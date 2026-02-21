@@ -16,11 +16,22 @@
 
 ## Planning Workflow
 
-1. For tasks >3 steps: use sequential-thinking MCP tool, then write a numbered plan.
-2. Present plan to user and WAIT for approval before coding.
-3. Execute sequentially. Verify after each step (compiles? tests pass?).
-4. Every change should be as simple as possible. One concern per PR.
-5. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+1. PM/architect defines problem, outcomes, constraints, success metrics, and non-goals.
+2. Run `/workflows:plan-loop "<problem statement>"` for tasks >3 steps.
+3. `workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve.
+4. Only then start implementation with `/workflows:work <approved-plan-path>`.
+5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
+6. Every change should be as simple as possible. One concern per PR.
+7. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+
+### Epic Definition
+
+An epic is the smallest independently shippable unit that:
+- Delivers user-visible or operational value
+- Has clear acceptance criteria
+- Can be implemented and reviewed without blocking unrelated initiatives
+
+If scope is too large for one PR cycle, split into multiple epics.
 
 ## Memory Protocol
 
@@ -28,6 +39,7 @@
 - After fixing a non-trivial bug: add a one-line entry to memory.md.
 - After discovering a pattern that works/fails: add it.
 - Keep memory.md under 100 lines. Remove oldest entries when exceeded.
+- Keep `docs/knowledge/plans-index.md` updated with plan status transitions: `active` -> `approved` -> `in_progress` -> `implemented` (or `superseded`).
 
 ## Circuit Breakers
 
