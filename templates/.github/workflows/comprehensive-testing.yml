@@ -93,8 +93,26 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
 
-      - name: Run integration tests
+      - name: Validate integration prerequisites
+        id: integration-prereqs
         env:
-          # TODO: Add required secrets
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [[ ! -d tests/integration ]]; then
+            echo "No tests/integration directory found. Skipping integration tests."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ -z "${DATABASE_URL:-}" ]]; then
+            echo "DATABASE_URL secret is required when tests/integration exists."
+            exit 1
+          fi
+
+          echo "run=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run integration tests
+        if: steps.integration-prereqs.outputs.run == 'true'
+        env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: poetry run pytest tests/integration -v --tb=short

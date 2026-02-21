@@ -39,12 +39,29 @@ if [[ -d "$WORKTREE_PATH" ]]; then
   exit 1
 fi
 
+BASE_REF=""
+if git ls-remote --exit-code --heads origin develop >/dev/null 2>&1; then
+  git fetch origin develop
+  BASE_REF="origin/develop"
+elif git show-ref --verify --quiet refs/heads/develop; then
+  BASE_REF="develop"
+else
+  DEFAULT_REMOTE_BRANCH="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || true)"
+  if [[ -z "$DEFAULT_REMOTE_BRANCH" ]]; then
+    DEFAULT_REMOTE_BRANCH="main"
+  fi
+  echo "No develop branch found. Creating local develop from origin/$DEFAULT_REMOTE_BRANCH"
+  git fetch origin "$DEFAULT_REMOTE_BRANCH"
+  git branch develop "origin/$DEFAULT_REMOTE_BRANCH"
+  BASE_REF="develop"
+fi
+
 echo "Creating worktree at: $WORKTREE_PATH"
-echo "Base branch: develop"
+echo "Base branch: $BASE_REF"
 echo "New branch: $BRANCH_NAME"
 echo ""
 
-git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" develop
+git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_REF"
 
 # Handle .env
 if [[ -f "$MAIN_WORKTREE/.env" ]]; then
@@ -70,6 +87,7 @@ for DIR_NAME in .venv terraform aws; do
       echo "Error: symlink target does not exist: $TARGET (for $DIR_NAME)"
       exit 1
     fi
+    rm -rf "$WORKTREE_PATH/$DIR_NAME"
     ln -s "$TARGET" "$WORKTREE_PATH/$DIR_NAME"
     echo "Symlinked $DIR_NAME -> $TARGET"
   fi
