@@ -6,6 +6,7 @@ Plan docs are the source of truth for what should be built and why.
 
 - `YYYY-MM-DD-<type>-<name>-plan.md`: approved implementation plan
 - `YYYY-MM-DD-<type>-<name>-execution.md`: real-time implementation tracker
+- `deltas/YYYY-MM-DD-<epic>-delta-<topic>.md`: mid-epic delta plans
 - `templates/execution-status-template.md`: tracker template
 - `archive/`: superseded or canceled plans
 
@@ -26,3 +27,4 @@ Use plan frontmatter status:
 3. Keep acceptance criteria in the plan and validation evidence in execution tracker.
 4. Update `docs/knowledge/plans-index.md` whenever status changes.
 5. Use `scripts/init-plan-tracker.sh docs/plans/<plan-file>` to initialize tracker quickly.
+6. For material scope changes during execution, run `/workflows:epic-delta-loop`.

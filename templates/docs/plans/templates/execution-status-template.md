@@ -14,6 +14,14 @@
 - Goal: `{GOAL}`
 - Non-goals: `{NON_GOALS}`
 
+## Gate Status
+
+| Gate | Status | Evidence |
+|------|--------|----------|
+| Teammate plan review | passed | `docs/reviews/plans/{PLAN_SLUG}-team-review.md` |
+| Codex Extra High plan review | passed | `docs/reviews/plans/{PLAN_SLUG}-codex-extra-high.md` |
+| PR triple review (latest) | pending | `docs/reviews/prs/pr-{NUMBER}-triple-review.md` |
+
 ## Progress
 
 | Task | Owner | Status | Notes |
@@ -29,6 +37,12 @@
 ## Decisions During Execution
 
 - `{YYYY-MM-DD}`: `{decision}` -> `{reason}` -> `{impact}`
+
+## Delta Log
+
+| Date | Delta File | Status | Notes |
+|------|------------|--------|-------|
+| `{YYYY-MM-DD}` | `docs/plans/deltas/{delta-file}.md` | proposed | `{notes}` |
 
 ## Handoff Notes
 
