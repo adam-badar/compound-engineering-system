@@ -30,6 +30,7 @@ Read:
 - parent plan
 - parent execution tracker
 - latest review evidence files for that epic
+- parent plan revision (latest commit SHA + plan hash)
 
 ### 2. Classify delta
 
@@ -46,9 +47,11 @@ Material deltas must run full nested loop below.
 1. Create delta plan file:
    - `docs/plans/deltas/YYYY-MM-DD-<epic-slug>-delta-<topic>.md`
 2. Run teammate plan-review agents on the delta.
-3. Run Codex Extra High external review on the delta.
-4. Ask PM only unresolved decision questions.
-5. Update delta plan and repeat until all blockers are cleared.
+3. Validate `codex_mcp_server` and `codex_gate_agent` availability.
+4. Run Codex Extra High external review on the delta through `codex_gate_agent`.
+   - pin to delta revision (commit SHA + delta hash)
+5. Ask PM only unresolved decision questions.
+6. Update delta plan and repeat until all blockers are cleared.
 
 ### 4. Delta approval criteria
 
@@ -69,6 +72,7 @@ After delta approval:
    - changed risks
 3. Add delta entry in `docs/knowledge/plans-index.md` notes or linked evidence.
 4. Archive closed delta files under `docs/plans/deltas/archive/` when fully implemented.
+5. If parent plan revision changes materially after merge, rerun relevant plan gate checks.
 
 ### 6. Boundary rule
 
@@ -83,4 +87,3 @@ Return:
 - gate evidence paths
 - parent plan/tracker files updated
 - next implementation step
-

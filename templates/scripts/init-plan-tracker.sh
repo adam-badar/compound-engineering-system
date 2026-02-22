@@ -31,6 +31,7 @@ TODAY="$(date +%F)"
 PLAN_BASENAME="$(basename "$PLAN_FILE")"
 PLAN_TITLE="$(basename "$PLAN_FILE" -plan.md)"
 PLAN_SLUG="$PLAN_TITLE"
+HEAD_SHA="$(git rev-parse HEAD 2>/dev/null || echo pending)"
 
 if [[ -f "$TRACKER_FILE" ]]; then
   echo "Tracker already exists: $TRACKER_FILE"
@@ -48,6 +49,7 @@ sed \
   -e "s|{PLAN_TITLE}|$PLAN_TITLE|g" \
   -e "s|{PLAN_FILE}|$PLAN_BASENAME|g" \
   -e "s|{PLAN_SLUG}|$PLAN_SLUG|g" \
+  -e "s|{PLAN_GATE_REVISION}|$HEAD_SHA|g" \
   -e "s|{OWNER}|unassigned|g" \
   -e "s|{YYYY-MM-DD}|$TODAY|g" \
   -e "s|{EPIC_NAME}|unassigned|g" \
@@ -65,6 +67,7 @@ sed \
   -e "s|{reason}|todo|g" \
   -e "s|{impact}|todo|g" \
   -e "s|{NUMBER}|pending|g" \
+  -e "s|{PR_REVIEWED_SHA}|pending|g" \
   -e "s|{delta-file}|pending|g" \
   "$TEMPLATE_FILE" > "$TRACKER_FILE"
 

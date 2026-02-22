@@ -8,7 +8,8 @@ sequenceDiagram
     participant Plan as Planning Workflow
     participant Research as Research Agents
     participant TeamPlan as Teammate Plan Review
-    participant Codex as Codex (Extra High)
+    participant CodexGate as Codex Gate Runner
+    participant Codex as Codex MCP (xhigh)
     participant Work as Execution Agents
     participant TeamPR as Teammate PR Review
     participant Greptile as Greptile
@@ -21,8 +22,10 @@ sequenceDiagram
         Research-->>Plan: Findings and options
         Plan->>TeamPlan: Review plan draft
         TeamPlan-->>Plan: Findings and blockers
-        Plan->>Codex: External plan review (Extra High)
-        Codex-->>Plan: Findings and blockers
+        Plan->>CodexGate: Run external plan gate
+        CodexGate->>Codex: Codex review (xhigh)
+        Codex-->>CodexGate: Findings and blockers
+        CodexGate-->>Plan: Normalized findings + status
         Plan->>PM: Ask decision-critical questions
         PM-->>Plan: Answers, priorities, acceptance criteria
         Plan->>Plan: Update plan
@@ -40,8 +43,10 @@ sequenceDiagram
             loop Nested delta approval loop
                 Plan->>TeamPlan: Review delta plan
                 TeamPlan-->>Plan: Delta findings
-                Plan->>Codex: External delta review (Extra High)
-                Codex-->>Plan: Delta findings
+                Plan->>CodexGate: Run external delta gate
+                CodexGate->>Codex: Codex review (xhigh)
+                Codex-->>CodexGate: Delta findings
+                CodexGate-->>Plan: Delta findings + status
                 Plan->>PM: Delta decisions needed
                 PM-->>Plan: Delta decisions
                 Plan->>Work: Update parent epic plan and tracker
@@ -50,8 +55,10 @@ sequenceDiagram
 
         Work->>TeamPR: PR review gate
         TeamPR-->>Work: PR findings
-        Work->>Codex: External PR review gate (Extra High)
-        Codex-->>Work: PR findings
+        Work->>CodexGate: Run external PR gate
+        CodexGate->>Codex: Codex review (xhigh)
+        Codex-->>CodexGate: PR findings
+        CodexGate-->>Work: PR findings + status
         Work->>Greptile: Greptile review gate
         Greptile-->>Work: PR findings
         Work->>PM: Ready for E2E acceptance
@@ -88,4 +95,3 @@ flowchart TD
     Q -- No --> I
     Q -- Yes --> R["Deploy + mark implemented"]
 ```
-

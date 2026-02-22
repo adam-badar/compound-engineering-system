@@ -87,7 +87,14 @@ for DIR_NAME in .venv terraform aws; do
       echo "Error: symlink target does not exist: $TARGET (for $DIR_NAME)"
       exit 1
     fi
-    rm -rf "$WORKTREE_PATH/$DIR_NAME"
+    DEST_PATH="$WORKTREE_PATH/$DIR_NAME"
+    if [[ -L "$DEST_PATH" ]]; then
+      rm "$DEST_PATH"
+    elif [[ -e "$DEST_PATH" ]]; then
+      echo "Error: refusing to remove non-symlink path: $DEST_PATH"
+      echo "Resolve manually, then rerun this script."
+      exit 1
+    fi
     ln -s "$TARGET" "$WORKTREE_PATH/$DIR_NAME"
     echo "Symlinked $DIR_NAME -> $TARGET"
   fi

@@ -8,6 +8,7 @@ This process defines how planning runs before implementation starts.
 - Planning workflow: drafts the plan and keeps it internally consistent
 - Plan-review agents: critique architecture, security, performance, and simplicity
 - External Codex reviewer: independent review at Extra High reasoning depth
+- Codex gate runner: dedicated teammate agent that executes Codex MCP gate and normalizes findings
 - Research agents: gather evidence when reviewers identify uncertainty
 
 ## Required Loop
@@ -17,10 +18,12 @@ This process defines how planning runs before implementation starts.
 3. Plan-review agents critique the plan.
 4. Planning workflow asks PM/architect only the unresolved decision questions.
 5. Plan updates are applied.
-6. Run external Codex review in Extra High mode and record evidence.
+6. Run external Codex review in Extra High mode through codex gate runner and record evidence pinned to revision.
 7. Steps 3-6 repeat until PM/architect, plan-review agents, and Codex all approve.
 
 No implementation begins until this loop exits.
+
+External Codex gate requires a connected global `codex-xhigh` MCP server.
 
 ## PR Triple Review Policy
 

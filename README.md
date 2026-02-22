@@ -8,6 +8,7 @@ Reusable templates for bootstrapping projects with compound engineering practice
 |------|---------|
 | `templates/CLAUDE.md.base` | Base Claude Code instructions (branch workflow, planning, memory, circuit breakers) |
 | `templates/.claude/settings.json` | Default Claude Code permissions and deny rules |
+| `templates/.claude/agents/codex-gate-runner.md` | Dedicated agent for Codex xhigh external review gates |
 | `templates/.claude/commands/workflows/plan-loop.md` | PM + reviewer iterative planning loop command |
 | `templates/.claude/commands/workflows/pr-triple-review.md` | Mandatory triple gate PR review command |
 | `templates/.claude/commands/workflows/epic-delta-loop.md` | Nested re-planning loop for mid-epic scope changes |
@@ -39,6 +40,7 @@ Reusable templates for bootstrapping projects with compound engineering practice
 6. For new initiatives, run `/workflows:plan-loop "problem statement"` to enforce PM/reviewer planning iterations before execution.
 7. Before merge, run `/workflows:pr-triple-review "<pr-number>"` to enforce teammate + Codex + Greptile gates.
 8. Copy `compound-engineering.local.example.md` to `compound-engineering.local.md` and customize reviewers.
+9. Run `claude mcp add -s user codex-xhigh -- codex mcp-server -c 'model=\"gpt-5.3-codex\"' -c 'model_reasoning_effort=\"xhigh\"'` once per machine.
 
 ### Option B: Existing project bootstrap
 

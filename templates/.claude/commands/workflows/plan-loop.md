@@ -24,6 +24,8 @@ If empty, ask: "What problem should this initiative solve?"
 - **Teammate reviewers:** `plan_review_agents` from `compound-engineering.local.md`
   - Fallback: `architecture-strategist`, `security-sentinel`, `performance-oracle`, `code-simplicity-reviewer`
 - **External reviewer:** `external_plan_review_gate` from `compound-engineering.local.md` (must resolve to `codex-extra-high`)
+- **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `codex-gate-runner`)
+- **Codex MCP server:** `codex_mcp_server` from `compound-engineering.local.md` (default: `codex-xhigh`)
 
 ## Workflow
 
@@ -33,6 +35,16 @@ If argument points to an existing plan file, use it.
 Otherwise run `/workflows:plan <planning_input>` and use the generated `docs/plans/*-plan.md`.
 
 Ensure the plan file exists before continuing.
+
+### 1.5 Preflight gate checks
+
+Before running any external gate:
+
+1. Validate configured MCP server exists and is connected (`codex-xhigh` by default).
+2. If unavailable, fail closed:
+   - set plan gate status to `failed`
+   - record reason `codex_mcp_unavailable`
+   - stop and return remediation steps
 
 ### 2. Teammate review loop (required)
 
@@ -53,7 +65,15 @@ Run iterative rounds until blockers are cleared:
 
 ### 3. Codex Extra High gate (required)
 
-When the plan reaches a candidate state (no obvious internal blockers), run external Codex review in **Extra High** mode.
+When the plan reaches a candidate state (no obvious internal blockers), run external Codex review in **Extra High** mode via the dedicated gate runner agent.
+
+Invoke `codex_gate_agent` with:
+
+- gate type: `plan`
+- plan path
+- plan revision metadata:
+  - latest commit SHA
+  - plan file hash
 
 Write review evidence to:
 
@@ -66,6 +86,7 @@ Evidence must include:
 - findings by severity
 - unresolved blockers
 - pass/fail recommendation
+- reviewed revision (commit SHA + plan hash)
 
 ### 4. Burden control rules
 
@@ -99,6 +120,7 @@ After all gates pass:
    - `approved_at: YYYY-MM-DD`
    - `teammate_plan_review_gate: passed`
    - `codex_extra_high_plan_gate: passed`
+   - `plan_gate_revision: <sha-or-hash>`
 2. Create execution tracker:
    - template: `docs/plans/templates/execution-status-template.md`
    - output: replace `-plan.md` with `-execution.md`

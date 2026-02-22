@@ -1,7 +1,7 @@
 # Plans Index
 
-| Plan | Execution Tracker | Status | PM Approval | Teammate Plan Gate | Codex Plan Gate | Latest PR Triple Gate | Last Updated |
-|------|-------------------|--------|-------------|--------------------|-----------------|-----------------------|--------------|
+| Plan | Execution Tracker | Status | PM Approval | Teammate Plan Gate | Codex Plan Gate | Plan Gate Revision | Latest PR Triple Gate | PR Gate SHA | Last Updated |
+|------|-------------------|--------|-------------|--------------------|-----------------|--------------------|-----------------------|-------------|--------------|
 
 Add one row per plan. Update status in place; do not duplicate rows.
 

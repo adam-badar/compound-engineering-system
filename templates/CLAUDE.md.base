@@ -94,6 +94,10 @@ result = await client.table("t").insert({"field": "value"})
 
 <!-- TODO: List MCP servers available for this project -->
 
+Required global MCP for external gate:
+
+- `codex-xhigh` (configured once per machine with user scope)
+
 ## Important URLs and Domains
 
 <!-- TODO: Add project-specific URLs. NEVER guess or make up URLs. -->
