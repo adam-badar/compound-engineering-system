@@ -33,6 +33,22 @@ MAIN_WORKTREE="$(git rev-parse --show-toplevel)"
 REPO_NAME="$(basename "$MAIN_WORKTREE")"
 SANITIZED_BRANCH="${BRANCH_NAME//\//-}"
 WORKTREE_PATH="$(dirname "$MAIN_WORKTREE")/${REPO_NAME}-${SANITIZED_BRANCH}"
+WORKTREE_CREATED=false
+
+cleanup_on_error() {
+  local exit_code=$?
+  if [[ "$WORKTREE_CREATED" == true ]]; then
+    echo ""
+    echo "Error after worktree creation. Cleaning up partial worktree..."
+    git worktree remove --force "$WORKTREE_PATH" >/dev/null 2>&1 || true
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+      git branch -D "$BRANCH_NAME" >/dev/null 2>&1 || true
+    fi
+  fi
+  exit "$exit_code"
+}
+
+trap 'cleanup_on_error' ERR
 
 if [[ -d "$WORKTREE_PATH" ]]; then
   echo "Error: worktree path already exists: $WORKTREE_PATH"
@@ -62,6 +78,7 @@ echo "New branch: $BRANCH_NAME"
 echo ""
 
 git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_REF"
+WORKTREE_CREATED=true
 
 # Handle .env
 if [[ -f "$MAIN_WORKTREE/.env" ]]; then
@@ -99,6 +116,8 @@ for DIR_NAME in .venv terraform aws; do
     echo "Symlinked $DIR_NAME -> $TARGET"
   fi
 done
+
+trap - ERR
 
 echo ""
 echo "Worktree ready. Next steps:"
