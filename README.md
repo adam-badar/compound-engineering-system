@@ -10,6 +10,7 @@ Reusable templates for bootstrapping projects with compound engineering practice
 | `templates/.claude/settings.json` | Default Claude Code permissions and deny rules |
 | `templates/.claude/agents/codex-gate-runner.md` | Dedicated agent for Codex xhigh external review gates |
 | `templates/.claude/commands/workflows/plan-loop.md` | PM + reviewer iterative planning loop command |
+| `templates/.claude/commands/workflows/work.md` | Execute approved plans with tracker + gate enforcement |
 | `templates/.claude/commands/workflows/pr-triple-review.md` | Mandatory triple gate PR review command |
 | `templates/.claude/commands/workflows/epic-delta-loop.md` | Nested re-planning loop for mid-epic scope changes |
 | `templates/compound-engineering.local.example.md` | Review-agent and external-gate configuration template |
@@ -36,11 +37,50 @@ Reusable templates for bootstrapping projects with compound engineering practice
 ```
 
 4. Rename `CLAUDE.md.base` to `CLAUDE.md` and customize project-specific sections.
-5. Commit the baseline and start with `/compound-engineering-setup`.
-6. For new initiatives, run `/workflows:plan-loop "problem statement"` to enforce PM/reviewer planning iterations before execution.
-7. Before merge, run `/workflows:pr-triple-review "<pr-number>"` to enforce teammate + Codex + Greptile gates.
-8. Copy `compound-engineering.local.example.md` to `compound-engineering.local.md` and customize reviewers.
-9. Run `claude mcp add -s user codex-xhigh -- codex mcp-server -c 'model=\"gpt-5.3-codex\"' -c 'model_reasoning_effort=\"xhigh\"'` once per machine.
+5. Copy `compound-engineering.local.example.md` to `compound-engineering.local.md` and customize reviewers.
+6. Run `claude mcp add -s user codex-xhigh -- codex mcp-server -c 'model=\"gpt-5.3-codex\"' -c 'model_reasoning_effort=\"xhigh\"'` once per machine.
+7. Verify workflow commands exist:
+
+```bash
+ls .claude/commands/workflows
+# should include: plan-loop.md, work.md, pr-triple-review.md, epic-delta-loop.md
+```
+
+8. Start planning:
+
+```text
+/workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
+```
+
+9. Confirm planning artifacts were created:
+   - `docs/plans/*-plan.md`
+   - `docs/reviews/plans/*-codex-extra-high.md`
+10. Initialize execution tracker:
+
+```bash
+scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
+```
+
+11. Execute implementation from the approved plan:
+
+```text
+/workflows:work docs/plans/<your-plan>-plan.md
+```
+
+12. If scope changes mid-epic:
+
+```text
+/workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
+```
+
+13. Before merge:
+
+```text
+/workflows:pr-triple-review "<pr-number>"
+```
+
+14. Merge only when triple gate status is `PASS` for the current PR head SHA.
+15. Optional: run `/compound-engineering-setup` for project-specific setup checks.
 
 ### Option B: Existing project bootstrap
 
@@ -66,3 +106,4 @@ Copy individual templates as needed. Edit placeholder sections marked with `<!--
 - This repository supports both **starter** and **bootstrap toolkit** workflows.
 - The planning/review/compound process diagrams remain valid in both modes once bootstrap is complete.
 - The planning loop is explicit: planning and plan-review agents iterate with PM feedback until both PM and reviewers approve.
+- For full startup verification steps, use `templates/docs/runbooks/new-project-bootstrap-smoke-test.md`.

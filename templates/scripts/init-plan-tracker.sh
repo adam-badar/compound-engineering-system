@@ -31,7 +31,7 @@ TODAY="$(date +%F)"
 PLAN_BASENAME="$(basename "$PLAN_FILE")"
 PLAN_TITLE="$(basename "$PLAN_FILE" -plan.md)"
 PLAN_SLUG="$PLAN_TITLE"
-HEAD_SHA="$(git rev-parse HEAD 2>/dev/null || echo pending)"
+HEAD_SHA="$(git rev-parse --verify HEAD 2>/dev/null || echo pending)"
 
 if [[ -f "$TRACKER_FILE" ]]; then
   echo "Tracker already exists: $TRACKER_FILE"
