@@ -68,10 +68,37 @@ jobs:
       - name: Run unit tests
         run: poetry run pytest tests/unit -v --tb=short
 
-  integration-tests:
+  integration-prereqs:
     runs-on: ubuntu-latest
     needs: lint-and-format
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    outputs:
+      run: ${{ steps.integration-prereqs.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate integration prerequisites
+        id: integration-prereqs
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [[ ! -d tests/integration ]]; then
+            echo "No tests/integration directory found. Skipping integration tests."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ -z "${DATABASE_URL:-}" ]]; then
+            echo "DATABASE_URL secret is required when tests/integration exists."
+            exit 1
+          fi
+
+          echo "run=true" >> "$GITHUB_OUTPUT"
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, integration-prereqs]
+    if: needs.integration-prereqs.outputs.run == 'true'
     steps:
       - uses: actions/checkout@v4
 
@@ -93,26 +120,7 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
 
-      - name: Validate integration prerequisites
-        id: integration-prereqs
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          if [[ ! -d tests/integration ]]; then
-            echo "No tests/integration directory found. Skipping integration tests."
-            echo "run=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ -z "${DATABASE_URL:-}" ]]; then
-            echo "DATABASE_URL secret is required when tests/integration exists."
-            exit 1
-          fi
-
-          echo "run=true" >> "$GITHUB_OUTPUT"
-
       - name: Run integration tests
-        if: steps.integration-prereqs.outputs.run == 'true'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: poetry run pytest tests/integration -v --tb=short

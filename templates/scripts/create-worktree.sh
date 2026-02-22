@@ -108,8 +108,9 @@ for DIR_NAME in .venv terraform aws; do
     if [[ -L "$DEST_PATH" ]]; then
       rm "$DEST_PATH"
     elif [[ -e "$DEST_PATH" ]]; then
-      echo "Error: refusing to remove non-symlink path: $DEST_PATH"
-      echo "Resolve manually, then rerun this script."
+      echo "Error: refusing to replace non-symlink path: $DEST_PATH"
+      echo "This partial worktree will be cleaned up automatically."
+      echo "Fix the base branch path/symlink setup, then rerun this script."
       exit 1
     fi
     ln -s "$TARGET" "$WORKTREE_PATH/$DIR_NAME"
