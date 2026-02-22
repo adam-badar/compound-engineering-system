@@ -16,11 +16,24 @@
 
 ## Planning Workflow
 
-1. For tasks >3 steps: use sequential-thinking MCP tool, then write a numbered plan.
-2. Present plan to user and WAIT for approval before coding.
-3. Execute sequentially. Verify after each step (compiles? tests pass?).
-4. Every change should be as simple as possible. One concern per PR.
-5. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+1. PM/architect defines problem, outcomes, constraints, success metrics, and non-goals.
+2. Run `/workflows:plan-loop "<problem statement>"` for tasks >3 steps.
+3. `workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve, and include required Codex Extra High external plan gate.
+4. Only then start implementation with `/workflows:work <approved-plan-path>`.
+5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
+6. If scope changes during implementation, run `/workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
+7. Before merging any code PR, run `/workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review agents + Codex Extra High + Greptile.
+8. Every change should be as simple as possible. One concern per PR.
+9. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+
+### Epic Definition
+
+An epic is the smallest independently shippable unit that:
+- Delivers user-visible or operational value
+- Has clear acceptance criteria
+- Can be implemented and reviewed without blocking unrelated initiatives
+
+If scope is too large for one PR cycle, split into multiple epics.
 
 ## Memory Protocol
 
@@ -28,6 +41,8 @@
 - After fixing a non-trivial bug: add a one-line entry to memory.md.
 - After discovering a pattern that works/fails: add it.
 - Keep memory.md under 100 lines. Remove oldest entries when exceeded.
+- Keep `docs/knowledge/plans-index.md` updated with plan status transitions: `active` -> `approved` -> `in_progress` -> `implemented` (or `superseded`).
+- Keep review evidence in `docs/reviews/` to avoid losing gate outcomes as context grows.
 
 ## Circuit Breakers
 
@@ -78,6 +93,10 @@ result = await client.table("t").insert({"field": "value"})
 ## Available MCP Servers
 
 <!-- TODO: List MCP servers available for this project -->
+
+Required global MCP for external gate:
+
+- `codex-xhigh` (configured once per machine with user scope)
 
 ## Important URLs and Domains
 

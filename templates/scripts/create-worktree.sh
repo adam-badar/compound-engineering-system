@@ -33,18 +33,52 @@ MAIN_WORKTREE="$(git rev-parse --show-toplevel)"
 REPO_NAME="$(basename "$MAIN_WORKTREE")"
 SANITIZED_BRANCH="${BRANCH_NAME//\//-}"
 WORKTREE_PATH="$(dirname "$MAIN_WORKTREE")/${REPO_NAME}-${SANITIZED_BRANCH}"
+WORKTREE_CREATED=false
+
+cleanup_on_error() {
+  local exit_code=$?
+  if [[ "$WORKTREE_CREATED" == true ]]; then
+    echo ""
+    echo "Error after worktree creation. Cleaning up partial worktree..."
+    git worktree remove --force "$WORKTREE_PATH" >/dev/null 2>&1 || true
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+      git branch -D "$BRANCH_NAME" >/dev/null 2>&1 || true
+    fi
+  fi
+  exit "$exit_code"
+}
+
+trap 'cleanup_on_error' ERR
 
 if [[ -d "$WORKTREE_PATH" ]]; then
   echo "Error: worktree path already exists: $WORKTREE_PATH"
   exit 1
 fi
 
+BASE_REF=""
+if git ls-remote --exit-code --heads origin develop >/dev/null 2>&1; then
+  git fetch origin develop
+  BASE_REF="origin/develop"
+elif git show-ref --verify --quiet refs/heads/develop; then
+  BASE_REF="develop"
+else
+  DEFAULT_REMOTE_BRANCH="$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || true)"
+  if [[ -z "$DEFAULT_REMOTE_BRANCH" ]]; then
+    DEFAULT_REMOTE_BRANCH="main"
+  fi
+  echo "No develop branch found. Creating local develop from origin/$DEFAULT_REMOTE_BRANCH"
+  git fetch origin "$DEFAULT_REMOTE_BRANCH"
+  git branch develop "origin/$DEFAULT_REMOTE_BRANCH"
+  BASE_REF="develop"
+fi
+
 echo "Creating worktree at: $WORKTREE_PATH"
-echo "Base branch: develop"
+echo "Base branch: $BASE_REF"
 echo "New branch: $BRANCH_NAME"
 echo ""
 
-git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" develop
+git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_REF"
+WORKTREE_CREATED=true
 
 # Handle .env
 if [[ -f "$MAIN_WORKTREE/.env" ]]; then
@@ -70,10 +104,21 @@ for DIR_NAME in .venv terraform aws; do
       echo "Error: symlink target does not exist: $TARGET (for $DIR_NAME)"
       exit 1
     fi
+    DEST_PATH="$WORKTREE_PATH/$DIR_NAME"
+    if [[ -L "$DEST_PATH" ]]; then
+      rm "$DEST_PATH"
+    elif [[ -e "$DEST_PATH" ]]; then
+      echo "Error: refusing to replace non-symlink path: $DEST_PATH"
+      echo "This partial worktree will be cleaned up automatically."
+      echo "Fix the base branch path/symlink setup, then rerun this script."
+      exit 1
+    fi
     ln -s "$TARGET" "$WORKTREE_PATH/$DIR_NAME"
     echo "Symlinked $DIR_NAME -> $TARGET"
   fi
 done
+
+trap - ERR
 
 echo ""
 echo "Worktree ready. Next steps:"

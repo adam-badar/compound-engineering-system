@@ -47,3 +47,5 @@ Confirm success by:
 - Name files descriptively: `deploy-production.md`, `rotate-api-keys.md`, `restore-database.md`
 - Include rollback steps for every destructive operation.
 - Test runbooks periodically -- stale runbooks are worse than no runbooks.
+- Keep one global environment runbook for shared tooling (example: `configure-codex-xhigh-mcp.md`).
+- Keep one bootstrap validation runbook for new projects (example: `new-project-bootstrap-smoke-test.md`).
