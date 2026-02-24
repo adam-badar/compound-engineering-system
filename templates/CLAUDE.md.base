@@ -18,12 +18,12 @@
 
 1. PM/architect defines problem, outcomes, constraints, success metrics, and non-goals.
 2. Run `/compound-engineering-core:workflows:plan-loop "<problem statement>"` for tasks >3 steps.
-3. `compound-engineering-core:workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve, and include required Codex Extra High external plan gate.
-4. Agent teams are optional for `compound-engineering-core:workflows:plan-loop` and `compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want team fan-out.
-5. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.
-6. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
-7. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
-8. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review agents + Codex Extra High + Greptile.
+3. `/compound-engineering-core:workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve, and include required Codex Extra High external plan gate.
+4. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.
+5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
+6. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
+7. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review agents + Codex Extra High + Greptile.
+8. Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
 9. Every change should be as simple as possible. One concern per PR.
 10. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
 

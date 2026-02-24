@@ -42,7 +42,7 @@ Before running gates:
 
 1. Parse `pr_input` for `teams=on` (default: `teams=off`).
 2. If `teams=on`, validate agent teams are enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) and teammate fan-out is available for `review_agents`.
-3. If `teams=on` and either team check fails, stop with `status: FAIL` and reason `agent_teams_unavailable`.
+3. If `teams=on` and agent teams are unavailable, stop with `status: FAIL` and reason `agent_teams_unavailable`.
 4. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
 5. Validate `codex_gate_agent` (`codex-gate-runner` default) is available.
 6. If either external gate check fails, stop with `status: FAIL` and reason `external_gate_unavailable`.

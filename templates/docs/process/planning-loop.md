@@ -25,7 +25,7 @@ No implementation begins until this loop exits.
 
 External Codex gate requires a connected global `codex-xhigh` MCP server.
 
-Agent teams are optional for `compound-engineering-core:workflows:plan-loop` and `compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
+Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
 
 ## PR Triple Review Policy
 
