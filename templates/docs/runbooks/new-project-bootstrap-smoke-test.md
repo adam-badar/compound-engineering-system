@@ -9,6 +9,7 @@ Bootstrap a new or existing repository with the compound engineering system and 
 - [ ] `codex` CLI installed and authenticated
 - [ ] `claude` CLI installed
 - [ ] `codex-xhigh` MCP configured (see `configure-codex-xhigh-mcp.md`)
+- [ ] private marketplace configured (see `configure-private-marketplace.md`)
 - [ ] repository cloned locally
 
 ## Steps
@@ -27,31 +28,35 @@ mv CLAUDE.md.base CLAUDE.md
 cp compound-engineering.local.example.md compound-engineering.local.md
 ```
 
-3. **Verify workflow commands were copied**
+3. **Install core plugin once on your machine (if not already installed)**
 
 ```bash
-ls .claude/commands/workflows
+claude plugin marketplace add https://github.com/adam-badar/compound-engineering-system.git
+claude plugin install compound-engineering-core@compound-engineering-marketplace --scope user
 ```
 
-Expected files:
-- `plan-loop.md`
-- `work.md`
-- `pr-triple-review.md`
-- `epic-delta-loop.md`
+4. **Verify workflow commands are available**
 
-4. **Run planning loop**
+```bash
+claude plugin list
+```
+
+Expected plugin:
+- `compound-engineering-core@compound-engineering-marketplace`
+
+5. **Run planning loop**
 
 ```text
-/workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
+/compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
 ```
 
-5. **Verify planning artifacts**
+6. **Verify planning artifacts**
 
 Expected artifacts:
 - `docs/plans/*-plan.md`
 - `docs/reviews/plans/*-codex-extra-high.md`
 
-6. **Initialize execution tracker**
+7. **Initialize execution tracker**
 
 ```bash
 scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
@@ -60,22 +65,22 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 Expected artifact:
 - `docs/plans/<your-plan>-execution.md`
 
-7. **Run implementation loop**
+8. **Run implementation loop**
 
 ```text
-/workflows:work docs/plans/<your-plan>-plan.md
+/compound-engineering-core:workflows:work docs/plans/<your-plan>-plan.md
 ```
 
-8. **Handle material scope shifts**
+9. **Handle material scope shifts**
 
 ```text
-/workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
+/compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-9. **Run pre-merge triple gate**
+10. **Run pre-merge triple gate**
 
 ```text
-/workflows:pr-triple-review "<pr-number>"
+/compound-engineering-core:workflows:pr-triple-review "<pr-number> teams=on"
 ```
 
 Merge policy:
@@ -91,7 +96,7 @@ If bootstrap files were applied to the wrong target repo:
 ## Verification
 
 Confirm success by checking all below:
-- [ ] workflow command files exist under `.claude/commands/workflows/`
+- [ ] `compound-engineering-core@compound-engineering-marketplace` is installed
 - [ ] plan + Codex plan review artifacts are generated
 - [ ] execution tracker is generated from template
 - [ ] PR triple review gate can run and produce evidence docs

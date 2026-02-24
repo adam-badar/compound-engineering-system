@@ -25,6 +25,10 @@ Optional runtime flag in arguments:
 - `teams=on` to require agent teams for teammate review fan-out in this run
 - `teams=off` (default) to run without a hard agent-teams requirement
 
+Agent ID normalization:
+
+- if an agent ID from `compound-engineering.local.md` has no namespace prefix, resolve it as `compound-engineering-core:<agent-id>` before invocation.
+
 ## Workflow
 
 ### 1. Collect PR context
@@ -42,9 +46,9 @@ Before running gates:
 
 1. Parse `pr_input` for `teams=on` (default: `teams=off`).
 2. If `teams=on`, validate agent teams are enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) and teammate fan-out is available for `review_agents`.
-3. If `teams=on` and agent teams are unavailable, stop with `status: FAIL` and reason `agent_teams_unavailable`.
+3. If `teams=on` and either team check fails, stop with `status: FAIL` and reason `agent_teams_unavailable`.
 4. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
-5. Validate `codex_gate_agent` (`codex-gate-runner` default) is available.
+5. Validate `codex_gate_agent` (`compound-engineering-core:codex-gate-runner` default) is available.
 6. If either external gate check fails, stop with `status: FAIL` and reason `external_gate_unavailable`.
 
 ### 2. Teammate review gate
@@ -56,10 +60,10 @@ Run `review_agents` from `compound-engineering.local.md`.
 
 Fallback set:
 
-- `architecture-strategist`
-- `security-sentinel`
-- `performance-oracle`
-- `code-simplicity-reviewer`
+- `compound-engineering-core:architecture-strategist`
+- `compound-engineering-core:security-sentinel`
+- `compound-engineering-core:performance-oracle`
+- `compound-engineering-core:code-simplicity-reviewer`
 
 Capture blocker/non-blocker findings in the review evidence file.
 

@@ -27,18 +27,19 @@ Optional runtime flag in arguments:
 ## Required Review Sources
 
 - **Teammate reviewers:** `plan_review_agents` from `compound-engineering.local.md`
-  - Fallback: `architecture-strategist`, `security-sentinel`, `performance-oracle`, `code-simplicity-reviewer`
+  - Fallback: `compound-engineering-core:architecture-strategist`, `compound-engineering-core:security-sentinel`, `compound-engineering-core:performance-oracle`, `compound-engineering-core:code-simplicity-reviewer`
 - **Execution mode:** agent teams are optional per run (`teams=on`)
 - **External reviewer:** `external_plan_review_gate` from `compound-engineering.local.md` (must resolve to `codex-extra-high`)
-- **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `codex-gate-runner`)
+- **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `compound-engineering-core:codex-gate-runner`)
 - **Codex MCP server:** `codex_mcp_server` from `compound-engineering.local.md` (default: `codex-xhigh`)
+- **Agent ID normalization:** if an agent ID from `compound-engineering.local.md` has no namespace prefix, resolve it as `compound-engineering-core:<agent-id>` before invocation.
 
 ## Workflow
 
 ### 1. Establish plan source
 
 If argument points to an existing plan file, use it.
-Otherwise run `/workflows:plan <planning_input>` and use the generated `docs/plans/*-plan.md`.
+Otherwise run `/compound-engineering-core:workflows:plan <planning_input>` and use the generated `docs/plans/*-plan.md`.
 
 Ensure the plan file exists before continuing.
 
@@ -73,9 +74,9 @@ Run iterative rounds until blockers are cleared:
    - If `teams=on`, run in parallel via agent teams.
    - If `teams=off`, run sequentially.
 3. If reviewers request more evidence, run research agents in parallel:
-   - `repo-research-analyst`
-   - `learnings-researcher`
-   - Optional: `framework-docs-researcher`
+   - `compound-engineering-core:repo-research-analyst`
+   - `compound-engineering-core:learnings-researcher`
+   - Optional: `compound-engineering-core:framework-docs-researcher`
 4. Consolidate findings into:
    - blockers
    - non-blocking improvements
@@ -153,4 +154,4 @@ Present:
 - approved plan path
 - Codex review evidence path
 - execution tracker path
-- next command: `/workflows:work <approved-plan-path>`
+- next command: `/compound-engineering-core:workflows:work <approved-plan-path>`

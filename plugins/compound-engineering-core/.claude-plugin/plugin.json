@@ -1,0 +1,19 @@
+{
+  "name": "compound-engineering-core",
+  "version": "0.1.0",
+  "description": "Core compound engineering workflows, agents, and review gate orchestration.",
+  "author": {
+    "name": "Adam Badar",
+    "url": "https://github.com/adam-badar"
+  },
+  "homepage": "https://github.com/adam-badar/compound-engineering-system",
+  "repository": "https://github.com/adam-badar/compound-engineering-system",
+  "license": "UNLICENSED",
+  "keywords": [
+    "compound-engineering",
+    "planning",
+    "review",
+    "workflow",
+    "codex"
+  ]
+}
