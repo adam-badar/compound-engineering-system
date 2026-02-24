@@ -1,0 +1,31 @@
+{
+  "name": "compound-engineering-marketplace",
+  "owner": {
+    "name": "Adam Badar",
+    "url": "https://github.com/adam-badar"
+  },
+  "metadata": {
+    "description": "Private marketplace for Compound Engineering System plugins.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "compound-engineering-core",
+      "description": "Shared planning, execution, and review-gate workflows for compound engineering.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Adam Badar",
+        "url": "https://github.com/adam-badar"
+      },
+      "homepage": "https://github.com/adam-badar/compound-engineering-system",
+      "tags": [
+        "compound-engineering",
+        "workflow",
+        "review-gates",
+        "planning",
+        "agent-teams"
+      ],
+      "source": "./plugins/compound-engineering-core"
+    }
+  ]
+}
