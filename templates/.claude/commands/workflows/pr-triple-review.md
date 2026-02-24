@@ -20,6 +20,11 @@ Required gates:
 
 If empty, ask: "Which PR should I run triple review for?"
 
+Optional runtime flag in arguments:
+
+- `teams=on` to require agent teams for teammate review fan-out in this run
+- `teams=off` (default) to run without a hard agent-teams requirement
+
 ## Workflow
 
 ### 1. Collect PR context
@@ -33,15 +38,21 @@ Write or update review evidence file:
 
 ### 1.5 Preflight gate checks
 
-Before running external gate:
+Before running gates:
 
-1. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
-2. Validate `codex_gate_agent` (`codex-gate-runner` default) is available.
-3. If either check fails, stop with `status: FAIL` and reason `external_gate_unavailable`.
+1. Parse `pr_input` for `teams=on` (default: `teams=off`).
+2. If `teams=on`, validate agent teams are enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) and teammate fan-out is available for `review_agents`.
+3. If `teams=on` and agent teams are unavailable, stop with `status: FAIL` and reason `agent_teams_unavailable`.
+4. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
+5. Validate `codex_gate_agent` (`codex-gate-runner` default) is available.
+6. If either external gate check fails, stop with `status: FAIL` and reason `external_gate_unavailable`.
 
 ### 2. Teammate review gate
 
-Run `review_agents` from `compound-engineering.local.md` in parallel.
+Run `review_agents` from `compound-engineering.local.md`.
+
+- If `teams=on`, run in parallel via agent teams.
+- If `teams=off`, run sequentially.
 
 Fallback set:
 

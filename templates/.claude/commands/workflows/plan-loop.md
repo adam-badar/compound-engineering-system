@@ -19,10 +19,16 @@ Never write production code in this command.
 
 If empty, ask: "What problem should this initiative solve?"
 
+Optional runtime flag in arguments:
+
+- `teams=on` to require agent teams for teammate review fan-out in this run
+- `teams=off` (default) to run without a hard agent-teams requirement
+
 ## Required Review Sources
 
 - **Teammate reviewers:** `plan_review_agents` from `compound-engineering.local.md`
   - Fallback: `architecture-strategist`, `security-sentinel`, `performance-oracle`, `code-simplicity-reviewer`
+- **Execution mode:** agent teams are optional per run (`teams=on`)
 - **External reviewer:** `external_plan_review_gate` from `compound-engineering.local.md` (must resolve to `codex-extra-high`)
 - **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `codex-gate-runner`)
 - **Codex MCP server:** `codex_mcp_server` from `compound-engineering.local.md` (default: `codex-xhigh`)
@@ -36,7 +42,19 @@ Otherwise run `/workflows:plan <planning_input>` and use the generated `docs/pla
 
 Ensure the plan file exists before continuing.
 
-### 1.5 Preflight gate checks
+### 1.4 Agent teams mode (optional)
+
+Before any review loop:
+
+1. Parse `planning_input` for `teams=on` (default: `teams=off`).
+2. If `teams=on`, validate agent teams are enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) and teammate fan-out is available for `plan_review_agents`.
+3. If `teams=on` and unavailable, fail closed:
+   - set plan gate status to `failed`
+   - record reason `agent_teams_unavailable`
+   - stop and return remediation steps
+4. If `teams=off`, continue without agent-teams preflight failure.
+
+### 1.5 External gate preflight checks
 
 Before running any external gate:
 
@@ -51,7 +69,9 @@ Before running any external gate:
 Run iterative rounds until blockers are cleared:
 
 1. Read the current plan and list unresolved assumptions, risks, and decisions.
-2. Run teammate plan-review agents in parallel.
+2. Run teammate plan-review agents.
+   - If `teams=on`, run in parallel via agent teams.
+   - If `teams=off`, run sequentially.
 3. If reviewers request more evidence, run research agents in parallel:
    - `repo-research-analyst`
    - `learnings-researcher`

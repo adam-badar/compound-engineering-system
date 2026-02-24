@@ -25,6 +25,8 @@ No implementation begins until this loop exits.
 
 External Codex gate requires a connected global `codex-xhigh` MCP server.
 
+Agent teams are optional for `/workflows:plan-loop` and `/workflows:pr-triple-review`. Add `teams=on` per run when you want team fan-out.
+
 ## PR Triple Review Policy
 
 Every code PR must pass all three gates before merge:
