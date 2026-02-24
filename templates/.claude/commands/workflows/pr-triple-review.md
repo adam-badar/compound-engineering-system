@@ -33,15 +33,19 @@ Write or update review evidence file:
 
 ### 1.5 Preflight gate checks
 
-Before running external gate:
+Before running gates:
 
-1. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
-2. Validate `codex_gate_agent` (`codex-gate-runner` default) is available.
-3. If either check fails, stop with `status: FAIL` and reason `external_gate_unavailable`.
+1. Validate agent teams are enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
+2. Validate teammate fan-out is available for `review_agents`.
+3. If either team check fails, stop with `status: FAIL` and reason `agent_teams_unavailable`.
+4. Do not downgrade this workflow to single-agent or sequential manual review.
+5. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
+6. Validate `codex_gate_agent` (`codex-gate-runner` default) is available.
+7. If either external gate check fails, stop with `status: FAIL` and reason `external_gate_unavailable`.
 
 ### 2. Teammate review gate
 
-Run `review_agents` from `compound-engineering.local.md` in parallel.
+Run `review_agents` from `compound-engineering.local.md` in parallel via agent teams.
 
 Fallback set:
 

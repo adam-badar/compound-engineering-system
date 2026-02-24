@@ -23,8 +23,9 @@
 5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
 6. If scope changes during implementation, run `/workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
 7. Before merging any code PR, run `/workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review agents + Codex Extra High + Greptile.
-8. Every change should be as simple as possible. One concern per PR.
-9. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+8. Agent teams are required only for `/workflows:plan-loop` and `/workflows:pr-triple-review`; other workflows can run without team fan-out.
+9. Every change should be as simple as possible. One concern per PR.
+10. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
 
 ### Epic Definition
 
