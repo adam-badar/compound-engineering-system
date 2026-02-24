@@ -25,7 +25,7 @@ No implementation begins until this loop exits.
 
 External Codex gate requires a connected global `codex-xhigh` MCP server.
 
-Agent teams are optional for `/workflows:plan-loop` and `/workflows:pr-triple-review`. Add `teams=on` per run when you want team fan-out.
+Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
 
 ## PR Triple Review Policy
 
@@ -41,7 +41,7 @@ Record results under `docs/reviews/prs/`.
 
 When implementation reveals material changes:
 
-1. Run `/workflows:epic-delta-loop`.
+1. Run `/compound-engineering-core:workflows:epic-delta-loop`.
 2. Create and review delta plan.
 3. Get PM + teammate + Codex approvals.
 4. Merge approved delta back into parent epic plan/tracker.

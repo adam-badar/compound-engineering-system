@@ -1,0 +1,16 @@
+{
+  "extraKnownMarketplaces": [
+    {
+      "id": "compound-engineering-marketplace",
+      "source": {
+        "type": "github",
+        "owner": "adam-badar",
+        "repo": "compound-engineering-system",
+        "ref": "main"
+      }
+    }
+  ],
+  "enabledPlugins": {
+    "compound-engineering-core@compound-engineering-marketplace": true
+  }
+}

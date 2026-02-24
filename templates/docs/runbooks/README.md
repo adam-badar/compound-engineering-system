@@ -49,3 +49,4 @@ Confirm success by:
 - Test runbooks periodically -- stale runbooks are worse than no runbooks.
 - Keep one global environment runbook for shared tooling (example: `configure-codex-xhigh-mcp.md`).
 - Keep one bootstrap validation runbook for new projects (example: `new-project-bootstrap-smoke-test.md`).
+- Keep one marketplace runbook for shared plugin rollout/updates (example: `configure-private-marketplace.md`).

@@ -1,11 +1,11 @@
 ---
-review_agents: [kieran-python-reviewer, code-simplicity-reviewer, security-sentinel, performance-oracle]
-plan_review_agents: [kieran-python-reviewer, code-simplicity-reviewer]
+review_agents: [compound-engineering-core:kieran-python-reviewer, compound-engineering-core:code-simplicity-reviewer, compound-engineering-core:security-sentinel, compound-engineering-core:performance-oracle]
+plan_review_agents: [compound-engineering-core:kieran-python-reviewer, compound-engineering-core:code-simplicity-reviewer]
 external_plan_review_gate: codex-extra-high
 external_pr_review_gate: codex-extra-high
 greptile_required_for_code_prs: true
 codex_mcp_server: codex-xhigh
-codex_gate_agent: codex-gate-runner
+codex_gate_agent: compound-engineering-core:codex-gate-runner
 ---
 
 # Review Context
