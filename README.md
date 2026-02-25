@@ -98,11 +98,12 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 15. Before merge:
 
 ```text
-/compound-engineering-core:workflows:pr-triple-review "<pr-number> teams=on"
+/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
-16. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
-17. Optional: run `/compound-engineering-setup` for project-specific setup checks.
+16. Triple review is PM-authorized per SHA. Do not auto-invoke it from background/sub-agent work.
+17. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
+18. Optional: run `/compound-engineering-setup` for project-specific setup checks.
 
 ### Option B: Existing project bootstrap
 

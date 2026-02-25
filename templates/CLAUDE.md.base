@@ -23,12 +23,13 @@
 5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
 6. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
 7. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage.
-8. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review + Codex Extra High + Greptile + test/CI.
-9. Conditional pass does not qualify as merge-ready for code PRs.
-10. Never defer tests to a later "test-only" PR for code already merged.
-11. Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
-12. Every change should be as simple as possible. One concern per PR.
-13. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+8. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha>"`. Required gates: teammate review + Codex Extra High + Greptile + test/CI.
+9. Triple review must be explicitly PM-authorized per SHA. Never invoke it automatically from background/sub-agent activity.
+10. Conditional pass does not qualify as merge-ready for code PRs.
+11. Never defer tests to a later "test-only" PR for code already merged.
+12. Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
+13. Every change should be as simple as possible. One concern per PR.
+14. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
 
 ### Epic Definition
 

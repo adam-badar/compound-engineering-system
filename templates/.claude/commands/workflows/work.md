@@ -60,8 +60,13 @@ When new information materially changes acceptance criteria, architecture, depen
 Before any merge:
 
 1. Open/update PR for current work batch.
-2. Run `/workflows:pr-triple-review "<pr-number-or-url>"`.
-3. Merge only when gate status is `PASS` for current PR head SHA and test/CI gate is green.
+2. Capture current PR head SHA.
+3. Ask PM for explicit authorization before running triple review.
+   - Required prompt: "Run triple review for PR <number> at SHA <head-sha>?"
+   - Do not invoke triple review from background/sub-agent activity without this explicit PM approval.
+4. Run `/workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha>"` only after PM approval.
+5. If PR head SHA changes during or after gate runs, invalidate prior gate result and require a new PM approval for the new SHA.
+6. Merge only when gate status is `PASS` for current PR head SHA and test/CI gate is green.
 
 ### 5. Closeout
 

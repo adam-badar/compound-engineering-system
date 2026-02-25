@@ -18,6 +18,13 @@ A code PR can be merged only when all pass:
 3. Greptile review
 4. Test/CI gate for code PRs
 5. All gate outputs match current PR head SHA
+6. PM explicit approval exists for this SHA before triple review is invoked
+
+Authorization rules:
+
+- Triple review is fail-closed without explicit PM approval.
+- Approval must be SHA-specific; if head SHA changes, prior approval is invalid.
+- Background/sub-agent invocation without PM approval is invalid and must not produce `PASS`.
 
 Conditional pass rules:
 
