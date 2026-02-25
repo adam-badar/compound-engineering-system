@@ -13,6 +13,7 @@ Required gates:
 1. Teammate review agents
 2. External Codex Extra High review
 3. Greptile review
+4. Test and CI verification for code PRs
 
 ## Inputs
 
@@ -25,12 +26,24 @@ Optional runtime flag in arguments:
 - `teams=on` to require agent teams for teammate review fan-out in this run
 - `teams=off` (default) to run without a hard agent-teams requirement
 
+Policy defaults (override in `compound-engineering.local.md`):
+
+- `require_tests_for_code_prs` (default: `true`)
+- `require_integration_tests_for_boundary_changes` (default: `true`)
+- `allow_conditional_pass_for_code_prs` (default: `false`)
+- `unit_test_command` (default: `pytest -q tests/unit`)
+- `integration_test_command` (default: `pytest -q tests/integration`)
+
 ## Workflow
 
 ### 1. Collect PR context
 
 Resolve PR number, branch, diff, touched files, and prior review status.
 Capture the current PR head SHA. All gate outcomes must be pinned to this SHA.
+Classify PR type:
+
+- `docs_only`: docs/changelog/commentary changes only
+- `code_pr`: any runtime, data, API, infra, or migration change
 
 Write or update review evidence file:
 
@@ -83,7 +96,19 @@ Capture output in:
 Summarize pass/fail and blockers in the triple-review evidence file.
 If PR head SHA changes after this step, mark Codex gate stale and rerun.
 
-### 4. Greptile gate
+### 4. Test and CI gate (required for code PRs)
+
+For `code_pr`, this gate is mandatory.
+
+1. Run configured `unit_test_command` and record command + summary in the evidence file.
+2. If boundary surfaces changed (API routes, DB schema/migrations, adapters, workers, auth, external integrations), run configured `integration_test_command`.
+3. Verify tests for changed behavior exist in the same PR.
+4. If CI exists, ensure test jobs for this PR head SHA are passing.
+5. If tests are missing, failing, skipped without policy exception, or CI is red, set gate status `FAIL` with explicit remediation.
+
+For `docs_only`, mark test gate `N/A` with rationale.
+
+### 5. Greptile gate
 
 Confirm Greptile review is present for the current PR revision.
 
@@ -91,25 +116,27 @@ If `greptile_required_for_code_prs: true` in `compound-engineering.local.md`, th
 
 If missing, mark gate as pending and stop with explicit next action.
 
-### 5. Burden control rules
+### 6. Burden control rules
 
 - Default: one Codex pass per commit batch.
 - Re-run Codex only if new commits materially change risk.
 - For very large PRs, run focused Codex passes per subsystem (max 2 by default).
 - Skip redundant teammate re-runs when no code changed since last run.
 
-### 6. Gate decision
+### 7. Gate decision
 
 PR gate is **PASS** only when:
 
 - teammate gate: no open blocker
 - Codex Extra High gate: no open blocker
+- test/CI gate: pass for `code_pr`, or N/A for `docs_only`
 - Greptile gate: no open blocker
 - all gate results match current PR head SHA
+- no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`
 
 Otherwise **FAIL** with explicit remediation checklist.
 
-### 7. Output
+### 8. Output
 
 Return:
 

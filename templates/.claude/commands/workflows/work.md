@@ -34,14 +34,17 @@ Work from the approved plan's acceptance criteria and scope boundaries.
 
 For each implementation batch:
 
-1. Select the next smallest shippable task(s).
-2. Implement changes.
-3. Run relevant tests and checks.
-4. Update execution tracker in real time:
+1. Select the next planned PR-sized slice from the plan's Epic PR Ladder.
+2. Implement only that slice (one concern per PR).
+3. Add or update tests in the same batch for changed behavior.
+4. Run relevant tests and checks before opening/updating PR.
+5. Update execution tracker in real time:
    - task status
    - test evidence
    - decisions and risks
    - current branch/PR references
+
+Do not defer tests to a later "testing-only" PR for code already merged in this epic.
 
 ### 3. Handle mid-epic scope changes
 
@@ -58,7 +61,7 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Run `/workflows:pr-triple-review "<pr-number-or-url>"`.
-3. Merge only when gate status is `PASS` for current PR head SHA.
+3. Merge only when gate status is `PASS` for current PR head SHA and test/CI gate is green.
 
 ### 5. Closeout
 

@@ -27,6 +27,26 @@ External Codex gate requires a connected global `codex-xhigh` MCP server.
 
 Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
 
+## Scope Sizing Contract
+
+Each approved plan must include an Epic PR Ladder with one row per PR:
+
+- PR id/title
+- objective and acceptance criteria
+- test plan (unit + integration)
+- estimated net LOC
+- estimated files changed
+- rollback note
+
+Default size budgets (override in `compound-engineering.local.md`):
+
+- `max_prs_per_epic: 5`
+- `max_net_loc_per_pr: 600`
+- `max_files_per_pr: 20`
+- `max_cycle_days_per_pr: 2`
+
+If projected scope violates these budgets, split into child epics before approval.
+
 ## PR Triple Review Policy
 
 Every code PR must pass all three gates before merge:
@@ -34,6 +54,7 @@ Every code PR must pass all three gates before merge:
 1. Teammate review agents
 2. Codex Extra High review
 3. Greptile review
+4. Test/CI gate for code PRs
 
 Record results under `docs/reviews/prs/`.
 

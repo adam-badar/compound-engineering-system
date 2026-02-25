@@ -22,10 +22,13 @@
 4. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.
 5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
 6. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
-7. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review agents + Codex Extra High + Greptile.
-8. Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
-9. Every change should be as simple as possible. One concern per PR.
-10. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+7. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage.
+8. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review + Codex Extra High + Greptile + test/CI.
+9. Conditional pass does not qualify as merge-ready for code PRs.
+10. Never defer tests to a later "test-only" PR for code already merged.
+11. Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
+12. Every change should be as simple as possible. One concern per PR.
+13. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
 
 ### Epic Definition
 
@@ -35,6 +38,12 @@ An epic is the smallest independently shippable unit that:
 - Can be implemented and reviewed without blocking unrelated initiatives
 
 If scope is too large for one PR cycle, split into multiple epics.
+
+Default PR size budgets (override in `compound-engineering.local.md`):
+- `max_prs_per_epic: 5`
+- `max_net_loc_per_pr: 600`
+- `max_files_per_pr: 20`
+- `max_cycle_days_per_pr: 2`
 
 ## Memory Protocol
 
