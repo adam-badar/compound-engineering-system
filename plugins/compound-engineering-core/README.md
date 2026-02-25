@@ -20,3 +20,4 @@ Private plugin for shared compound engineering workflows.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
+- PR triple review requires explicit PM authorization per SHA via `approve_sha=<current-head-sha>`.

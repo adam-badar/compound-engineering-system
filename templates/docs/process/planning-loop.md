@@ -58,6 +58,12 @@ Every code PR must pass all three gates before merge:
 
 Record results under `docs/reviews/prs/`.
 
+Triple review invocation policy:
+
+- Run only after explicit PM approval for the current PR head SHA.
+- Use `approve_sha=<current-head-sha>` when invoking triple review.
+- If head SHA changes, invalidate prior gate/approval and rerun.
+
 ## Mid-Epic Delta Loop
 
 When implementation reveals material changes:

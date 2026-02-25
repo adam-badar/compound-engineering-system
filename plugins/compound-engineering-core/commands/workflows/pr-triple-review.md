@@ -25,6 +25,7 @@ Optional runtime flag in arguments:
 
 - `teams=on` to require agent teams for teammate review fan-out in this run
 - `teams=off` (default) to run without a hard agent-teams requirement
+- `approve_sha=<sha>` explicit PM authorization token for this run (required for `code_pr`)
 
 Agent ID normalization:
 
@@ -52,6 +53,19 @@ Classify PR type:
 Write or update review evidence file:
 
 `docs/reviews/prs/pr-<number>-triple-review.md`
+
+### 1.1 Human authorization gate (fail-closed)
+
+Before running any review gates for `code_pr`:
+
+1. Parse `approve_sha=<sha>` from `pr_input`.
+2. If `approve_sha` is missing, stop with `status: PENDING` and reason `awaiting_pm_approval`.
+3. If `approve_sha` does not match current PR head SHA, stop with `status: PENDING` and reason `approval_sha_mismatch`.
+4. In either case above, do not run teammate/Codex/Greptile gates and do not mark overall gate `PASS`.
+5. Return required next action:
+   - `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> [teams=on|teams=off]"`
+
+For `docs_only`, this authorization token is optional.
 
 ### 1.5 Preflight gate checks
 
@@ -136,9 +150,16 @@ PR gate is **PASS** only when:
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
 - Greptile gate: no open blocker
 - all gate results match current PR head SHA
+- `approve_sha` used for this run matches current PR head SHA
 - no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`
 
 Otherwise **FAIL** with explicit remediation checklist.
+
+If PR head SHA changes at any point after gate execution starts:
+
+- mark gate result `STALE`
+- do not keep or report `PASS`
+- require rerun with a fresh `approve_sha=<new-head-sha>`
 
 ### 8. Output
 
