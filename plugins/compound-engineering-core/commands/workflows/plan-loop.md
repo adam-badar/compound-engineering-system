@@ -33,6 +33,12 @@ Optional runtime flag in arguments:
 - **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `compound-engineering-core:codex-gate-runner`)
 - **Codex MCP server:** `codex_mcp_server` from `compound-engineering.local.md` (default: `codex-xhigh`)
 - **Agent ID normalization:** if an agent ID from `compound-engineering.local.md` has no namespace prefix, resolve it as `compound-engineering-core:<agent-id>` before invocation.
+- **Sizing defaults (override in `compound-engineering.local.md`):**
+  - `max_prs_per_epic` (default: `5`)
+  - `max_net_loc_per_pr` (default: `600`)
+  - `max_files_per_pr` (default: `20`)
+  - `max_cycle_days_per_pr` (default: `2`)
+  - `require_test_strategy_per_pr` (default: `true`)
 
 ## Workflow
 
@@ -42,6 +48,8 @@ If argument points to an existing plan file, use it.
 Otherwise run `/compound-engineering-core:workflows:plan <planning_input>` and use the generated `docs/plans/*-plan.md`.
 
 Ensure the plan file exists before continuing.
+
+Do not launch research agents or teammate reviewers until steps 1.4, 1.5, and 1.6 are satisfied.
 
 ### 1.4 Agent teams mode (optional)
 
@@ -64,6 +72,25 @@ Before running any external gate:
    - set plan gate status to `failed`
    - record reason `codex_mcp_unavailable`
    - stop and return remediation steps
+
+### 1.6 Plan sizing contract (required)
+
+Before any approval, ensure the plan includes an **Epic PR Ladder** table with one row per planned PR and these columns:
+
+- PR id/title
+- Objective and acceptance criteria
+- Test plan for that PR (unit + integration scope)
+- Estimated net LOC
+- Estimated files changed
+- Rollback note
+
+Sizing and decomposition rules:
+
+1. Each PR must be independently reviewable and shippable.
+2. Each PR must stay within configured size budgets.
+3. If projected PR count exceeds `max_prs_per_epic`, split into child epics before approval.
+4. The first PR in each epic should establish/verify test harness and CI path (if not already present).
+5. "Test later" is not allowed for code paths included in this epic.
 
 ### 2. Teammate review loop (required)
 
@@ -131,6 +158,9 @@ Do not approve the plan until all are true:
 - Scope boundaries and non-goals are explicit
 - Acceptance criteria are testable
 - Dependencies, rollout, and rollback are defined
+- Plan includes Epic PR Ladder that satisfies sizing budgets
+- Every planned PR includes explicit unit/integration testing intent
+- No deferred "test-only later epic" for already-planned code PRs
 
 ### 6. Finalize planning artifacts
 

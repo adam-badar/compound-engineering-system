@@ -18,3 +18,5 @@ Private plugin for shared compound engineering workflows.
 - Use plugin-prefixed command names to guarantee you are invoking the shared plugin implementation.
 - Agent teams are opt-in per command run via `teams=on`.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
+- Planning enforces an Epic PR Ladder with per-PR size/test expectations.
+- PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.

@@ -40,8 +40,20 @@ Populate with:
 - risks and mitigations
 - dependencies
 - acceptance criteria (testable)
+- epic decomposition and PR ladder
+- testing strategy (unit, integration, CI)
 - rollout and rollback strategy
 - open decision questions
+
+PR ladder requirements:
+
+1. Define one row per PR slice with objective, acceptance criteria, test coverage, and rollback note.
+2. Keep each PR independently reviewable and shippable.
+3. Use these default sizing budgets unless project policy says otherwise:
+   - max 5 PRs per epic
+   - max 600 net LOC per PR
+   - max 20 files changed per PR
+4. If scope exceeds budgets, split into child epics.
 
 Include frontmatter fields:
 

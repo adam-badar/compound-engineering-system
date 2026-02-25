@@ -101,7 +101,7 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 /compound-engineering-core:workflows:pr-triple-review "<pr-number> teams=on"
 ```
 
-16. Merge only when triple gate status is `PASS` for the current PR head SHA.
+16. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
 17. Optional: run `/compound-engineering-setup` for project-specific setup checks.
 
 ### Option B: Existing project bootstrap

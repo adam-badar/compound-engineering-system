@@ -16,7 +16,14 @@ A code PR can be merged only when all pass:
 1. Teammate review agents
 2. Codex Extra High external review
 3. Greptile review
-4. All gate outputs match current PR head SHA
+4. Test/CI gate for code PRs
+5. All gate outputs match current PR head SHA
+
+Conditional pass rules:
+
+- `conditional_pass` is not merge-ready for code PRs by default.
+- Only explicit policy exception (`allow_conditional_pass_for_code_prs: true`) can permit it.
+- Missing tests cannot be accepted as non-blocking for code PRs.
 
 ## Overhead Controls
 
