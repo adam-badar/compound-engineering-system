@@ -12,7 +12,10 @@ This repository now also contains a private Claude plugin marketplace so shared 
 | `templates/.claude/settings.json` | Default Claude Code permissions and deny rules |
 | `templates/.claude/settings.marketplace.example.json` | Example project settings for marketplace/plugin enforcement |
 | `templates/.claude/agents/codex-gate-runner.md` | Dedicated agent for Codex xhigh external review gates |
+| `templates/.claude/commands/workflows/brainstorm.md` | Discovery command to clarify WHAT/why before planning |
 | `templates/.claude/commands/workflows/plan-loop.md` | PM + reviewer iterative planning loop command |
+| `templates/.claude/commands/workflows/debug.md` | Structured repro/root-cause workflow with evidence capture |
+| `templates/.claude/commands/workflows/explain.md` | Decision and behavior trace workflow for why/how questions |
 | `templates/.claude/commands/workflows/work.md` | Execute approved plans with tracker + gate enforcement |
 | `templates/.claude/commands/workflows/pr-triple-review.md` | Mandatory triple gate PR review command |
 | `templates/.claude/commands/workflows/epic-delta-loop.md` | Nested re-planning loop for mid-epic scope changes |
@@ -68,42 +71,50 @@ claude plugin list
 # should include: compound-engineering-core@compound-engineering-marketplace
 ```
 
-10. Start planning with plugin-prefixed command:
+10. If requirements are ambiguous, run discovery first:
+
+```text
+/compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
+```
+
+11. Start planning with plugin-prefixed command:
 
 ```text
 /compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
 ```
 
-11. Confirm planning artifacts were created:
+12. Confirm planning artifacts were created:
    - `docs/plans/*-plan.md`
    - `docs/reviews/plans/*-codex-extra-high.md`
-12. Initialize execution tracker:
+13. Initialize execution tracker:
 
 ```bash
 scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 ```
 
-13. Execute implementation from the approved plan:
+14. Execute implementation from the approved plan:
 
 ```text
 /compound-engineering-core:workflows:work docs/plans/<your-plan>-plan.md
 ```
 
-14. If scope changes mid-epic:
+15. If scope changes mid-epic:
 
 ```text
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-15. Before merge:
+16. Before merge:
 
 ```text
 /compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
-16. Triple review is PM-authorized per SHA. Do not auto-invoke it from background/sub-agent work.
-17. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
-18. Optional: run `/compound-engineering-setup` for project-specific setup checks.
+17. Triple review is PM-authorized per SHA. Do not auto-invoke it from background/sub-agent work.
+18. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
+19. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
+20. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
+21. Optional: run `/compound-engineering-setup` for project-specific setup checks.
 
 ### Option B: Existing project bootstrap
 

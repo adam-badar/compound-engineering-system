@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 - 2026-02-26
+
+- Added non-coding workflow commands:
+  - `workflows:brainstorm`
+  - `workflows:debug`
+  - `workflows:explain`
+- Added non-blocker value triage requirements across planning and PR gates:
+  - explicit disposition (`implement_now|defer|reject`)
+  - PM signoff requirement for deferred high-value items (policy-controlled)
+  - auto-promotion path for high-impact non-blockers
+- Updated `workflows:work` to require non-blocker triage completion before merge
+- Updated templates, runbooks, and process docs to include new workflows and non-blocker policy
+
 ## 0.2.0 - 2026-02-25
 
 - Added hard plan sizing contract with Epic PR Ladder requirements

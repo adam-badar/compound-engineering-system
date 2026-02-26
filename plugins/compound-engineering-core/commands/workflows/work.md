@@ -43,6 +43,7 @@ For each implementation batch:
    - test evidence
    - decisions and risks
    - current branch/PR references
+6. Review non-blocker improvements from current and prior review rounds; implement high-value low-risk items that improve goal alignment.
 
 Do not defer tests to a later "testing-only" PR for code already merged in this epic.
 
@@ -66,7 +67,12 @@ Before any merge:
    - Do not invoke triple review from background/sub-agent activity without this explicit PM approval.
 4. Run `/compound-engineering-core:workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha>"` only after PM approval.
 5. If PR head SHA changes during or after gate runs, invalidate prior gate result and require a new PM approval for the new SHA.
-6. Merge only when gate status is `PASS` for current PR head SHA and test/CI gate is green.
+6. Triage non-blockers from triple review output:
+   - implement_now
+   - defer (owner + follow-up PR/task + rationale)
+   - reject (rationale)
+7. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
+8. Merge only when gate status is `PASS` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete.
 
 ### 5. Closeout
 
