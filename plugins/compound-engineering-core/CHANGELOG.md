@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1 - 2026-02-26
+
+- Upgraded `workflows:brainstorm` with freshness-aware research controls:
+  - `research=auto|on|off`
+  - `research_depth=quick|standard|deep`
+  - `as_of=YYYY-MM-DD`
+- Added `external-frontier-researcher` for time-sensitive external research in volatile domains.
+- Added dated evidence requirements for external claims in brainstorm artifacts (source URL + source date + checked date + confidence).
+
 ## 0.3.0 - 2026-02-26
 
 - Added non-coding workflow commands:

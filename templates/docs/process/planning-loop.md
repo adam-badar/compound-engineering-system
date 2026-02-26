@@ -3,6 +3,9 @@
 This process defines how planning runs before implementation starts.
 
 Use `/compound-engineering-core:workflows:brainstorm` first when problem framing or approach is still ambiguous.
+For fast-moving domains (AI models, external APIs, compliance, pricing), run with external freshness research enabled, for example:
+
+`/compound-engineering-core:workflows:brainstorm "<topic> research=on research_depth=standard"`
 
 ## Roles
 

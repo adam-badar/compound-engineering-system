@@ -17,7 +17,7 @@
 ## Planning Workflow
 
 1. PM/architect defines problem, outcomes, constraints, success metrics, and non-goals.
-2. If requirements are still fuzzy, run `/compound-engineering-core:workflows:brainstorm "<problem statement>"` first.
+2. If requirements are still fuzzy, run `/compound-engineering-core:workflows:brainstorm "<problem statement>"` first. For fast-moving domains, include `research=on` (and optional `research_depth=quick|standard|deep`).
 3. Run `/compound-engineering-core:workflows:plan-loop "<problem statement>"` for tasks >3 steps.
 4. `/compound-engineering-core:workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve, and include required Codex Extra High external plan gate.
 5. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.

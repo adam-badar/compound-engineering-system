@@ -21,6 +21,7 @@ Private plugin for shared compound engineering workflows.
 - Use plugin-prefixed command names to guarantee you are invoking the shared plugin implementation.
 - Agent teams are opt-in per command run via `teams=on`.
 - `brainstorm`, `debug`, and `explain` provide non-coding workflows for discovery, diagnosis, and decision traceability.
+- `brainstorm` supports freshness-aware research controls: `research=auto|on|off`, `research_depth=quick|standard|deep`, and `as_of=YYYY-MM-DD`.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
