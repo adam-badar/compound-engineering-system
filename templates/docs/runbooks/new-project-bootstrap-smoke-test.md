@@ -49,7 +49,7 @@ Expected plugin:
 Optional discovery step when requirements are unclear:
 
 ```text
-/compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
+/compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions research=on research_depth=standard"
 ```
 
 Then run planning loop:

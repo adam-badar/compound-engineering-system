@@ -71,10 +71,10 @@ claude plugin list
 # should include: compound-engineering-core@compound-engineering-marketplace
 ```
 
-10. If requirements are ambiguous, run discovery first:
+10. If requirements are ambiguous, run discovery first (add freshness research controls for volatile domains):
 
 ```text
-/compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
+/compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions research=on research_depth=standard"
 ```
 
 11. Start planning with plugin-prefixed command:
