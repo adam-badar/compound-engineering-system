@@ -46,6 +46,14 @@ Expected plugin:
 
 5. **Run planning loop**
 
+Optional discovery step when requirements are unclear:
+
+```text
+/compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
+```
+
+Then run planning loop:
+
 ```text
 /compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
 ```
@@ -86,6 +94,14 @@ Expected artifact:
 Merge policy:
 - merge only when status is `PASS`
 - gate evidence must match current PR head SHA
+- non-blockers must be triaged (`implement_now|defer|reject`) with rationale
+
+11. **Verify diagnosis/explanation workflows are available**
+
+```text
+/compound-engineering-core:workflows:debug "<failing behavior>"
+/compound-engineering-core:workflows:explain "<question about behavior/decision>"
+```
 
 ## Rollback
 

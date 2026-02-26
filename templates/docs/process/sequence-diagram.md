@@ -5,6 +5,7 @@
 ```mermaid
 sequenceDiagram
     actor PM as PM/Architect
+    participant Brainstorm as Brainstorm Workflow
     participant Plan as Planning Workflow
     participant Research as Research Agents
     participant TeamPlan as Teammate Plan Review
@@ -17,6 +18,10 @@ sequenceDiagram
     participant KB as Knowledge Base
 
     PM->>Plan: Define problem, outcomes, constraints, non-goals
+    opt Requirements unclear
+        PM->>Brainstorm: Run brainstorm loop
+        Brainstorm-->>PM: Clarified direction + tradeoffs
+    end
     loop Planning approval loop (required)
         Plan->>Research: Gather evidence and constraints
         Research-->>Plan: Findings and options
@@ -61,6 +66,7 @@ sequenceDiagram
         CodexGate-->>Work: PR findings + status
         Work->>Greptile: Greptile review gate
         Greptile-->>Work: PR findings
+        Work->>Work: Triage non-blockers (implement/defer/reject)
         Work->>PM: Ready for E2E acceptance
         PM-->>Work: Accept or request changes
     end
@@ -72,7 +78,10 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A["PM defines problem + outcomes"] --> B["Draft or update plan"]
+    A["PM defines problem + outcomes"] --> A1{"Need brainstorming?"}
+    A1 -- Yes --> A2["Run /workflows:brainstorm"]
+    A2 --> B["Draft or update plan"]
+    A1 -- No --> B
     B --> C["Run teammate plan review"]
     C --> D["Run Codex Extra High plan review"]
     D --> E{"Any blockers?"}
@@ -89,7 +98,8 @@ flowchart TD
     L --> M["Teammate PR review"]
     M --> N["Codex Extra High PR review"]
     N --> O["Greptile review"]
-    O --> P{"Triple gate passed?"}
+    O --> O1["Triage non-blockers"]
+    O1 --> P{"Triple gate passed?"}
     P -- No --> I
     P -- Yes --> Q{"PM E2E accepted?"}
     Q -- No --> I

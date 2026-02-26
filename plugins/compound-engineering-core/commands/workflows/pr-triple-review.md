@@ -25,6 +25,7 @@ Optional runtime flag in arguments:
 
 - `teams=on` to require agent teams for teammate review fan-out in this run
 - `teams=off` (default) to run without a hard agent-teams requirement
+- `approve_sha=<sha>` explicit PM authorization token for this run (required for `code_pr`)
 
 Agent ID normalization:
 
@@ -37,6 +38,9 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `allow_conditional_pass_for_code_prs` (default: `false`)
 - `unit_test_command` (default: `pytest -q tests/unit`)
 - `integration_test_command` (default: `pytest -q tests/integration`)
+- `require_non_blocker_triage` (default: `true`)
+- `require_pm_signoff_for_non_blocker_deferrals` (default: `true`)
+- `auto_promote_high_impact_non_blockers` (default: `true`)
 
 ## Workflow
 
@@ -52,6 +56,19 @@ Classify PR type:
 Write or update review evidence file:
 
 `docs/reviews/prs/pr-<number>-triple-review.md`
+
+### 1.1 Human authorization gate (fail-closed)
+
+Before running any review gates for `code_pr`:
+
+1. Parse `approve_sha=<sha>` from `pr_input`.
+2. If `approve_sha` is missing, stop with `status: PENDING` and reason `awaiting_pm_approval`.
+3. If `approve_sha` does not match current PR head SHA, stop with `status: PENDING` and reason `approval_sha_mismatch`.
+4. In either case above, do not run teammate/Codex/Greptile gates and do not mark overall gate `PASS`.
+5. Return required next action:
+   - `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> [teams=on|teams=off]"`
+
+For `docs_only`, this authorization token is optional.
 
 ### 1.5 Preflight gate checks
 
@@ -120,6 +137,23 @@ If `greptile_required_for_code_prs: true` in `compound-engineering.local.md`, th
 
 If missing, mark gate as pending and stop with explicit next action.
 
+### 5.5 Non-blocker value gate (required by default)
+
+Do not treat non-blockers as disposable. Consolidate non-blockers from teammate, Codex, Greptile, and test/CI analysis into a single triage table.
+
+For each non-blocker, assign one disposition:
+
+- `implement_now`
+- `defer`
+- `reject`
+
+Rules:
+
+1. If `auto_promote_high_impact_non_blockers: true`, promote non-blockers to blockers when they carry meaningful risk in correctness, security, data integrity, performance, or user-facing accuracy.
+2. If `require_non_blocker_triage: true`, every non-blocker must have disposition + rationale before overall gate can pass.
+3. For `defer`, record owner, target milestone/PR, and explicit rationale.
+4. If `require_pm_signoff_for_non_blocker_deferrals: true`, deferred high-value non-blockers require explicit PM signoff captured in evidence.
+
 ### 6. Burden control rules
 
 - Default: one Codex pass per commit batch.
@@ -136,9 +170,19 @@ PR gate is **PASS** only when:
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
 - Greptile gate: no open blocker
 - all gate results match current PR head SHA
+- `approve_sha` used for this run matches current PR head SHA
 - no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`
+- all non-blockers are triaged with explicit disposition and rationale (if required)
+- deferred high-value non-blockers have explicit PM signoff (if required)
+- no high-impact non-blocker remains unpromoted when `auto_promote_high_impact_non_blockers` is `true`
 
 Otherwise **FAIL** with explicit remediation checklist.
+
+If PR head SHA changes at any point after gate execution starts:
+
+- mark gate result `STALE`
+- do not keep or report `PASS`
+- require rerun with a fresh `approve_sha=<new-head-sha>`
 
 ### 8. Output
 

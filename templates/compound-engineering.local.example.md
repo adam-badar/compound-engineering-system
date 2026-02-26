@@ -14,6 +14,9 @@ require_test_strategy_per_pr: true
 require_tests_for_code_prs: true
 require_integration_tests_for_boundary_changes: true
 allow_conditional_pass_for_code_prs: false
+require_non_blocker_triage: true
+require_pm_signoff_for_non_blocker_deferrals: true
+auto_promote_high_impact_non_blockers: true
 unit_test_command: "pytest -q tests/unit"
 integration_test_command: "pytest -q tests/integration"
 ---

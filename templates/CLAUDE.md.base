@@ -17,18 +17,22 @@
 ## Planning Workflow
 
 1. PM/architect defines problem, outcomes, constraints, success metrics, and non-goals.
-2. Run `/compound-engineering-core:workflows:plan-loop "<problem statement>"` for tasks >3 steps.
-3. `/compound-engineering-core:workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve, and include required Codex Extra High external plan gate.
-4. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.
-5. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
-6. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
-7. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage.
-8. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number>"`. Required gates: teammate review + Codex Extra High + Greptile + test/CI.
-9. Conditional pass does not qualify as merge-ready for code PRs.
-10. Never defer tests to a later "test-only" PR for code already merged.
-11. Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
-12. Every change should be as simple as possible. One concern per PR.
-13. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+2. If requirements are still fuzzy, run `/compound-engineering-core:workflows:brainstorm "<problem statement>"` first.
+3. Run `/compound-engineering-core:workflows:plan-loop "<problem statement>"` for tasks >3 steps.
+4. `/compound-engineering-core:workflows:plan-loop` must iterate planning + reviewer critique + PM Q&A until both PM and reviewer agents approve, and include required Codex Extra High external plan gate.
+5. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.
+6. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
+7. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
+8. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage.
+9. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha>"`. Required gates: teammate review + Codex Extra High + Greptile + test/CI.
+10. Triple review must be explicitly PM-authorized per SHA. Never invoke it automatically from background/sub-agent activity.
+11. Non-blockers from reviews must be triaged (`implement_now|defer|reject`) with rationale; defer high-value items only with explicit PM signoff.
+12. Conditional pass does not qualify as merge-ready for code PRs.
+13. Never defer tests to a later "test-only" PR for code already merged.
+14. Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
+15. Use `/compound-engineering-core:workflows:debug` for root-cause loops and `/compound-engineering-core:workflows:explain` for decision/behavior traceability.
+16. Every change should be as simple as possible. One concern per PR.
+17. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
 
 ### Epic Definition
 
