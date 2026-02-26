@@ -41,7 +41,7 @@ Use explicit plugin prefix so execution always comes from the shared plugin (not
 
 ```text
 /compound-engineering-core:workflows:plan-loop "problem statement teams=on"
-/compound-engineering-core:workflows:brainstorm "problem framing prompt"
+/compound-engineering-core:workflows:brainstorm "problem framing prompt research=on research_depth=standard"
 /compound-engineering-core:workflows:debug "failing behavior or error trace"
 /compound-engineering-core:workflows:explain "why is this behaving this way?"
 /compound-engineering-core:workflows:work docs/plans/<plan>-plan.md
