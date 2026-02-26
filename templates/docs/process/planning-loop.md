@@ -2,6 +2,8 @@
 
 This process defines how planning runs before implementation starts.
 
+Use `/compound-engineering-core:workflows:brainstorm` first when problem framing or approach is still ambiguous.
+
 ## Roles
 
 - PM/architect: defines the problem, approves priorities, accepts tradeoffs
@@ -25,7 +27,12 @@ No implementation begins until this loop exits.
 
 External Codex gate requires a connected global `codex-xhigh` MCP server.
 
-Agent teams are optional for `/compound-engineering-core:workflows:plan-loop` and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
+Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
+
+Related non-coding workflows:
+
+- `/compound-engineering-core:workflows:debug` for reproducible root-cause loops
+- `/compound-engineering-core:workflows:explain` for evidence-backed decision/behavior traceability
 
 ## Scope Sizing Contract
 
@@ -55,6 +62,7 @@ Every code PR must pass all three gates before merge:
 2. Codex Extra High review
 3. Greptile review
 4. Test/CI gate for code PRs
+5. Non-blocker triage and disposition (`implement_now|defer|reject`)
 
 Record results under `docs/reviews/prs/`.
 
@@ -63,6 +71,7 @@ Triple review invocation policy:
 - Run only after explicit PM approval for the current PR head SHA.
 - Use `approve_sha=<current-head-sha>` when invoking triple review.
 - If head SHA changes, invalidate prior gate/approval and rerun.
+- Deferred high-value non-blockers require explicit PM signoff and follow-up ownership.
 
 ## Mid-Epic Delta Loop
 

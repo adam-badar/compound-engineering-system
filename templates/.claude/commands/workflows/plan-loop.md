@@ -38,6 +38,8 @@ Optional runtime flag in arguments:
   - `max_files_per_pr` (default: `20`)
   - `max_cycle_days_per_pr` (default: `2`)
   - `require_test_strategy_per_pr` (default: `true`)
+  - `require_non_blocker_triage` (default: `true`)
+  - `require_pm_signoff_for_non_blocker_deferrals` (default: `true`)
 
 ## Workflow
 
@@ -110,6 +112,19 @@ Run iterative rounds until blockers are cleared:
 5. Ask PM only decision-critical questions.
 6. Update plan in place.
 
+### 2.5 Non-blocker value triage (required by default)
+
+Do not treat non-blockers as automatically optional. For each non-blocking finding from teammate and Codex plan review:
+
+1. Assign one disposition:
+   - `implement_now` (adds meaningful quality/accuracy/risk reduction with acceptable scope impact)
+   - `defer` (not required for this cycle)
+   - `reject` (not aligned with goals or constraints)
+2. Record rationale for each disposition in plan notes or review evidence.
+3. For `defer`, capture owner and intended review point.
+4. If `require_pm_signoff_for_non_blocker_deferrals: true`, obtain explicit PM signoff for deferred high-value items.
+5. If a non-blocker materially reduces architecture/security/data/performance risk, promote it to blocker unless PM explicitly defers with rationale.
+
 ### 3. Codex Extra High gate (required)
 
 When the plan reaches a candidate state (no obvious internal blockers), run external Codex review in **Extra High** mode via the dedicated gate runner agent.
@@ -160,6 +175,8 @@ Do not approve the plan until all are true:
 - Plan includes Epic PR Ladder that satisfies sizing budgets
 - Every planned PR includes explicit unit/integration testing intent
 - No deferred "test-only later epic" for already-planned code PRs
+- Non-blockers are triaged (`implement_now|defer|reject`) with rationale
+- High-value deferred non-blockers have explicit PM signoff when policy requires it
 
 ### 6. Finalize planning artifacts
 

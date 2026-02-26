@@ -38,6 +38,9 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `allow_conditional_pass_for_code_prs` (default: `false`)
 - `unit_test_command` (default: `pytest -q tests/unit`)
 - `integration_test_command` (default: `pytest -q tests/integration`)
+- `require_non_blocker_triage` (default: `true`)
+- `require_pm_signoff_for_non_blocker_deferrals` (default: `true`)
+- `auto_promote_high_impact_non_blockers` (default: `true`)
 
 ## Workflow
 
@@ -134,6 +137,23 @@ If `greptile_required_for_code_prs: true` in `compound-engineering.local.md`, th
 
 If missing, mark gate as pending and stop with explicit next action.
 
+### 5.5 Non-blocker value gate (required by default)
+
+Do not treat non-blockers as disposable. Consolidate non-blockers from teammate, Codex, Greptile, and test/CI analysis into a single triage table.
+
+For each non-blocker, assign one disposition:
+
+- `implement_now`
+- `defer`
+- `reject`
+
+Rules:
+
+1. If `auto_promote_high_impact_non_blockers: true`, promote non-blockers to blockers when they carry meaningful risk in correctness, security, data integrity, performance, or user-facing accuracy.
+2. If `require_non_blocker_triage: true`, every non-blocker must have disposition + rationale before overall gate can pass.
+3. For `defer`, record owner, target milestone/PR, and explicit rationale.
+4. If `require_pm_signoff_for_non_blocker_deferrals: true`, deferred high-value non-blockers require explicit PM signoff captured in evidence.
+
 ### 6. Burden control rules
 
 - Default: one Codex pass per commit batch.
@@ -152,6 +172,9 @@ PR gate is **PASS** only when:
 - all gate results match current PR head SHA
 - `approve_sha` used for this run matches current PR head SHA
 - no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`
+- all non-blockers are triaged with explicit disposition and rationale (if required)
+- deferred high-value non-blockers have explicit PM signoff (if required)
+- no high-impact non-blocker remains unpromoted when `auto_promote_high_impact_non_blockers` is `true`
 
 Otherwise **FAIL** with explicit remediation checklist.
 
