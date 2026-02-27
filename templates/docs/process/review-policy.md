@@ -36,8 +36,12 @@ Conditional pass rules:
 Non-blocker value rules:
 
 - Non-blockers must be dispositioned as `implement_now`, `defer`, or `reject`.
+- Duplicate non-blockers across reviewers should be normalized and tracked with `support_count` and `supporting_reviewers`.
+- Consensus non-blockers (`support_count >= consensus_threshold_for_promotion`, default `2`) should be promoted by default when `auto_promote_consensus_non_blockers: true`.
 - High-impact non-blockers (correctness/security/data/perf/user-accuracy) should be promoted to blockers unless explicitly deferred with rationale.
+- Rejecting a non-blocker should require concrete counterevidence (tests/benchmarks/spec references) when `require_counterevidence_for_non_blocker_reject: true`.
 - Deferred high-value non-blockers require PM signoff when `require_pm_signoff_for_non_blocker_deferrals: true`.
+- Deferred consensus non-blockers require PM signoff when `require_pm_signoff_for_consensus_non_blocker_deferrals: true`.
 - Gate evidence must include owner + target follow-up for each deferred item.
 
 ## Overhead Controls

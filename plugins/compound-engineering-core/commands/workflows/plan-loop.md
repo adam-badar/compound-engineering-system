@@ -41,6 +41,10 @@ Optional runtime flag in arguments:
   - `require_test_strategy_per_pr` (default: `true`)
   - `require_non_blocker_triage` (default: `true`)
   - `require_pm_signoff_for_non_blocker_deferrals` (default: `true`)
+  - `auto_promote_consensus_non_blockers` (default: `true`)
+  - `consensus_threshold_for_promotion` (default: `2`)
+  - `require_counterevidence_for_non_blocker_reject` (default: `true`)
+  - `require_pm_signoff_for_consensus_non_blocker_deferrals` (default: `true`)
 
 ## Workflow
 
@@ -116,15 +120,24 @@ Run iterative rounds until blockers are cleared:
 ### 2.5 Non-blocker value triage (required by default)
 
 Do not treat non-blockers as automatically optional. For each non-blocking finding from teammate and Codex plan review:
+Normalize duplicate findings into canonical rows with:
+
+- `support_count`
+- `supporting_reviewers`
+- `impact_tags`
 
 1. Assign one disposition:
    - `implement_now` (adds meaningful quality/accuracy/risk reduction with acceptable scope impact)
    - `defer` (not required for this cycle)
    - `reject` (not aligned with goals or constraints)
 2. Record rationale for each disposition in plan notes or review evidence.
-3. For `defer`, capture owner and intended review point.
-4. If `require_pm_signoff_for_non_blocker_deferrals: true`, obtain explicit PM signoff for deferred high-value items.
-5. If a non-blocker materially reduces architecture/security/data/performance risk, promote it to blocker unless PM explicitly defers with rationale.
+3. If `auto_promote_consensus_non_blockers: true`, any item with `support_count >= consensus_threshold_for_promotion` should be promoted to blocker by default.
+4. Consensus items may remain non-blockers only with documented counterevidence and PM signoff.
+5. For `defer`, capture owner and intended review point.
+6. If `require_pm_signoff_for_non_blocker_deferrals: true`, obtain explicit PM signoff for deferred high-value items.
+7. If `require_pm_signoff_for_consensus_non_blocker_deferrals: true`, obtain PM signoff for deferred consensus non-blockers.
+8. If `require_counterevidence_for_non_blocker_reject: true`, `reject` is invalid without concrete counterevidence.
+9. If a non-blocker materially reduces architecture/security/data/performance risk, promote it to blocker unless PM explicitly defers with rationale.
 
 ### 3. Codex Extra High gate (required)
 
@@ -178,6 +191,9 @@ Do not approve the plan until all are true:
 - No deferred "test-only later epic" for already-planned code PRs
 - Non-blockers are triaged (`implement_now|defer|reject`) with rationale
 - High-value deferred non-blockers have explicit PM signoff when policy requires it
+- Deferred consensus non-blockers have explicit PM signoff when policy requires it
+- Rejected non-blockers include counterevidence when policy requires it
+- No consensus non-blocker remains unpromoted when `auto_promote_consensus_non_blockers` is `true`
 
 ### 6. Finalize planning artifacts
 

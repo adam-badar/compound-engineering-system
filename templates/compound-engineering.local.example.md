@@ -20,6 +20,10 @@ allow_conditional_pass_for_code_prs: false
 require_non_blocker_triage: true
 require_pm_signoff_for_non_blocker_deferrals: true
 auto_promote_high_impact_non_blockers: true
+auto_promote_consensus_non_blockers: true
+consensus_threshold_for_promotion: 2
+require_counterevidence_for_non_blocker_reject: true
+require_pm_signoff_for_consensus_non_blocker_deferrals: true
 unit_test_command: "pytest -q tests/unit"
 integration_test_command: "pytest -q tests/integration"
 ---
