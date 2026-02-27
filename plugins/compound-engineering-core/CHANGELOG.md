@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1 - 2026-02-27
+
+- Hardened non-blocker triage to reduce low-value `defer/reject` outcomes:
+  - consensus-aware normalization (`support_count`, `supporting_reviewers`)
+  - default promotion of multi-reviewer consensus findings (`consensus_threshold_for_promotion`, default `2`)
+  - counterevidence requirement for `reject` when policy enabled
+  - PM signoff requirement for deferred consensus findings
+- Updated `workflows:plan-loop`, `workflows:pr-triple-review`, and `workflows:work` with consensus escalation gates.
+- Updated template policy docs and local config defaults for consensus-based non-blocker handling.
+
 ## 0.4.0 - 2026-02-26
 
 - Added `workflows:research` for deep-research style investigation with iterative PM feedback loops.
