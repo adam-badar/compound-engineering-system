@@ -44,6 +44,7 @@ For each implementation batch:
    - decisions and risks
    - current branch/PR references
 6. Review non-blocker improvements from current and prior review rounds; implement high-value low-risk items that improve goal alignment.
+7. Treat repeated non-blockers from multiple reviewers as escalation-candidates; default to `implement_now` or blocker unless counterevidence + PM signoff are captured.
 
 Do not defer tests to a later "testing-only" PR for code already merged in this epic.
 
@@ -71,8 +72,9 @@ Before any merge:
    - implement_now
    - defer (owner + follow-up PR/task + rationale)
    - reject (rationale)
-7. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
-8. Merge only when gate status is `PASS` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete.
+7. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
+8. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
+9. Merge only when gate status is `PASS` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
 
 ### 5. Closeout
 

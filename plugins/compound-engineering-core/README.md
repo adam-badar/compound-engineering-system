@@ -31,3 +31,4 @@ Private plugin for shared compound engineering workflows.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
 - PR triple review requires explicit PM authorization per SHA via `approve_sha=<current-head-sha>`.
 - Non-blockers must be triaged (`implement_now|defer|reject`) and cannot be silently ignored.
+- Multi-reviewer consensus non-blockers are escalation-candidates and default to promotion unless counterevidence + PM signoff are captured.

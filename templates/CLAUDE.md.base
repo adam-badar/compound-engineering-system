@@ -28,7 +28,7 @@
 10. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage.
 11. Before merging any code PR, run `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha>"`. Required gates: teammate review + Codex Extra High + Greptile + test/CI.
 12. Triple review must be explicitly PM-authorized per SHA. Never invoke it automatically from background/sub-agent activity.
-13. Non-blockers from reviews must be triaged (`implement_now|defer|reject`) with rationale; defer high-value items only with explicit PM signoff.
+13. Non-blockers from reviews must be triaged (`implement_now|defer|reject`) with rationale; findings repeated by multiple reviewers should be treated as escalation-candidates and require counterevidence + explicit PM signoff to defer/reject.
 14. Conditional pass does not qualify as merge-ready for code PRs.
 15. Never defer tests to a later "test-only" PR for code already merged.
 16. Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:research`, `/compound-engineering-core:workflows:deepen-plan`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` when you want fan-out.
