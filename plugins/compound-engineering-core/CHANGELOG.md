@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 - 2026-02-26
+
+- Added `workflows:research` for deep-research style investigation with iterative PM feedback loops.
+- Added `workflows:deepen-plan` to strengthen existing plans with targeted research rounds and confidence tracking.
+- Added `best-practices-researcher` agent for prioritized external guidance with anti-pattern detection.
+- Added template docs structure for research artifacts under `docs/research/`.
+- Added policy knobs in `compound-engineering.local.md`:
+  - `research_agents`
+  - `research_max_rounds`
+  - `deepen_plan_max_rounds`
+
 ## 0.3.1 - 2026-02-26
 
 - Upgraded `workflows:brainstorm` with freshness-aware research controls:

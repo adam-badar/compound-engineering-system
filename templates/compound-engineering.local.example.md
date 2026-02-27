@@ -6,6 +6,9 @@ external_pr_review_gate: codex-extra-high
 greptile_required_for_code_prs: true
 codex_mcp_server: codex-xhigh
 codex_gate_agent: compound-engineering-core:codex-gate-runner
+research_agents: [compound-engineering-core:repo-research-analyst, compound-engineering-core:learnings-researcher, compound-engineering-core:framework-docs-researcher, compound-engineering-core:external-frontier-researcher, compound-engineering-core:best-practices-researcher]
+research_max_rounds: 3
+deepen_plan_max_rounds: 2
 max_prs_per_epic: 5
 max_net_loc_per_pr: 600
 max_files_per_pr: 20
