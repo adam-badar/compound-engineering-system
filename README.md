@@ -13,6 +13,8 @@ This repository now also contains a private Claude plugin marketplace so shared 
 | `templates/.claude/settings.marketplace.example.json` | Example project settings for marketplace/plugin enforcement |
 | `templates/.claude/agents/codex-gate-runner.md` | Dedicated agent for Codex xhigh external review gates |
 | `templates/.claude/commands/workflows/brainstorm.md` | Discovery command to clarify WHAT/why before planning |
+| `templates/.claude/commands/workflows/research.md` | Deep research workflow with iterative PM feedback loops |
+| `templates/.claude/commands/workflows/deepen-plan.md` | Plan hardening workflow with targeted research passes |
 | `templates/.claude/commands/workflows/plan-loop.md` | PM + reviewer iterative planning loop command |
 | `templates/.claude/commands/workflows/debug.md` | Structured repro/root-cause workflow with evidence capture |
 | `templates/.claude/commands/workflows/explain.md` | Decision and behavior trace workflow for why/how questions |
@@ -26,6 +28,7 @@ This repository now also contains a private Claude plugin marketplace so shared 
 | `templates/docs/solutions/` | Solution documentation structure |
 | `templates/docs/process/` | Workflow definitions and sequence diagrams |
 | `templates/docs/plans/` | Plan lifecycle + real-time execution tracker template |
+| `templates/docs/research/` | Deep research artifact structure and conventions |
 | `templates/docs/knowledge/` | Plan index and knowledge base lifecycle guidance |
 | `templates/docs/reviews/` | Review evidence templates and logging conventions |
 | `templates/scripts/` | Worktree creation/removal helpers |
@@ -77,44 +80,56 @@ claude plugin list
 /compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions research=on research_depth=standard"
 ```
 
-11. Start planning with plugin-prefixed command:
+11. When needed, run deep research before planning:
+
+```text
+/compound-engineering-core:workflows:research "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions depth=deep scope=hybrid"
+```
+
+12. Start planning with plugin-prefixed command:
 
 ```text
 /compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
 ```
 
-12. Confirm planning artifacts were created:
+13. Confirm planning artifacts were created:
    - `docs/plans/*-plan.md`
    - `docs/reviews/plans/*-codex-extra-high.md`
-13. Initialize execution tracker:
+14. If a draft plan needs stronger grounding before approval:
+
+```text
+/compound-engineering-core:workflows:deepen-plan "docs/plans/<your-plan>-plan.md depth=deep"
+```
+
+15. Initialize execution tracker:
 
 ```bash
 scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 ```
 
-14. Execute implementation from the approved plan:
+16. Execute implementation from the approved plan:
 
 ```text
 /compound-engineering-core:workflows:work docs/plans/<your-plan>-plan.md
 ```
 
-15. If scope changes mid-epic:
+17. If scope changes mid-epic:
 
 ```text
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-16. Before merge:
+18. Before merge:
 
 ```text
 /compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
-17. Triple review is PM-authorized per SHA. Do not auto-invoke it from background/sub-agent work.
-18. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
-19. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
-20. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
-21. Optional: run `/compound-engineering-setup` for project-specific setup checks.
+19. Triple review is PM-authorized per SHA. Do not auto-invoke it from background/sub-agent work.
+20. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
+21. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
+22. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
+23. Optional: run `/compound-engineering-setup` for project-specific setup checks.
 
 ### Option B: Existing project bootstrap
 
