@@ -52,10 +52,22 @@ Optional discovery step when requirements are unclear:
 /compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions research=on research_depth=standard"
 ```
 
+Optional deep research step before planning:
+
+```text
+/compound-engineering-core:workflows:research "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions depth=deep scope=hybrid"
+```
+
 Then run planning loop:
 
 ```text
 /compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
+```
+
+Optional plan-hardening step:
+
+```text
+/compound-engineering-core:workflows:deepen-plan "docs/plans/<your-plan>-plan.md depth=deep"
 ```
 
 6. **Verify planning artifacts**

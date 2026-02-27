@@ -22,6 +22,10 @@ sequenceDiagram
         PM->>Brainstorm: Run brainstorm loop
         Brainstorm-->>PM: Clarified direction + tradeoffs
     end
+    opt Deep research requested
+        PM->>Research: Run research workflow (iterative Q&A)
+        Research-->>PM: Evidence-backed recommendation + open unknowns
+    end
     loop Planning approval loop (required)
         Plan->>Research: Gather evidence and constraints
         Research-->>Plan: Findings and options
@@ -81,7 +85,11 @@ flowchart TD
     A["PM defines problem + outcomes"] --> A1{"Need brainstorming?"}
     A1 -- Yes --> A2["Run /workflows:brainstorm"]
     A2 --> B["Draft or update plan"]
+    A2 --> A3["Optional: /workflows:research (deep)"]
+    A3 --> B
     A1 -- No --> B
+    B --> B1["Optional: /workflows:deepen-plan"]
+    B1 --> C
     B --> C["Run teammate plan review"]
     C --> D["Run Codex Extra High plan review"]
     D --> E{"Any blockers?"}

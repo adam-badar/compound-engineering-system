@@ -6,6 +6,8 @@ Private plugin for shared compound engineering workflows.
 
 - Workflow commands:
   - `compound-engineering-core:workflows:brainstorm`
+  - `compound-engineering-core:workflows:research`
+  - `compound-engineering-core:workflows:deepen-plan`
   - `compound-engineering-core:workflows:plan`
   - `compound-engineering-core:workflows:plan-loop`
   - `compound-engineering-core:workflows:debug`
@@ -22,6 +24,8 @@ Private plugin for shared compound engineering workflows.
 - Agent teams are opt-in per command run via `teams=on`.
 - `brainstorm`, `debug`, and `explain` provide non-coding workflows for discovery, diagnosis, and decision traceability.
 - `brainstorm` supports freshness-aware research controls: `research=auto|on|off`, `research_depth=quick|standard|deep`, and `as_of=YYYY-MM-DD`.
+- `research` provides deep-research style investigation with iterative PM Q&A loops and dated evidence capture.
+- `deepen-plan` upgrades an existing plan through targeted research passes and confidence-tracked PM feedback loops.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.

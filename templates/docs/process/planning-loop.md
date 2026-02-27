@@ -7,6 +7,14 @@ For fast-moving domains (AI models, external APIs, compliance, pricing), run wit
 
 `/compound-engineering-core:workflows:brainstorm "<topic> research=on research_depth=standard"`
 
+For deep research before planning decisions, run:
+
+`/compound-engineering-core:workflows:research "<topic> depth=deep scope=hybrid"`
+
+If a plan already exists but needs stronger grounding, run:
+
+`/compound-engineering-core:workflows:deepen-plan "docs/plans/<plan>.md"`
+
 ## Roles
 
 - PM/architect: defines the problem, approves priorities, accepts tradeoffs
@@ -30,10 +38,12 @@ No implementation begins until this loop exits.
 
 External Codex gate requires a connected global `codex-xhigh` MCP server.
 
-Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
+Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:research`, `/compound-engineering-core:workflows:deepen-plan`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
 
 Related non-coding workflows:
 
+- `/compound-engineering-core:workflows:research` for deep evidence-backed investigation with iterative PM Q&A
+- `/compound-engineering-core:workflows:deepen-plan` for plan-level research hardening before approval
 - `/compound-engineering-core:workflows:debug` for reproducible root-cause loops
 - `/compound-engineering-core:workflows:explain` for evidence-backed decision/behavior traceability
 
