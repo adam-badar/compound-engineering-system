@@ -18,14 +18,15 @@ A code PR can be merged only when all pass:
 3. Greptile review
 4. Test/CI gate for code PRs
 5. All gate outputs match current PR head SHA
-6. PM explicit approval exists for this SHA before triple review is invoked
+6. SHA authorization exists for this revision before triple review is invoked (`approve_sha=<head-sha>` or auto-supplied by `/workflows:work`)
 7. Non-blockers are triaged with explicit disposition and rationale
 
 Authorization rules:
 
-- Triple review is fail-closed without explicit PM approval.
-- Approval must be SHA-specific; if head SHA changes, prior approval is invalid.
-- Background/sub-agent invocation without PM approval is invalid and must not produce `PASS`.
+- Triple review is fail-closed without SHA authorization.
+- Authorization must be SHA-specific; if head SHA changes, prior authorization is invalid.
+- `/workflows:work` should auto-run triple review with current head SHA authorization and rerun on SHA change.
+- Background/sub-agent output with stale SHA is invalid and must not produce `PASS`.
 
 Conditional pass rules:
 

@@ -1,6 +1,6 @@
 {
   "name": "compound-engineering-core",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Core compound engineering workflows, agents, and review gate orchestration.",
   "author": {
     "name": "Adam Badar",

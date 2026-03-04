@@ -16,6 +16,10 @@ Never re-plan from scratch during execution. Use delta loops for material scope 
 
 If empty, ask: "Which approved plan should I execute?"
 
+Optional runtime flag in arguments:
+
+- `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/compound-engineering-core:workflows:pr-triple-review`
+
 ## Workflow
 
 ### 1. Validate plan context
@@ -37,7 +41,11 @@ For each implementation batch:
 1. Select the next planned PR-sized slice from the plan's Epic PR Ladder.
 2. Implement only that slice (one concern per PR).
 3. Add or update tests in the same batch for changed behavior.
-4. Run relevant tests and checks before opening/updating PR.
+4. Run local validation before opening/updating PR:
+   - Always run unit tests (`unit_test_command` from `compound-engineering.local.md`, default `pytest -q tests/unit`).
+   - If boundary surfaces changed (API routes/endpoints, DB schema/migrations, adapters/integrations, workers, auth), run integration tests (`integration_test_command`, default `pytest -q tests/integration`).
+   - Run project-required lint/type/static checks.
+   - If required integration tests are missing, skipped, or failing without an approved exception, stop and remediate before proceeding.
 5. Update execution tracker in real time:
    - task status
    - test evidence
@@ -63,11 +71,9 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
-3. Ask PM for explicit authorization before running triple review.
-   - Required prompt: "Run triple review for PR <number> at SHA <head-sha>?"
-   - Do not invoke triple review from background/sub-agent activity without this explicit PM approval.
-4. Run `/compound-engineering-core:workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha>"` only after PM approval.
-5. If PR head SHA changes during or after gate runs, invalidate prior gate result and require a new PM approval for the new SHA.
+3. Run `/compound-engineering-core:workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
+4. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
+5. If PR head SHA changes during or after gate runs, invalidate prior gate result and rerun triple review with the new head SHA.
 6. Triage non-blockers from triple review output:
    - implement_now
    - defer (owner + follow-up PR/task + rationale)

@@ -25,7 +25,7 @@ Optional runtime flag in arguments:
 
 - `teams=on` to require agent teams for teammate review fan-out in this run
 - `teams=off` (default) to run without a hard agent-teams requirement
-- `approve_sha=<sha>` explicit PM authorization token for this run (required for `code_pr`)
+- `approve_sha=<sha>` SHA authorization token for this run (required for `code_pr`)
 
 Agent ID normalization:
 
@@ -61,12 +61,12 @@ Write or update review evidence file:
 
 `docs/reviews/prs/pr-<number>-triple-review.md`
 
-### 1.1 Human authorization gate (fail-closed)
+### 1.1 SHA authorization gate (fail-closed)
 
 Before running any review gates for `code_pr`:
 
 1. Parse `approve_sha=<sha>` from `pr_input`.
-2. If `approve_sha` is missing, stop with `status: PENDING` and reason `awaiting_pm_approval`.
+2. If `approve_sha` is missing, stop with `status: PENDING` and reason `awaiting_sha_authorization`.
 3. If `approve_sha` does not match current PR head SHA, stop with `status: PENDING` and reason `approval_sha_mismatch`.
 4. In either case above, do not run teammate/Codex/Greptile gates and do not mark overall gate `PASS`.
 5. Return required next action:
