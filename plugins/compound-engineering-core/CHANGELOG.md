@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.2 - 2026-03-04
+
+- Updated `workflows:work` to auto-run `workflows:pr-triple-review` per PR batch with SHA authorization (`approve_sha=<head-sha>`), removing the manual per-SHA approval prompt inside execution flow.
+- Added stale-output handling guidance in `workflows:work` so background results tied to old SHAs are non-authoritative.
+- Hardened `workflows:work` local validation requirements:
+  - always run unit tests before PR gate
+  - require integration tests for boundary/API/integration/auth/worker/schema changes
+  - fail fast on missing/skipped integration tests without approved exception
+- Renamed triple-review authorization language from PM-only to SHA-authorization to align with automated execution flow.
+- Updated templates and process docs to reflect automatic triple-review invocation from `workflows:work` and manual `approve_sha` for ad-hoc gate runs.
+
 ## 0.4.1 - 2026-02-27
 
 - Hardened non-blocker triage to reduce low-value `defer/reject` outcomes:

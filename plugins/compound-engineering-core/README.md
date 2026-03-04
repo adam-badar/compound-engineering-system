@@ -29,6 +29,6 @@ Private plugin for shared compound engineering workflows.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
-- PR triple review requires explicit PM authorization per SHA via `approve_sha=<current-head-sha>`.
+- PR triple review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
 - Non-blockers must be triaged (`implement_now|defer|reject`) and cannot be silently ignored.
 - Multi-reviewer consensus non-blockers are escalation-candidates and default to promotion unless counterevidence + PM signoff are captured.

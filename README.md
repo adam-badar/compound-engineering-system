@@ -119,13 +119,13 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-18. Before merge:
+18. For manual gate reruns (or ad-hoc checks) before merge:
 
 ```text
 /compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
-19. Triple review is PM-authorized per SHA. Do not auto-invoke it from background/sub-agent work.
+19. `/compound-engineering-core:workflows:work` auto-runs triple review per PR batch using current head SHA authorization; treat stale/background runs as invalid.
 20. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
 21. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
 22. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
