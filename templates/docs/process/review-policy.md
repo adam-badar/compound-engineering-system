@@ -28,6 +28,17 @@ Authorization rules:
 - `/workflows:work` should auto-run triple review with current head SHA authorization and rerun on SHA change.
 - Background/sub-agent output with stale SHA is invalid and must not produce `PASS`.
 
+## Post-Merge CI/CD Confirmation Gate
+
+After a PR is merged, progression is blocked until merge-triggered CI/CD is confirmed for the merged SHA on the target branch.
+
+Rules:
+
+- Wait for required merge-triggered workflows (tests/build/deploy) to complete.
+- If any required post-merge workflow fails, treat as blocker and stop progression.
+- If no merge-triggered workflow is configured, record `N/A` with rationale and continue.
+- Do not begin the next PR slice or mark epic closeout while required post-merge workflows are still pending.
+
 Conditional pass rules:
 
 - `conditional_pass` is not merge-ready for code PRs by default.

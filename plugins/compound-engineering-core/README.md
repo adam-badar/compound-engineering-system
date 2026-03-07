@@ -30,5 +30,6 @@ Private plugin for shared compound engineering workflows.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
 - PR triple review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
+- `workflows:work` enforces a post-merge CI/CD confirmation gate on target-branch SHA before continuing to the next slice/closeout.
 - Non-blockers must be triaged (`implement_now|defer|reject`) and cannot be silently ignored.
 - Multi-reviewer consensus non-blockers are escalation-candidates and default to promotion unless counterevidence + PM signoff are captured.

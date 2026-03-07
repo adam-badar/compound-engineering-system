@@ -85,6 +85,7 @@ Triple review invocation policy:
 - For manual invocations, use `approve_sha=<current-head-sha>` when invoking triple review.
 - If head SHA changes, invalidate prior gate/approval and rerun.
 - Deferred high-value non-blockers require explicit PM signoff and follow-up ownership.
+- After PR merge, wait for merge-triggered CI/CD/deploy on target-branch SHA before continuing to the next PR slice (or record `N/A` with rationale when no merge-triggered pipeline exists).
 
 ## Mid-Epic Delta Loop
 
