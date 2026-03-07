@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.3 - 2026-03-06
+
+- Added a post-merge CI/CD confirmation gate to `workflows:work`:
+  - after merge, wait for merge-triggered workflows on target branch/SHA
+  - block progression while merge-triggered workflows are pending
+  - fail closed on post-merge CI/CD failure
+  - allow explicit `N/A` only when no merge-triggered CI/CD exists
+- Updated template docs and workflow policy to require post-merge CI/CD confirmation before starting the next PR slice or epic closeout.
+
 ## 0.4.2 - 2026-03-04
 
 - Updated `workflows:work` to auto-run `workflows:pr-triple-review` per PR batch with SHA authorization (`approve_sha=<head-sha>`), removing the manual per-SHA approval prompt inside execution flow.

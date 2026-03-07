@@ -127,9 +127,10 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 
 19. `/compound-engineering-core:workflows:work` auto-runs triple review per PR batch using current head SHA authorization; treat stale/background runs as invalid.
 20. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
-21. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
-22. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
-23. Optional: run `/compound-engineering-setup` for project-specific setup checks.
+21. After each merge, wait for merge-triggered CI/CD/deploy workflows on target-branch SHA to finish and pass before continuing (or record `N/A` with rationale when no merge-triggered pipeline exists).
+22. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
+23. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
+24. Optional: run `/compound-engineering-setup` for project-specific setup checks.
 
 ### Option B: Existing project bootstrap
 
