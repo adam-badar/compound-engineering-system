@@ -29,10 +29,11 @@ If a plan already exists but needs stronger grounding, run:
 1. PM/architect provides problem statement, outcomes, constraints, success metrics, non-goals.
 2. Planning workflow creates/updates `docs/plans/*-plan.md`.
 3. Plan-review agents critique the plan.
-4. Planning workflow asks PM/architect only the unresolved decision questions.
-5. Plan updates are applied.
-6. Run external Codex review in Extra High mode through codex gate runner and record evidence pinned to revision.
-7. Steps 3-6 repeat until PM/architect, plan-review agents, and Codex all approve.
+4. Spec-flow analysis runs on each material revision to detect permutation/edge-case gaps (including refresh/rehydrate/resume for stateful UX).
+5. Planning workflow asks PM/architect only the unresolved decision questions.
+6. Plan updates are applied.
+7. Run external Codex review in Extra High mode through codex gate runner and record evidence pinned to revision.
+8. Steps 3-7 repeat until PM/architect, plan-review agents, and Codex all approve.
 
 No implementation begins until this loop exits.
 
@@ -67,6 +68,15 @@ Default size budgets (override in `compound-engineering.local.md`):
 
 If projected scope violates these budgets, split into child epics before approval.
 
+Each approved plan must also include a **Flow Permutations & Edge Cases** section with:
+
+- initial load
+- refresh/rehydrate
+- partial completion + resume
+- error + retry
+- session expiry/re-auth (if auth exists)
+- offline/timeout degradation (if networked)
+
 ## PR Triple Review Policy
 
 Every code PR must pass all three gates before merge:
@@ -86,6 +96,7 @@ Triple review invocation policy:
 - If head SHA changes, invalidate prior gate/approval and rerun.
 - Deferred high-value non-blockers require explicit PM signoff and follow-up ownership.
 - After PR merge, wait for merge-triggered CI/CD/deploy on target-branch SHA before continuing to the next PR slice (or record `N/A` with rationale when no merge-triggered pipeline exists).
+- After post-merge CI/CD is green, `/compound-engineering-core:workflows:work` should auto-run `/compound-engineering-core:workflows:compound` and record created/updated/skipped evidence before proceeding.
 
 ## Mid-Epic Delta Loop
 

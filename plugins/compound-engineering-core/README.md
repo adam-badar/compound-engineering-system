@@ -13,6 +13,7 @@ Private plugin for shared compound engineering workflows.
   - `compound-engineering-core:workflows:debug`
   - `compound-engineering-core:workflows:explain`
   - `compound-engineering-core:workflows:work`
+  - `compound-engineering-core:workflows:compound`
   - `compound-engineering-core:workflows:epic-delta-loop`
   - `compound-engineering-core:workflows:pr-triple-review`
 - Review and research agents for planning and PR gates
@@ -34,6 +35,7 @@ Private plugin for shared compound engineering workflows.
 - PR triple review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
 - `workflows:work` auto-runs/re-runs triple review after each pushed SHA on the active PR.
 - `workflows:work` enforces a post-merge CI/CD confirmation gate on target-branch SHA before continuing to the next slice/closeout.
+- `workflows:work` auto-runs post-merge `workflows:compound` after CI/CD is green, and records created/updated/skipped evidence in the execution tracker.
 - Non-blockers must be triaged (`implement_now|defer|reject`) and cannot be silently ignored.
 - Default triage artifact is existing gate evidence + execution tracker (no extra todo-file system required).
 - Multi-reviewer consensus non-blockers are escalation-candidates and default to promotion unless counterevidence + PM signoff are captured.

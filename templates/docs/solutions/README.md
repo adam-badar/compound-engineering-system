@@ -12,6 +12,7 @@ Design and implementation notes for significant features. Include: requirements,
 
 ### `patterns/`
 Reusable patterns discovered during development. Include: problem, solution, when to use, when not to use, and examples.
+`patterns/critical-patterns.md` is the high-signal subset that planning/review should check by default.
 
 ### `architecture/`
 System-level documentation: data flow diagrams, integration maps, scaling strategies, and infrastructure decisions.
@@ -22,3 +23,5 @@ System-level documentation: data flow diagrams, integration maps, scaling strate
 - Date-prefix for chronological context.
 - Link to related ADRs, PRs, and code where applicable.
 - Keep solutions focused -- one problem per document.
+- Prefer updating existing nearby solution docs over creating duplicates.
+- Skip documentation for trivial fixes; use `/compound-engineering-core:workflows:compound` only for reusable, non-trivial learnings.

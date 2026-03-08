@@ -91,13 +91,17 @@ Before any merge:
    - Do not start the next implementation batch or close the epic while these runs are pending.
    - If any merge-triggered CI/CD workflow fails, stop and treat as an open blocker until remediated.
    - Continue only when required post-merge workflows are green.
+12. After post-merge CI/CD is green, auto-run `/workflows:compound "<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"` before starting the next slice:
+   - For `status: created|updated`, record artifact path(s) in the execution tracker.
+   - For `status: skipped`, record the returned rationale in the execution tracker.
+   - If compound capture errors (workflow/tool failure), stop and remediate before continuing execution.
 
 ### 5. Closeout
 
-After PM acceptance and successful post-merge CI/CD confirmation:
+After PM acceptance, successful post-merge CI/CD confirmation, and post-merge compound capture:
 
 1. Update plan status to `implemented`.
-2. Update tracker summary/outcomes.
+2. Update tracker summary/outcomes (including compound capture status and evidence path/rationale).
 3. Update `docs/knowledge/plans-index.md`:
    - status `implemented`
    - links to plan/tracker/review evidence
@@ -111,4 +115,5 @@ Return:
 - updated tracker path
 - open blockers or risks
 - PR/gate status
+- post-merge compound status/evidence
 - next step

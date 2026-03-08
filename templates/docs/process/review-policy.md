@@ -20,6 +20,7 @@ A code PR can be merged only when all pass:
 5. All gate outputs match current PR head SHA
 6. SHA authorization exists for this revision before triple review is invoked (`approve_sha=<head-sha>` or auto-supplied by `/workflows:work`)
 7. Non-blockers are triaged with explicit disposition and rationale
+8. For frontend/session/state changes, refresh/rehydrate/resume behavior is covered by integration/e2e validation
 
 Authorization rules:
 
@@ -35,16 +36,19 @@ Greptile rules:
 - Exception path requires explicit runtime exception + explicit PM signoff, and must be recorded in gate evidence.
 - Greptile exceptions are SHA-scoped; any new SHA invalidates prior exceptions.
 
-## Post-Merge CI/CD Confirmation Gate
+## Post-Merge CI/CD and Compound Gate
 
-After a PR is merged, progression is blocked until merge-triggered CI/CD is confirmed for the merged SHA on the target branch.
+After a PR is merged, progression is blocked until merge-triggered CI/CD is confirmed for the merged SHA on the target branch and compound capture is executed.
 
 Rules:
 
 - Wait for required merge-triggered workflows (tests/build/deploy) to complete.
 - If any required post-merge workflow fails, treat as blocker and stop progression.
 - If no merge-triggered workflow is configured, record `N/A` with rationale and continue.
-- Do not begin the next PR slice or mark epic closeout while required post-merge workflows are still pending.
+- After CI/CD is green, run `/workflows:compound` (or plugin-prefixed equivalent) for the merged change context.
+- Accept `status: skipped` only with explicit rationale captured in tracker/evidence.
+- Treat compound workflow/tool failures as blockers until rerun succeeds or PM approves an exception.
+- Do not begin the next PR slice or mark epic closeout while required post-merge workflows or compound capture are still pending.
 
 Conditional pass rules:
 

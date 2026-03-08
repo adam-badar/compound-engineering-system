@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.5 - 2026-03-08
+
+- Added `workflows:compound` for high-signal learning capture with:
+  - fail-closed noise gate (`created|updated|skipped` only when criteria are met)
+  - de-dup against existing `docs/solutions/` artifacts
+  - optional promotion to `docs/solutions/patterns/critical-patterns.md`
+- Added `spec-flow-analyzer` and integrated it into `workflows:plan-loop` so each material plan revision is checked for flow permutations/edge cases (including refresh/rehydrate/resume).
+- Hardened planning contract to require a **Flow Permutations & Edge Cases** section in approved plans.
+- Hardened `workflows:pr-triple-review` to require refresh/rehydrate/resume integration/e2e coverage when frontend/session/state surfaces change.
+- Updated `workflows:work` post-merge behavior:
+  - keep existing post-merge CI/CD confirmation gate
+  - auto-run post-merge compound capture after CI/CD is green
+  - block progression on compound workflow failure
+  - require compound `created|updated|skipped` evidence in tracker before next slice/closeout
+- Expanded `learnings-researcher` guidance and added template agent copies so planning/research can retrieve higher-signal historical patterns without replacing prior behavior.
+- Updated templates/runbooks/policy docs to reflect new planning edge-case gate and automatic post-merge compound step.
+
 ## 0.4.4 - 2026-03-08
 
 - Hardened Greptile gate semantics in `workflows:pr-triple-review`:
