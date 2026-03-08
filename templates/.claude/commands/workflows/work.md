@@ -72,16 +72,19 @@ Before any merge:
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
 3. Run `/workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
-4. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
-5. If PR head SHA changes during or after gate runs, invalidate prior gate result and rerun triple review with the new head SHA.
-6. Triage non-blockers from triple review output:
+4. If triple review fails with `greptile_missing_for_sha`, do not proceed to merge:
+   - default path: wait for Greptile on the current SHA, then rerun triple review
+   - exception path: rerun with `greptile_exception="<reason>" greptile_exception_signoff="<pm-signoff-ref>"` only when policy allows
+5. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun triple review with the new head SHA before making merge decisions.
+6. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
+7. Triage non-blockers from triple review output:
    - implement_now
    - defer (owner + follow-up PR/task + rationale)
    - reject (rationale)
-7. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
-8. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
-9. Merge only when gate status is `PASS` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
-10. After merge, run a post-merge CI/CD confirmation gate before proceeding:
+8. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
+9. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
+10. Merge only when gate status is `PASS` or `PASS_WITH_EXCEPTION` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
+11. After merge, run a post-merge CI/CD confirmation gate before proceeding:
    - Identify target branch and merged SHA.
    - Wait for merge-triggered CI/CD workflows on that branch/SHA to finish (tests + deployment where configured).
    - If no merge-triggered CI/CD workflow exists, record `N/A` with rationale and continue.

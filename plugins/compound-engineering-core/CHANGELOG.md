@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.4 - 2026-03-08
+
+- Hardened Greptile gate semantics in `workflows:pr-triple-review`:
+  - fail-closed for missing/stale Greptile on code PRs
+  - explicit exception path requires reason + PM signoff
+  - exception is SHA-scoped and invalidated on new head SHA
+  - explicit `N/A` pass path when `greptile_required_for_code_prs: false`
+  - explicit `N/A` pass path for `docs_only` PR classifications
+- Clarified `workflows:work` behavior to auto-run triple review after each pushed SHA on active PRs.
+- Added `allow_greptile_exception_for_code_prs` policy knob (default `false`) to template config.
+- Updated templates/runbooks/review policy for:
+  - SHA-scoped Greptile exception handling
+  - manual triple-review examples with `approve_sha=<current-head-sha>`
+  - explicit default for `greptile_required_for_code_prs`
+  - explicit `workflows:work` recovery path for `greptile_missing_for_sha`
+  - explicit output status taxonomy includes `PASS_WITH_EXCEPTION` and `STALE`
+  - merge criteria in `workflows:work` accepts `PASS_WITH_EXCEPTION` when policy-gated exception is approved
+  - removal of stale `/compound-engineering-setup` reference in favor of upstream `/setup` and `/triage` context.
+  - explicit guidance that default deferred-item tracking stays in review evidence + execution tracker (no extra todo-file system required).
+
 ## 0.4.3 - 2026-03-06
 
 - Added a post-merge CI/CD confirmation gate to `workflows:work`:

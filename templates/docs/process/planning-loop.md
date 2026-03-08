@@ -81,7 +81,7 @@ Record results under `docs/reviews/prs/`.
 
 Triple review invocation policy:
 
-- `/compound-engineering-core:workflows:work` should auto-run triple review for each PR batch using `approve_sha=<current-head-sha>`.
+- `/compound-engineering-core:workflows:work` should auto-run triple review after each pushed SHA on open PRs using `approve_sha=<current-head-sha>`.
 - For manual invocations, use `approve_sha=<current-head-sha>` when invoking triple review.
 - If head SHA changes, invalidate prior gate/approval and rerun.
 - Deferred high-value non-blockers require explicit PM signoff and follow-up ownership.
