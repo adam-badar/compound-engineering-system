@@ -43,6 +43,7 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `consensus_threshold_for_promotion` (default: `2`)
 - `require_counterevidence_for_non_blocker_reject` (default: `true`)
 - `require_pm_signoff_for_consensus_non_blocker_deferrals` (default: `true`)
+- `greptile_required_for_code_prs` (default: `true`)
 - `allow_greptile_exception_for_code_prs` (default: `false`)
 
 ## Workflow

@@ -13,6 +13,8 @@
 - Updated templates/runbooks/review policy for:
   - SHA-scoped Greptile exception handling
   - manual triple-review examples with `approve_sha=<current-head-sha>`
+  - explicit default for `greptile_required_for_code_prs`
+  - explicit `workflows:work` recovery path for `greptile_missing_for_sha`
   - removal of stale `/compound-engineering-setup` reference in favor of upstream `/setup` and `/triage` context.
   - explicit guidance that default deferred-item tracking stays in review evidence + execution tracker (no extra todo-file system required).
 
