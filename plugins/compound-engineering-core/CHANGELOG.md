@@ -6,6 +6,8 @@
   - fail-closed for missing/stale Greptile on code PRs
   - explicit exception path requires reason + PM signoff
   - exception is SHA-scoped and invalidated on new head SHA
+  - explicit `N/A` pass path when `greptile_required_for_code_prs: false`
+  - explicit `N/A` pass path for `docs_only` PR classifications
 - Clarified `workflows:work` behavior to auto-run triple review after each pushed SHA on active PRs.
 - Added `allow_greptile_exception_for_code_prs` policy knob (default `true`) to template config.
 - Updated templates/runbooks/review policy for:

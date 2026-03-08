@@ -30,6 +30,7 @@ Private plugin for shared compound engineering workflows.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
 - Greptile is fail-closed for code PRs by default; exception requires explicit reason + PM signoff and is SHA-scoped.
+- If `greptile_required_for_code_prs: false`, the Greptile gate is explicitly `N/A` by policy.
 - PR triple review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
 - `workflows:work` auto-runs/re-runs triple review after each pushed SHA on the active PR.
 - `workflows:work` enforces a post-merge CI/CD confirmation gate on target-branch SHA before continuing to the next slice/closeout.

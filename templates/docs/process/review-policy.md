@@ -31,6 +31,7 @@ Authorization rules:
 Greptile rules:
 
 - For `code_pr`, missing/stale Greptile review for current SHA is fail-closed by default.
+- When `greptile_required_for_code_prs: false`, mark Greptile gate `N/A` with rationale and continue.
 - Exception path requires explicit runtime exception + explicit PM signoff, and must be recorded in gate evidence.
 - Greptile exceptions are SHA-scoped; any new SHA invalidates prior exceptions.
 

@@ -150,6 +150,11 @@ For `code_pr` when `greptile_required_for_code_prs: true`:
    - mark Greptile gate `PASS_WITH_EXCEPTION`
    - treat exception as SHA-scoped only (any new SHA invalidates prior exception)
 
+For `code_pr` when `greptile_required_for_code_prs: false`:
+
+1. Mark Greptile gate `N/A` with rationale `greptile_not_required_by_policy`.
+2. Continue with remaining gates.
+
 For `docs_only`, mark Greptile gate `N/A` unless project policy explicitly requires it.
 
 ### 5.5 Non-blocker value gate (required by default)
@@ -194,7 +199,10 @@ PR gate is **PASS** only when:
 - teammate gate: no open blocker
 - Codex Extra High gate: no open blocker
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
-- Greptile gate: `PASS` for current SHA, or `PASS_WITH_EXCEPTION` with explicit PM signoff when policy allows
+- Greptile gate:
+  - `PASS` for current SHA, or
+  - `PASS_WITH_EXCEPTION` with explicit PM signoff when policy allows, or
+  - `N/A` for `docs_only` or when `greptile_required_for_code_prs: false`
 - all gate results match current PR head SHA
 - `approve_sha` used for this run matches current PR head SHA
 - no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`
