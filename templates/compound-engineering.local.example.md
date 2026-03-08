@@ -4,6 +4,7 @@ plan_review_agents: [compound-engineering-core:kieran-python-reviewer, compound-
 external_plan_review_gate: codex-extra-high
 external_pr_review_gate: codex-extra-high
 greptile_required_for_code_prs: true
+allow_greptile_exception_for_code_prs: true
 codex_mcp_server: codex-xhigh
 codex_gate_agent: compound-engineering-core:codex-gate-runner
 research_agents: [compound-engineering-core:repo-research-analyst, compound-engineering-core:learnings-researcher, compound-engineering-core:framework-docs-researcher, compound-engineering-core:external-frontier-researcher, compound-engineering-core:best-practices-researcher]

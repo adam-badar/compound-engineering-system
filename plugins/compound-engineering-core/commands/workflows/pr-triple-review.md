@@ -26,6 +26,8 @@ Optional runtime flag in arguments:
 - `teams=on` to require agent teams for teammate review fan-out in this run
 - `teams=off` (default) to run without a hard agent-teams requirement
 - `approve_sha=<sha>` SHA authorization token for this run (required for `code_pr`)
+- `greptile_exception="<ticket-or-reason>"` explicit exception request when Greptile is unavailable for this SHA
+- `greptile_exception_signoff="<pm-signoff-ref>"` required with `greptile_exception` (for example: `pm:@adam 2026-03-08`)
 
 Agent ID normalization:
 
@@ -45,6 +47,7 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `consensus_threshold_for_promotion` (default: `2`)
 - `require_counterevidence_for_non_blocker_reject` (default: `true`)
 - `require_pm_signoff_for_consensus_non_blocker_deferrals` (default: `true`)
+- `allow_greptile_exception_for_code_prs` (default: `true`)
 
 ## Workflow
 
@@ -134,13 +137,24 @@ For `code_pr`, this gate is mandatory.
 
 For `docs_only`, mark test gate `N/A` with rationale.
 
-### 5. Greptile gate
+### 5. Greptile gate (fail-closed by default)
 
-Confirm Greptile review is present for the current PR revision.
+Confirm Greptile review is present for the current PR head SHA/revision.
 
-If `greptile_required_for_code_prs: true` in `compound-engineering.local.md`, this gate is mandatory.
+For `code_pr` when `greptile_required_for_code_prs: true`:
 
-If missing, mark gate as pending and stop with explicit next action.
+1. If Greptile review is present for current SHA, continue.
+2. If Greptile review is missing/stale/unavailable, fail closed by default (`status: FAIL`, reason `greptile_missing_for_sha`).
+3. Exception path is allowed only when all are true:
+   - `allow_greptile_exception_for_code_prs: true` (policy)
+   - `greptile_exception="<ticket-or-reason>"` is provided in runtime arguments
+   - `greptile_exception_signoff="<pm-signoff-ref>"` is provided in runtime arguments
+4. When exception path is used:
+   - record reason + signoff + authorized SHA in triple-review evidence
+   - mark Greptile gate `PASS_WITH_EXCEPTION`
+   - treat exception as SHA-scoped only (any new SHA invalidates prior exception)
+
+For `docs_only`, mark Greptile gate `N/A` unless project policy explicitly requires it.
 
 ### 5.5 Non-blocker value gate (required by default)
 
@@ -184,7 +198,7 @@ PR gate is **PASS** only when:
 - teammate gate: no open blocker
 - Codex Extra High gate: no open blocker
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
-- Greptile gate: no open blocker
+- Greptile gate: `PASS` for current SHA, or `PASS_WITH_EXCEPTION` with explicit PM signoff when policy allows
 - all gate results match current PR head SHA
 - `approve_sha` used for this run matches current PR head SHA
 - no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`

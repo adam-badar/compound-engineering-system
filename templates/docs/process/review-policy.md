@@ -15,7 +15,7 @@ A code PR can be merged only when all pass:
 
 1. Teammate review agents
 2. Codex Extra High external review
-3. Greptile review
+3. Greptile review (or explicit SHA-scoped exception with PM signoff when policy allows)
 4. Test/CI gate for code PRs
 5. All gate outputs match current PR head SHA
 6. SHA authorization exists for this revision before triple review is invoked (`approve_sha=<head-sha>` or auto-supplied by `/workflows:work`)
@@ -25,8 +25,14 @@ Authorization rules:
 
 - Triple review is fail-closed without SHA authorization.
 - Authorization must be SHA-specific; if head SHA changes, prior authorization is invalid.
-- `/workflows:work` should auto-run triple review with current head SHA authorization and rerun on SHA change.
+- `/workflows:work` should auto-run triple review with current head SHA authorization after each pushed SHA and rerun on SHA change.
 - Background/sub-agent output with stale SHA is invalid and must not produce `PASS`.
+
+Greptile rules:
+
+- For `code_pr`, missing/stale Greptile review for current SHA is fail-closed by default.
+- Exception path requires explicit runtime exception + explicit PM signoff, and must be recorded in gate evidence.
+- Greptile exceptions are SHA-scoped; any new SHA invalidates prior exceptions.
 
 ## Post-Merge CI/CD Confirmation Gate
 
@@ -55,6 +61,7 @@ Non-blocker value rules:
 - Deferred high-value non-blockers require PM signoff when `require_pm_signoff_for_non_blocker_deferrals: true`.
 - Deferred consensus non-blockers require PM signoff when `require_pm_signoff_for_consensus_non_blocker_deferrals: true`.
 - Gate evidence must include owner + target follow-up for each deferred item.
+- Default tracking location for deferred items is existing review evidence + execution tracker; separate todo-file systems are optional.
 
 ## Overhead Controls
 

@@ -97,15 +97,16 @@ Expected artifact:
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-10. **Run pre-merge triple gate**
+10. **Manual triple-gate rerun (ad-hoc)**
 
 ```text
-/compound-engineering-core:workflows:pr-triple-review "<pr-number> teams=on"
+/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
 Merge policy:
 - merge only when status is `PASS`
 - gate evidence must match current PR head SHA
+- `workflows:work` is the primary path and should auto-run triple review after each pushed SHA
 - non-blockers must be triaged (`implement_now|defer|reject`) with rationale
 
 11. **Verify diagnosis/explanation workflows are available**
