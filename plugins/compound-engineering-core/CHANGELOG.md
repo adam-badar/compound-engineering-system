@@ -9,7 +9,7 @@
   - explicit `N/A` pass path when `greptile_required_for_code_prs: false`
   - explicit `N/A` pass path for `docs_only` PR classifications
 - Clarified `workflows:work` behavior to auto-run triple review after each pushed SHA on active PRs.
-- Added `allow_greptile_exception_for_code_prs` policy knob (default `true`) to template config.
+- Added `allow_greptile_exception_for_code_prs` policy knob (default `false`) to template config.
 - Updated templates/runbooks/review policy for:
   - SHA-scoped Greptile exception handling
   - manual triple-review examples with `approve_sha=<current-head-sha>`
