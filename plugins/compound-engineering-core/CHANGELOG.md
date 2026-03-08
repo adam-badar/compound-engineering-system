@@ -15,6 +15,8 @@
   - manual triple-review examples with `approve_sha=<current-head-sha>`
   - explicit default for `greptile_required_for_code_prs`
   - explicit `workflows:work` recovery path for `greptile_missing_for_sha`
+  - explicit output status taxonomy includes `PASS_WITH_EXCEPTION` and `STALE`
+  - merge criteria in `workflows:work` accepts `PASS_WITH_EXCEPTION` when policy-gated exception is approved
   - removal of stale `/compound-engineering-setup` reference in favor of upstream `/setup` and `/triage` context.
   - explicit guidance that default deferred-item tracking stays in review evidence + execution tracker (no extra todo-file system required).
 

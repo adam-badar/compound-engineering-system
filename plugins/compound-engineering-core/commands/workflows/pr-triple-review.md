@@ -230,7 +230,7 @@ If PR head SHA changes at any point after gate execution starts:
 
 Return:
 
-- gate status (PASS/FAIL/PENDING)
+- gate status (`PASS`/`PASS_WITH_EXCEPTION`/`FAIL`/`PENDING`/`STALE`)
 - evidence file paths
 - blocker list (if any)
 - next action

@@ -83,7 +83,7 @@ Before any merge:
    - reject (rationale)
 8. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
 9. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
-10. Merge only when gate status is `PASS` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
+10. Merge only when gate status is `PASS` or `PASS_WITH_EXCEPTION` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
 11. After merge, run a post-merge CI/CD confirmation gate before proceeding:
    - Identify target branch and merged SHA.
    - Wait for merge-triggered CI/CD workflows on that branch/SHA to finish (tests + deployment where configured).
