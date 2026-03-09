@@ -14,6 +14,14 @@ Do not run this for trivial changes.
 
 <compound_input> #$ARGUMENTS </compound_input>
 
+Accepted input formats:
+
+- free-form context (manual usage), for example: `"session refresh bug in dashboard filters"`
+- structured context from `workflows:work`, for example:
+  - `"<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"`
+
+When structured fields are present, use them in the output references/evidence section.
+
 ## Quality Gate (Fail-Closed for Noise)
 
 Only create/update a solution doc when all are true:

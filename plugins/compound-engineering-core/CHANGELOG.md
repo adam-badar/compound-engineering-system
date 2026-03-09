@@ -13,7 +13,10 @@
   - keep existing post-merge CI/CD confirmation gate
   - auto-run post-merge compound capture after CI/CD is green
   - block progression on compound workflow failure
+  - include explicit PM exception escape hatch for compound-capture failure (`compound_capture_exception` evidence)
   - require compound `created|updated|skipped` evidence in tracker before next slice/closeout
+- Documented structured `workflows:compound` input contract used by `workflows:work`:
+  - `<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>`
 - Expanded `learnings-researcher` guidance and added template agent copies so planning/research can retrieve higher-signal historical patterns without replacing prior behavior.
 - Updated templates/runbooks/policy docs to reflect new planning edge-case gate and automatic post-merge compound step.
 

@@ -94,7 +94,8 @@ Before any merge:
 12. After post-merge CI/CD is green, auto-run `/compound-engineering-core:workflows:compound "<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"` before starting the next slice:
    - For `status: created|updated`, record artifact path(s) in the execution tracker.
    - For `status: skipped`, record the returned rationale in the execution tracker.
-   - If compound capture errors (workflow/tool failure), stop and remediate before continuing execution.
+   - If compound capture errors (workflow/tool failure), default to stop + remediate + rerun before continuing execution.
+   - Exception path: proceed only with explicit PM signoff captured in tracker/review evidence (`compound_capture_exception` + rationale + signoff reference).
 
 ### 5. Closeout
 
