@@ -27,9 +27,10 @@ Optional runtime flag in arguments:
 - `teams=off` (default) to run without a hard agent-teams requirement
 - `approve_sha=<sha>` SHA authorization token for this run (required for `code_pr`)
 
-Agent ID normalization:
+Agent ID resolution:
 
-- if an agent ID from `compound-engineering.local.md` has no namespace prefix, resolve it as `compound-engineering-core:<agent-id>` before invocation.
+- If you are invoking the shared plugin command (`/compound-engineering-core:workflows:pr-review`), normalize unqualified IDs from `compound-engineering.local.md` to `compound-engineering-core:<agent-id>`.
+- If you are invoking this repo-local copied command (`/workflows:pr-review`), keep unqualified IDs local and do not auto-prefix them with the plugin namespace.
 
 Policy defaults (override in `compound-engineering.local.md`):
 
@@ -45,7 +46,7 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `consensus_threshold_for_promotion` (default: `2`)
 - `require_counterevidence_for_non_blocker_reject` (default: `true`)
 - `require_pm_signoff_for_consensus_non_blocker_deferrals` (default: `true`)
-- `codex_pr_review_agents` (default: `[compound-engineering-core:codex-pr-correctness-reviewer, compound-engineering-core:codex-pr-edgecase-reviewer]`)
+- `codex_pr_review_agents` (default: `[codex-pr-correctness-reviewer, codex-pr-edgecase-reviewer]`)
 
 ## Workflow
 
@@ -60,7 +61,7 @@ Classify PR type:
 
 Write or update review evidence file:
 
-`docs/reviews/prs/pr-<number>-triple-review.md`
+`docs/reviews/prs/pr-<number>-review.md`
 
 ### 1.1 SHA authorization gate (fail-closed)
 
@@ -71,7 +72,7 @@ Before running any review gates for `code_pr`:
 3. If `approve_sha` does not match current PR head SHA, stop with `status: PENDING` and reason `approval_sha_mismatch`.
 4. In either case above, do not run teammate/Codex/test gates and do not mark overall gate `PASS`.
 5. Return required next action:
-   - `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> [teams=on|teams=off]"`
+   - `/workflows:pr-review "<pr-number> approve_sha=<current-head-sha> [teams=on|teams=off]"`
 
 For `docs_only`, this authorization token is optional.
 
@@ -84,8 +85,8 @@ Before running gates:
 3. If `teams=on` and either team check fails, stop with `status: FAIL` and reason `agent_teams_unavailable`.
 4. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
 5. Resolve `codex_pr_review_agents` from `compound-engineering.local.md`; if missing, use both fallback agents:
-   - `compound-engineering-core:codex-pr-correctness-reviewer`
-   - `compound-engineering-core:codex-pr-edgecase-reviewer`
+   - `codex-pr-correctness-reviewer`
+   - `codex-pr-edgecase-reviewer`
 6. Validate both Codex PR reviewer agents are available.
 7. If MCP or either reviewer agent is unavailable, stop with `status: FAIL` and reason `external_gate_unavailable`.
 
@@ -98,10 +99,8 @@ Run `review_agents` from `compound-engineering.local.md`.
 
 Fallback set:
 
-- `compound-engineering-core:architecture-strategist`
-- `compound-engineering-core:security-sentinel`
-- `compound-engineering-core:performance-oracle`
-- `compound-engineering-core:code-simplicity-reviewer`
+- Prefer project-local reviewer agents configured in `compound-engineering.local.md`.
+- If `review_agents` is missing or empty in repo-local mode, fail closed with `status: FAIL` and reason `review_agents_unconfigured` instead of silently assuming plugin-only agent IDs.
 
 Capture blocker/non-blocker findings in the review evidence file.
 Tag each finding with source reviewer (`teammate|codex_correctness|codex_edgecase|ci`) so consensus can be computed.
@@ -141,7 +140,7 @@ Capture output in:
 
 `docs/reviews/prs/pr-<number>-codex-edgecase.md`
 
-Summarize both pass/fail results and blockers in the triple-review evidence file.
+Summarize both pass/fail results and blockers in the review evidence file.
 If PR head SHA changes after either step, mark both Codex gates stale and rerun both.
 
 ### 4. Test and CI gate (required for code PRs)

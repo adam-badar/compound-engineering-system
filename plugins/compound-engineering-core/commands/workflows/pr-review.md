@@ -141,7 +141,7 @@ Capture output in:
 
 `docs/reviews/prs/pr-<number>-codex-edgecase.md`
 
-Summarize both pass/fail results and blockers in the triple-review evidence file.
+Summarize both pass/fail results and blockers in the review evidence file.
 If PR head SHA changes after either step, mark both Codex gates stale and rerun both.
 
 ### 4. Test and CI gate (required for code PRs)

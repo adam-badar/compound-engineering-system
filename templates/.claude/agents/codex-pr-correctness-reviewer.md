@@ -31,7 +31,7 @@ Prioritize:
 
 1. Validate MCP availability before review:
    - `codex-xhigh` must be reachable.
-   - If unavailable, return `status: failed` with reason `mcp_unavailable`.
+   - If unavailable, return `status: fail` with reason `mcp_unavailable`.
 2. Review the PR using high-signal context only.
 3. Normalize findings into:
    - blockers

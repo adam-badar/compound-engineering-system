@@ -5,6 +5,9 @@
 - Renamed the canonical PR review evidence artifact from `pr-<number>-triple-review.md` to `pr-<number>-review.md`.
 - Renamed the primary PR review template to `pr-review-gate-template.md` and retained the legacy template filename as a compatibility alias.
 - Normalized remaining docs and workflow text from "triple review" to "PR review" while keeping `workflows:pr-triple-review` as a command alias.
+- Fixed the repo-local copied `workflows:pr-review` template so it uses the canonical review artifact/remediation path and local-agent semantics instead of stale plugin-only references.
+- Extended the canonical PR review evidence template to represent `stale` SHA state and required non-blocker triage fields.
+- Fixed Codex reviewer/gate agent MCP-outage contracts to return `status: fail` consistently with their declared output schemas.
 
 ## 0.4.6 - 2026-03-09
 
