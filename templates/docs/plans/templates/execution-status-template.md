@@ -21,7 +21,7 @@
 |------|--------|----------|
 | Teammate plan review | passed | `docs/reviews/plans/{PLAN_SLUG}-team-review.md` |
 | Codex Extra High plan review | passed | `docs/reviews/plans/{PLAN_SLUG}-codex-extra-high.md` |
-| PR triple review (latest) | pending | `docs/reviews/prs/pr-{NUMBER}-triple-review.md` |
+| PR review (latest) | pending | `docs/reviews/prs/pr-{NUMBER}-review.md` |
 | Latest PR reviewed SHA | pending | `{PR_REVIEWED_SHA}` |
 
 ## Progress

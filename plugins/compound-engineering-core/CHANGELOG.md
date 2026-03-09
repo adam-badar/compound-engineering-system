@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.4.7 - 2026-03-09
+
+- Renamed the canonical PR review evidence artifact from `pr-<number>-triple-review.md` to `pr-<number>-review.md`.
+- Renamed the primary PR review template to `pr-review-gate-template.md` and retained the legacy template filename as a compatibility alias.
+- Normalized remaining docs and workflow text from "triple review" to "PR review" while keeping `workflows:pr-triple-review` as a command alias.
+- Fixed the repo-local copied `workflows:pr-review` template so it uses the canonical review artifact/remediation path and local-agent semantics instead of stale plugin-only references.
+- Extended the canonical PR review evidence template to represent `stale` SHA state and required non-blocker triage fields.
+- Fixed Codex reviewer/gate agent MCP-outage contracts to return `status: fail` consistently with their declared output schemas.
+
+## 0.4.6 - 2026-03-09
+
+- Replaced the Greptile PR gate with two required parallel Codex xhigh PR reviewers:
+  - `codex-pr-correctness-reviewer`
+  - `codex-pr-edgecase-reviewer`
+- Added `codex_pr_review_agents` policy/config input to `compound-engineering.local.md`.
+- Added canonical `workflows:pr-review` command and retained `workflows:pr-triple-review` as a compatibility alias.
+- Updated `workflows:work` to invoke the canonical PR review command and require both Codex reviewer gates before merge.
+- Tightened `spec-flow-analyzer` with an explicit `not_applicable` path for backend/infra-only plans.
+- Tightened `workflows:plan-loop` so analyzer `required_tests` must be mapped into plan verification strategy before approval.
+- Tightened `workflows:compound` skip logic so non-trivial/reusable decisions are auditable instead of subjective.
+- Updated templates, review policy, runbooks, and sequence diagram to reflect the dual-Codex PR gate model.
+
 ## 0.4.5 - 2026-03-08
 
 - Added `workflows:compound` for high-signal learning capture with:

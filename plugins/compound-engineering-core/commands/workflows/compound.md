@@ -27,11 +27,13 @@ When structured fields are present, use them in the output references/evidence s
 Only create/update a solution doc when all are true:
 
 1. Outcome is verified (tests/pass + behavior confirmed).
-2. Problem was non-trivial (required investigation, tradeoff, or edge-case handling).
-3. Learning is reusable for future planning/review.
+2. Problem was non-trivial:
+   - required multi-step investigation, conflicting review resolution, edge-case handling, or cross-boundary coordination.
+3. Learning is reusable:
+   - yields a rule, test expectation, or review heuristic that should influence future plans/reviews beyond this exact file.
 4. At least one concrete prevention/test pattern can be stated.
 
-If any condition is false, return `status: skipped` with a one-line rationale and do not write files.
+If any condition is false, return `status: skipped` with a one-line rationale that names the failed condition(s), and do not write files.
 
 ## Workflow
 

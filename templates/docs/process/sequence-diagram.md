@@ -13,7 +13,8 @@ sequenceDiagram
     participant Codex as Codex MCP (xhigh)
     participant Work as Execution Agents
     participant TeamPR as Teammate PR Review
-    participant Greptile as Greptile
+    participant CodexPR1 as Codex PR Correctness
+    participant CodexPR2 as Codex PR Edge-Case
     participant CI as CI Gates
     participant KB as Knowledge Base
 
@@ -64,12 +65,17 @@ sequenceDiagram
 
         Work->>TeamPR: PR review gate
         TeamPR-->>Work: PR findings
-        Work->>CodexGate: Run external PR gate
-        CodexGate->>Codex: Codex review (xhigh)
-        Codex-->>CodexGate: PR findings
-        CodexGate-->>Work: PR findings + status
-        Work->>Greptile: Greptile review gate
-        Greptile-->>Work: PR findings
+        par Dual external PR review
+            Work->>CodexPR1: Run correctness gate
+            CodexPR1->>Codex: Codex review (xhigh)
+            Codex-->>CodexPR1: Correctness findings
+            CodexPR1-->>Work: PR findings + status
+        and
+            Work->>CodexPR2: Run edge-case gate
+            CodexPR2->>Codex: Codex review (xhigh)
+            Codex-->>CodexPR2: Edge-case findings
+            CodexPR2-->>Work: PR findings + status
+        end
         Work->>Work: Triage non-blockers (implement/defer/reject)
         Work->>PM: Ready for E2E acceptance
         PM-->>Work: Accept or request changes
@@ -104,8 +110,8 @@ flowchart TD
     K --> I
     J -- No --> L["Open/update PR"]
     L --> M["Teammate PR review"]
-    M --> N["Codex Extra High PR review"]
-    N --> O["Greptile review"]
+    M --> N["Codex correctness PR review"]
+    N --> O["Codex edge-case PR review"]
     O --> O1["Triage non-blockers"]
     O1 --> P{"Triple gate passed?"}
     P -- No --> I

@@ -100,13 +100,13 @@ Expected artifact:
 10. **Manual triple-gate rerun (ad-hoc)**
 
 ```text
-/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
+/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
 Merge policy:
 - merge only when status is `PASS`
 - gate evidence must match current PR head SHA
-- `workflows:work` is the primary path and should auto-run triple review after each pushed SHA
+- `workflows:work` is the primary path and should auto-run PR review after each pushed SHA
 - after merge and green post-merge CI/CD, `workflows:work` should auto-run `workflows:compound` and write created/updated/skipped evidence
 - non-blockers must be triaged (`implement_now|defer|reject`) with rationale
 
@@ -129,4 +129,4 @@ Confirm success by checking all below:
 - [ ] `compound-engineering-core@compound-engineering-marketplace` is installed
 - [ ] plan + Codex plan review artifacts are generated
 - [ ] execution tracker is generated from template
-- [ ] PR triple review gate can run and produce evidence docs
+- [ ] PR review gate can run and produce evidence docs

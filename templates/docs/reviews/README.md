@@ -5,16 +5,18 @@ Store durable review evidence here so gates remain auditable even as chat contex
 ## Structure
 
 - `plans/`: plan and delta review evidence
-- `prs/`: PR triple-review evidence
+- `prs/`: PR review evidence
 
 ## Required Files
 
 - Plan gate: `plans/<plan-slug>-codex-extra-high.md`
-- PR gate: `prs/pr-<number>-triple-review.md`
-- Optional detailed Codex PR dump: `prs/pr-<number>-codex-extra-high.md`
+- PR gate: `prs/pr-<number>-review.md`
+- Optional detailed Codex PR dumps:
+  - `prs/pr-<number>-codex-correctness.md`
+  - `prs/pr-<number>-codex-edgecase.md`
 - Reference templates:
   - `plans/plan-gate-template.md`
-  - `prs/pr-triple-gate-template.md`
+  - `prs/pr-review-gate-template.md`
 
 ## Conventions
 

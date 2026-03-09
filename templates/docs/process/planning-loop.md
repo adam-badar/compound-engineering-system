@@ -39,7 +39,7 @@ No implementation begins until this loop exits.
 
 External Codex gate requires a connected global `codex-xhigh` MCP server.
 
-Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:research`, `/compound-engineering-core:workflows:deepen-plan`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-triple-review`; add `teams=on` per run when you want fan-out.
+Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:research`, `/compound-engineering-core:workflows:deepen-plan`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-review`; add `teams=on` per run when you want fan-out.
 
 Related non-coding workflows:
 
@@ -79,24 +79,29 @@ Each approved plan must also include a **Flow Permutations & Edge Cases** sectio
 
 ## PR Triple Review Policy
 
-Every code PR must pass all three gates before merge:
+Every code PR must pass all three review sources plus test gate before merge:
 
 1. Teammate review agents
-2. Codex Extra High review
-3. Greptile review
+2. Codex correctness review
+3. Codex edge-case review
 4. Test/CI gate for code PRs
 5. Non-blocker triage and disposition (`implement_now|defer|reject`)
 
 Record results under `docs/reviews/prs/`.
 
-Triple review invocation policy:
+PR review invocation policy:
 
-- `/compound-engineering-core:workflows:work` should auto-run triple review after each pushed SHA on open PRs using `approve_sha=<current-head-sha>`.
-- For manual invocations, use `approve_sha=<current-head-sha>` when invoking triple review.
+- `/compound-engineering-core:workflows:work` should auto-run PR review after each pushed SHA on open PRs using `approve_sha=<current-head-sha>`.
+- For manual invocations, use `approve_sha=<current-head-sha>` when invoking PR review.
 - If head SHA changes, invalidate prior gate/approval and rerun.
 - Deferred high-value non-blockers require explicit PM signoff and follow-up ownership.
 - After PR merge, wait for merge-triggered CI/CD/deploy on target-branch SHA before continuing to the next PR slice (or record `N/A` with rationale when no merge-triggered pipeline exists).
 - After post-merge CI/CD is green, `/compound-engineering-core:workflows:work` should auto-run `/compound-engineering-core:workflows:compound` and record created/updated/skipped evidence before proceeding.
+
+`spec-flow-analyzer` output handling:
+
+- If it returns `status: not_applicable`, record the rationale and do not invent frontend/state blockers.
+- If it returns `required_tests`, copy them into the plan's Flow Permutations section or per-PR test strategy before approval.
 
 ## Mid-Epic Delta Loop
 

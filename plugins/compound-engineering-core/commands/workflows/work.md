@@ -1,6 +1,6 @@
 ---
 name: workflows:work
-description: Execute an approved plan with real-time tracking, epic delta loops, and mandatory PR triple review gates
+description: Execute an approved plan with real-time tracking, epic delta loops, and mandatory PR review gates
 argument-hint: "[approved plan path]"
 ---
 
@@ -18,7 +18,7 @@ If empty, ask: "Which approved plan should I execute?"
 
 Optional runtime flag in arguments:
 
-- `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/compound-engineering-core:workflows:pr-triple-review`
+- `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/compound-engineering-core:workflows:pr-review`
 
 ## Workflow
 
@@ -71,19 +71,17 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
-3. Run `/compound-engineering-core:workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
-4. If triple review fails with `greptile_missing_for_sha`, do not proceed to merge:
-   - default path: wait for Greptile on the current SHA, then rerun triple review
-   - exception path: rerun with `greptile_exception="<reason>" greptile_exception_signoff="<pm-signoff-ref>"` only when policy allows
-5. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun triple review with the new head SHA before making merge decisions.
+3. Run `/compound-engineering-core:workflows:pr-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
+4. If PR review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
+5. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun PR review with the new head SHA before making merge decisions.
 6. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
-7. Triage non-blockers from triple review output:
+7. Triage non-blockers from PR review output:
    - implement_now
    - defer (owner + follow-up PR/task + rationale)
    - reject (rationale)
 8. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
 9. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
-10. Merge only when gate status is `PASS` or `PASS_WITH_EXCEPTION` for current PR head SHA, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
+10. Merge only when gate status is `PASS` for current PR head SHA, both Codex reviewer gates are green, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
 11. After merge, run a post-merge CI/CD confirmation gate before proceeding:
    - Identify target branch and merged SHA.
    - Wait for merge-triggered CI/CD workflows on that branch/SHA to finish (tests + deployment where configured).

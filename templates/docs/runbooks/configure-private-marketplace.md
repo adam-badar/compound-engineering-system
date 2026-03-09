@@ -48,11 +48,11 @@ Use explicit plugin prefix so execution always comes from the shared plugin (not
 /compound-engineering-core:workflows:explain "why is this behaving this way?"
 /compound-engineering-core:workflows:work docs/plans/<plan>-plan.md
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<plan>-plan.md | <delta>"
-/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha> teams=on"
+/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
-`/compound-engineering-core:workflows:work` auto-invokes triple review after each pushed SHA and auto-runs post-merge compound capture after CI/CD is green.
-Use direct `/workflows:pr-triple-review` mainly for ad-hoc reruns or spot checks.
+`/compound-engineering-core:workflows:work` auto-invokes PR review after each pushed SHA and auto-runs post-merge compound capture after CI/CD is green.
+Use direct `/workflows:pr-review` mainly for ad-hoc reruns or spot checks.
 
 ## 6) Update workflow after new plugin release
 
