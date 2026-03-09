@@ -73,18 +73,20 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
-3. If `require_frontend_validation_for_frontend_changes: true` and the batch touches qualifying frontend/browser validation changes, run the configured `frontend_validation_command` automatically using the current head SHA.
+3. If the batch touches qualifying frontend/browser validation changes:
+   - If `require_frontend_validation_for_frontend_changes: true`, run the configured `frontend_validation_command` automatically using the current head SHA.
    - Default command: `/workflows:frontend-validate "<pr-number-or-url> sha=<head-sha> env=<frontend_env|auto> playwright=auto"`.
    - If `workflows:frontend-validate` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not skip or silently downgrade the browser-validation gate.
    - Record the frontend artifact path in the execution tracker.
    - If frontend validation returns `FAIL` or `STALE`, do not proceed to PR review or merge until rerun passes on the current SHA.
-   - If policy explicitly disables frontend validation, record `N/A` with rationale in the execution tracker and continue instead of invoking the gate.
+   - If `require_frontend_validation_for_frontend_changes: false`, record `N/A` with rationale in the execution tracker and continue without invoking the gate.
 4. Run `/workflows:pr-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
    - If `workflows:pr-review` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not fall back to a deprecated review gate automatically.
 5. If PR review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
 6. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun required gates on the new head SHA before making merge decisions.
-   - For qualifying frontend/browser validation changes, rerun the configured `frontend_validation_command` on the new head SHA first.
+   - For qualifying frontend/browser validation changes, rerun the configured `frontend_validation_command` on the new head SHA first when `require_frontend_validation_for_frontend_changes: true`.
    - Default rerun command: `/workflows:frontend-validate "<pr-number-or-url> sha=<new-head-sha> env=<frontend_env|auto> playwright=auto"`.
+   - If project policy disables frontend validation, keep the gate at `N/A` and record the new SHA in the execution tracker instead of invoking the browser gate.
    - If `workflows:frontend-validate` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge.
    - Then rerun `/workflows:pr-review "<pr-number-or-url> approve_sha=<new-head-sha> [teams=on|teams=off]"`.
 7. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.

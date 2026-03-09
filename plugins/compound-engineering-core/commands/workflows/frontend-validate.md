@@ -132,7 +132,7 @@ Before returning `PASS`, re-resolve the current PR/branch head SHA. If it no lon
 Write to:
 
 - `docs/reviews/frontend/pr-<number>-frontend-validate.md` for PR-based runs
-- `docs/reviews/frontend/YYYY-MM-DD-<branch>-frontend-validate.md` otherwise
+- `docs/reviews/frontend/YYYY-MM-DD-<branch>-<short-sha>-frontend-validate.md` otherwise
 
 Minimum sections:
 
@@ -166,7 +166,7 @@ Otherwise:
 
 - `FAIL` for open blockers or missing required validation
 - `STALE` if artifact SHA does not match current head
-- `N/A` only when the change truly does not qualify
+- `N/A` only when the change truly does not qualify or project policy explicitly disables this gate
 
 ## Output
 
