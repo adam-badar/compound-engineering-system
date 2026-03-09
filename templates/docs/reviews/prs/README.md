@@ -1,10 +1,11 @@
 # PR Review Evidence
 
-Store PR triple-review evidence files here.
+Store PR review evidence files here.
 
 Examples:
 
-- `pr-77-triple-review.md`
-- `pr-77-codex-extra-high.md`
+- `pr-77-review.md`
+- `pr-77-codex-correctness.md`
+- `pr-77-codex-edgecase.md`
 
-Use `pr-triple-gate-template.md` and pin all gate outcomes to PR head SHA.
+Use `pr-review-gate-template.md` and pin all gate outcomes to PR head SHA.

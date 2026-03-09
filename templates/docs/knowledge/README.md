@@ -6,7 +6,7 @@ The knowledge base tracks decision context and implementation status without dup
 
 - `plans-index.md`: status index of all plans
 - `docs/plans/*`: canonical plan and execution docs
-- `docs/reviews/*`: review evidence (teammate, Codex, Greptile)
+- `docs/reviews/*`: review evidence (teammate, Codex, test/CI)
 - `docs/solutions/*`: reusable learnings after implementation
 - `docs/adr/*`: architecture decisions
 

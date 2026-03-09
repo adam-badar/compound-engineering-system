@@ -112,6 +112,7 @@ Minimum coverage:
 6. offline/timeout degradation (if networked)
 
 For stateful UX changes (frontend state, auth/session, client cache/local storage, multi-step flows), this section is mandatory and must include explicit verification strategy (integration/e2e).
+Any `required_tests` emitted by `spec-flow-analyzer` must be copied into either this section or the Epic PR Ladder rows before approval.
 
 ### 2. Teammate review loop (required)
 
@@ -119,20 +120,22 @@ Run iterative rounds until blockers are cleared:
 
 1. Read the current plan and list unresolved assumptions, risks, and decisions.
 2. Run `spec-flow-analyzer` on the current plan to identify missing user-flow permutations and edge cases.
-3. Convert any critical flow gaps into blockers and patch the plan before teammate review.
-4. Run teammate plan-review agents.
+3. If analyzer returns `status: not_applicable`, record the rationale and continue without flow blockers.
+4. If analyzer returns `status: applicable`, convert any critical flow gaps into blockers and patch the plan before teammate review.
+5. Copy analyzer `required_tests` into the plan's verification strategy. Missing mapping from analyzer output to plan content is a blocker.
+6. Run teammate plan-review agents.
    - If `teams=on`, run in parallel via agent teams.
    - If `teams=off`, run sequentially.
-5. If reviewers request more evidence, run research agents in parallel:
+7. If reviewers request more evidence, run research agents in parallel:
    - `repo-research-analyst`
    - `learnings-researcher`
    - Optional: `framework-docs-researcher`
-6. Consolidate findings into:
+8. Consolidate findings into:
    - blockers
    - non-blocking improvements
    - decision questions for PM
-7. Ask PM only decision-critical questions.
-8. Update plan in place.
+9. Ask PM only decision-critical questions.
+10. Update plan in place.
 
 ### 2.5 Non-blocker value triage (required by default)
 
@@ -205,6 +208,7 @@ Do not approve the plan until all are true:
 - Dependencies, rollout, and rollback are defined
 - Plan includes Epic PR Ladder that satisfies sizing budgets
 - Plan includes Flow Permutations & Edge Cases coverage for relevant user journeys
+- Any `required_tests` emitted by `spec-flow-analyzer` are mapped into the plan's explicit verification strategy or marked `not_applicable`
 - Every planned PR includes explicit unit/integration testing intent
 - Stateful UX paths (when present) include explicit refresh/rehydrate/resume verification strategy
 - No deferred "test-only later epic" for already-planned code PRs

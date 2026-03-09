@@ -9,32 +9,32 @@ A plan can be marked `approved` only when all pass:
 3. Codex Extra High external approval
 4. Gate output pinned to current revision (commit SHA + plan hash)
 
-## PR Triple Review Gate
+## PR Review Gate
 
 A code PR can be merged only when all pass:
 
 1. Teammate review agents
-2. Codex Extra High external review
-3. Greptile review (or explicit SHA-scoped exception with PM signoff when policy allows)
+2. Codex correctness review
+3. Codex edge-case review
 4. Test/CI gate for code PRs
 5. All gate outputs match current PR head SHA
-6. SHA authorization exists for this revision before triple review is invoked (`approve_sha=<head-sha>` or auto-supplied by `/workflows:work`)
+6. SHA authorization exists for this revision before PR review is invoked (`approve_sha=<head-sha>` or auto-supplied by `/workflows:work`)
 7. Non-blockers are triaged with explicit disposition and rationale
 8. For frontend/session/state changes, refresh/rehydrate/resume behavior is covered by integration/e2e validation
 
 Authorization rules:
 
-- Triple review is fail-closed without SHA authorization.
+- PR review is fail-closed without SHA authorization.
 - Authorization must be SHA-specific; if head SHA changes, prior authorization is invalid.
-- `/workflows:work` should auto-run triple review with current head SHA authorization after each pushed SHA and rerun on SHA change.
+- `/workflows:work` should auto-run PR review with current head SHA authorization after each pushed SHA and rerun on SHA change.
 - Background/sub-agent output with stale SHA is invalid and must not produce `PASS`.
 
-Greptile rules:
+External reviewer rules:
 
-- For `code_pr`, missing/stale Greptile review for current SHA is fail-closed by default.
-- When `greptile_required_for_code_prs: false`, mark Greptile gate `N/A` with rationale and continue.
-- Exception path requires explicit runtime exception + explicit PM signoff, and must be recorded in gate evidence.
-- Greptile exceptions are SHA-scoped; any new SHA invalidates prior exceptions.
+- For `code_pr`, both Codex PR reviewers are required and fail-closed for the current SHA.
+- Codex correctness and edge-case reviewers must run in parallel against the same head SHA.
+- If either reviewer is missing, stale, or unavailable, the PR is not merge-ready.
+- The shared `codex-xhigh` MCP server is required unless project policy explicitly defines an alternate Codex MCP endpoint.
 
 ## Post-Merge CI/CD and Compound Gate
 
@@ -72,12 +72,12 @@ Non-blocker value rules:
 
 To prevent review overload:
 
-- Run Codex once per stable revision.
+- Run both Codex PR reviewers once per stable revision.
 - Re-run only after material change.
 - Prefer focused re-review on changed areas, not full re-review of unchanged sections.
 - Keep evidence docs concise and link to artifacts instead of copying full transcripts.
 
 ## Availability Policy
 
-- External Codex gate must use `codex-xhigh` MCP server.
-- If `codex-xhigh` is unavailable, gate fails closed and merge/approval cannot proceed.
+- External Codex gates must use `codex-xhigh` MCP server unless project policy names an alternate Codex MCP endpoint.
+- If the Codex MCP endpoint is unavailable, the relevant gate fails closed and merge/approval cannot proceed.

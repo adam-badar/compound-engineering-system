@@ -15,9 +15,9 @@ Private plugin for shared compound engineering workflows.
   - `compound-engineering-core:workflows:work`
   - `compound-engineering-core:workflows:compound`
   - `compound-engineering-core:workflows:epic-delta-loop`
-  - `compound-engineering-core:workflows:pr-triple-review`
+  - `compound-engineering-core:workflows:pr-review`
 - Review and research agents for planning and PR gates
-- Codex gate runner agent
+- Codex gate runner agents
 
 ## Notes
 
@@ -29,11 +29,10 @@ Private plugin for shared compound engineering workflows.
 - `deepen-plan` upgrades an existing plan through targeted research passes and confidence-tracked PM feedback loops.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
-- PR triple review enforces teammate + Codex + Greptile + test/CI gates for code PRs.
-- Greptile is fail-closed for code PRs by default; exception requires explicit reason + PM signoff and is SHA-scoped.
-- If `greptile_required_for_code_prs: false`, the Greptile gate is explicitly `N/A` by policy.
-- PR triple review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
-- `workflows:work` auto-runs/re-runs triple review after each pushed SHA on the active PR.
+- PR review enforces teammate + Codex correctness + Codex edge-case + test/CI gates for code PRs.
+- The two Codex PR reviewers run in parallel and are both required on the current SHA.
+- PR review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
+- `workflows:work` auto-runs/re-runs PR review after each pushed SHA on the active PR.
 - `workflows:work` enforces a post-merge CI/CD confirmation gate on target-branch SHA before continuing to the next slice/closeout.
 - `workflows:work` auto-runs post-merge `workflows:compound` after CI/CD is green, and records created/updated/skipped evidence in the execution tracker.
 - Non-blockers must be triaged (`implement_now|defer|reject`) and cannot be silently ignored.

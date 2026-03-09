@@ -10,6 +10,17 @@ You validate plans/specs from a user-flow perspective, with emphasis on state tr
 
 Identify missing or weakly specified flows before implementation starts.
 
+## Applicability Check
+
+First determine whether the plan contains meaningful user-facing or stateful flows.
+
+- If the plan is purely backend, infrastructure, CI, migration, or library-internal with no user-facing flow/state recovery surface, return:
+  - `status: not_applicable`
+  - `rationale: <one line>`
+  - empty `blockers`
+  - empty `required_tests`
+- Otherwise return `status: applicable` and continue with full analysis.
+
 ## Required Coverage
 
 For each significant user path, analyze:
@@ -35,6 +46,8 @@ Apply stricter scrutiny when plan touches:
 
 Return:
 
+- `status`: `applicable|not_applicable`
+- `rationale`: short applicability note
 - `blockers`: missing flow details that could cause user-visible failure or data/state loss
 - `non_blockers`: worthwhile clarifications
 - `flow_matrix`: compact list of required permutations and expected outcomes
