@@ -6,17 +6,17 @@
 - PR Number: `{PR_NUMBER}`
 - Branch: `{BRANCH}`
 - PR Head SHA: `{PR_HEAD_SHA}`
-- Status: `pass|fail|pending|stale`
+- Status: `PASS|FAIL|PENDING|STALE`
 - Approved SHA: `{APPROVE_SHA|n/a}`
 
 ## Gate Results
 
 | Gate | Status | Reviewed SHA | Evidence |
 |------|--------|--------------|----------|
-| Teammate review | pass|fail|pending|stale | `{PR_HEAD_SHA}` | `{path}` |
-| Codex correctness | pass|fail|pending|stale | `{PR_HEAD_SHA}` | `docs/reviews/prs/pr-{PR_NUMBER}-codex-correctness.md` |
-| Codex edge-case | pass|fail|pending|stale | `{PR_HEAD_SHA}` | `docs/reviews/prs/pr-{PR_NUMBER}-codex-edgecase.md` |
-| Test/CI | pass|fail|pending|stale|n/a | `{PR_HEAD_SHA}` | `{path}` |
+| Teammate review | PASS|FAIL|PENDING|STALE | `{TEAMMATE_REVIEWED_SHA}` | `{path}` |
+| Codex correctness | PASS|FAIL|PENDING|STALE | `{CODEX_CORRECTNESS_REVIEWED_SHA}` | `docs/reviews/prs/pr-{PR_NUMBER}-codex-correctness.md` |
+| Codex edge-case | PASS|FAIL|PENDING|STALE | `{CODEX_EDGECASE_REVIEWED_SHA}` | `docs/reviews/prs/pr-{PR_NUMBER}-codex-edgecase.md` |
+| Test/CI | PASS|FAIL|PENDING|STALE|N/A | `{TEST_CI_REVIEWED_SHA_OR_N_A}` | `{path}` |
 
 ## Blockers
 
@@ -24,9 +24,9 @@
 
 ## Non-Blocker Triage
 
-| Finding | Source Reviewers | Support Count | Impact Tags | Disposition | Rationale | Owner / Follow-up |
-|---------|-------------------|---------------|-------------|-------------|-----------|-------------------|
-| {finding} | {reviewers} | {count} | {tags} | implement_now\|defer\|reject | {rationale} | {owner_or_followup} |
+| Finding | Source Reviewers | Support Count | Impact Tags | Disposition | Rationale | Counterevidence | PM Signoff | Target Milestone / PR | Owner / Follow-up |
+|---------|-------------------|---------------|-------------|-------------|-----------|-----------------|------------|-----------------------|-------------------|
+| {finding} | {reviewers} | {count} | {tags} | implement_now\|defer\|reject | {rationale} | {counterevidence_or_n/a} | {pm_signoff_or_n/a} | {target_milestone_or_pr} | {owner_or_followup} |
 
 ## Next Action
 

@@ -12,7 +12,7 @@
     {
       "name": "compound-engineering-core",
       "description": "Shared planning, execution, and review-gate workflows for compound engineering.",
-      "version": "0.4.7",
+      "version": "0.4.8",
       "author": {
         "name": "Adam Badar",
         "url": "https://github.com/adam-badar"

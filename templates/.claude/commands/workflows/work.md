@@ -1,6 +1,6 @@
 ---
 name: workflows:work
-description: Execute an approved plan with real-time tracking, epic delta loops, and mandatory PR triple review gates
+description: Execute an approved plan with real-time tracking, epic delta loops, and mandatory PR review gates
 argument-hint: "[approved plan path]"
 ---
 
@@ -18,7 +18,7 @@ If empty, ask: "Which approved plan should I execute?"
 
 Optional runtime flag in arguments:
 
-- `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/workflows:pr-triple-review`
+- `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/workflows:pr-review`
 
 ## Workflow
 
@@ -71,11 +71,12 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
-3. Run `/workflows:pr-triple-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
-4. If triple review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
-5. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun triple review with the new head SHA before making merge decisions.
+3. Run `/workflows:pr-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
+   - If `workflows:pr-review` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not fall back to a deprecated review gate automatically.
+4. If PR review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
+5. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun PR review with the new head SHA before making merge decisions.
 6. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
-7. Triage non-blockers from triple review output:
+7. Triage non-blockers from PR review output:
    - implement_now
    - defer (owner + follow-up PR/task + rationale)
    - reject (rationale)
