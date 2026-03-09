@@ -55,6 +55,15 @@
 
 - {non_blocking_finding_or_none}
 
-## Final Summary
+## Playwright Evidence
 
+- {playwright_evidence_or_not_run}
+
+## Final Status
+
+- Status: `{PASS|FAIL|STALE|N/A}`
 - {summary}
+
+## Remediation / Rerun Instruction
+
+- {remediation_or_none}

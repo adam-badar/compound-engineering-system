@@ -19,7 +19,7 @@ If empty, ask: "Which approved plan should I execute?"
 Optional runtime flag in arguments:
 
 - `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/workflows:pr-review`
-- `frontend_env=auto|local|staging` (default `auto`) to forward browser-validation environment choice into `/workflows:frontend-validate`
+- `frontend_env=auto|local|staging` (default `auto`) to forward browser-validation environment choice into the configured `frontend_validation_command`
 
 ## Workflow
 
@@ -45,7 +45,7 @@ For each implementation batch:
 4. Run local validation before opening/updating PR:
    - Always run unit tests (`unit_test_command` from `compound-engineering.local.md`, default `pytest -q tests/unit`).
    - If boundary surfaces changed (API routes/endpoints, DB schema/migrations, adapters/integrations, workers, auth), run integration tests (`integration_test_command`, default `pytest -q tests/integration`).
-   - If frontend/session/state surfaces changed, ensure the configured frontend validation target is reachable (`frontend_local_url` or `frontend_staging_url`).
+   - If `require_frontend_validation_for_frontend_changes: true` and the batch touches qualifying frontend/browser validation changes (including backend/API changes that materially alter rendered UI or state recovery), ensure the configured frontend validation target is reachable (`frontend_local_url` or `frontend_staging_url`).
    - Run project-required lint/type/static checks.
    - If required integration tests are missing, skipped, or failing without an approved exception, stop and remediate before proceeding.
 5. Update execution tracker in real time:
@@ -73,15 +73,18 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
-3. If frontend/session/state surfaces changed, run `/workflows:frontend-validate "<pr-number-or-url> sha=<head-sha> env=<frontend_env|auto> playwright=auto"` automatically from this workflow using the current head SHA.
+3. If `require_frontend_validation_for_frontend_changes: true` and the batch touches qualifying frontend/browser validation changes, run the configured `frontend_validation_command` automatically using the current head SHA.
+   - Default command: `/workflows:frontend-validate "<pr-number-or-url> sha=<head-sha> env=<frontend_env|auto> playwright=auto"`.
    - If `workflows:frontend-validate` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not skip or silently downgrade the browser-validation gate.
    - Record the frontend artifact path in the execution tracker.
    - If frontend validation returns `FAIL` or `STALE`, do not proceed to PR review or merge until rerun passes on the current SHA.
+   - If policy explicitly disables frontend validation, record `N/A` with rationale in the execution tracker and continue instead of invoking the gate.
 4. Run `/workflows:pr-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
    - If `workflows:pr-review` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not fall back to a deprecated review gate automatically.
 5. If PR review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
 6. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun required gates on the new head SHA before making merge decisions.
-   - For frontend/session/state changes, rerun `/workflows:frontend-validate "<pr-number-or-url> sha=<new-head-sha> env=<frontend_env|auto> playwright=auto"` first.
+   - For qualifying frontend/browser validation changes, rerun the configured `frontend_validation_command` on the new head SHA first.
+   - Default rerun command: `/workflows:frontend-validate "<pr-number-or-url> sha=<new-head-sha> env=<frontend_env|auto> playwright=auto"`.
    - If `workflows:frontend-validate` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge.
    - Then rerun `/workflows:pr-review "<pr-number-or-url> approve_sha=<new-head-sha> [teams=on|teams=off]"`.
 7. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.

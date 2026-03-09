@@ -4,7 +4,7 @@
 
 - Added `workflows:frontend-validate` as the phase-1 browser-validation gate using `codex exec` and Chrome DevTools MCP.
 - Added a frontend validation artifact template under `docs/reviews/frontend/`.
-- Updated `workflows:work` to auto-run frontend validation before PR review when frontend/session/state surfaces changed.
+- Updated `workflows:work` to auto-run frontend validation before PR review when a batch touches qualifying frontend/browser validation changes.
 - Updated `workflows:pr-review` to fail closed for qualifying PRs when frontend validation evidence is missing, stale, or failed.
 - Added policy defaults for frontend validation environment/mode/fallback and optional Playwright supplementation.
 

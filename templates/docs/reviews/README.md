@@ -6,7 +6,7 @@ Store durable review evidence here so gates remain auditable even as chat contex
 
 - `plans/`: plan and delta review evidence
 - `prs/`: PR review evidence
-- `frontend/`: browser-validation evidence for qualifying frontend/session/state PRs
+- `frontend/`: browser-validation evidence for qualifying frontend/browser validation PRs
 
 ## Required Files
 

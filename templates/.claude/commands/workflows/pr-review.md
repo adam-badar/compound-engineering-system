@@ -205,7 +205,7 @@ For `code_pr`, this gate is mandatory.
 
 1. Run configured `unit_test_command` and record command + summary in the evidence file.
 2. If boundary surfaces changed (API routes, DB schema/migrations, adapters, workers, auth, external integrations), run configured `integration_test_command`.
-3. If frontend/session/state surfaces changed (client state, auth/session token lifecycle, local storage/cache rehydration, multi-step flows), require at least one integration/e2e scenario that proves refresh/rehydrate/resume behavior.
+3. If the PR touches qualifying frontend/browser validation changes (frontend pages/routes/components/layouts/styles, client state/data hydration, auth/session token lifecycle, router/navigation behavior, local storage/session storage/cache rehydration, multi-step UX flows, or backend/API changes that materially alter rendered UI or state recovery), require at least one integration/e2e scenario that proves refresh/rehydrate/resume behavior.
 4. If the refresh/rehydrate/resume scenario is missing for a qualifying PR, set gate status `FAIL` with explicit remediation.
 5. Verify tests for changed behavior exist in the same PR.
 6. If CI exists, ensure test jobs for this PR head SHA are passing.
@@ -215,7 +215,7 @@ For `docs_only`, mark test gate `N/A` with rationale.
 
 ### 4.5 Frontend/browser validation gate (required when qualifying)
 
-If `require_frontend_validation_for_frontend_changes: true` and the PR touches qualifying frontend/session/state surfaces:
+If `require_frontend_validation_for_frontend_changes: true` and the PR touches qualifying frontend/browser validation changes:
 
 1. Require a current-SHA frontend validation artifact at:
 
@@ -229,9 +229,10 @@ If `require_frontend_validation_for_frontend_changes: true` and the PR touches q
    - console/network findings
    - refresh/rehydrate/resume result
    - final status
-3. If the artifact is missing, stale, or failed, set gate status `FAIL` with explicit remediation:
+3. If auth/session/token lifecycle changed, also require `Session / Auth Continuity` evidence in the artifact and treat `FAIL`, missing evidence, or unsupported `N/A` as gate failure.
+4. If the artifact is missing, stale, or failed, set gate status `FAIL` with explicit remediation:
    - rerun `frontend_validation_command` on the current SHA
-4. If the change does not qualify, or policy explicitly disables this gate, mark frontend validation `N/A` with rationale.
+5. If the change does not qualify, or policy explicitly disables this gate, mark frontend validation `N/A` with rationale.
 
 ### 5. Non-blocker value gate (required by default)
 
@@ -276,8 +277,8 @@ PR gate is **PASS** only when:
 - Codex correctness gate: no open blocker
 - Codex edge-case gate: no open blocker
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
-- frontend/browser validation gate: pass for qualifying frontend/state changes, or N/A otherwise
-- refresh-resilience test requirement satisfied when frontend/session/state surfaces changed
+- frontend/browser validation gate: pass for qualifying frontend/browser validation changes, or N/A otherwise
+- refresh-resilience test requirement satisfied when the PR touches qualifying frontend/browser validation changes
 - all gate results match current PR head SHA
 - for `code_pr`, `approve_sha` used for this run matches current PR head SHA
 - for `docs_only`, `approve_sha` may be omitted; if supplied, it must match current PR head SHA

@@ -40,7 +40,8 @@ Optional runtime flags in arguments:
 
 1. Resolve PR number/branch/diff/touched files/current head SHA.
 2. If `sha=<sha>` is supplied and does not match current head SHA, stop with `status: STALE`.
-3. Determine whether this change qualifies for browser validation.
+3. If `require_frontend_validation_for_frontend_changes: false`, write an `N/A` artifact with rationale (`policy disabled`) and return `status: N/A`.
+4. Determine whether this change qualifies for browser validation.
 
 Treat browser validation as required when any of the following changed:
 
@@ -124,6 +125,8 @@ Run:
 If `playwright=on`, or `playwright=auto` and `playwright_command` is configured and appropriate for this repo, run the Playwright command as supplemental evidence only.
 Playwright is not required for phase 1 pass/fail unless project policy explicitly says so.
 
+Before returning `PASS`, re-resolve the current PR/branch head SHA. If it no longer matches the requested/current validation SHA, write a `STALE` artifact instead of `PASS` and instruct the caller to rerun on the new SHA.
+
 ### 5. Write validation artifact
 
 Write to:
@@ -143,10 +146,11 @@ Minimum sections:
 - Network findings
 - Refresh/rehydrate/resume result
 - Session/auth result
-- Playwright evidence (if run)
 - Blocking findings
 - Non-blocking findings
-- Final status and remediation
+- Playwright evidence (if run)
+- Final status
+- Remediation / rerun instruction
 
 ### 6. Gate semantics
 
