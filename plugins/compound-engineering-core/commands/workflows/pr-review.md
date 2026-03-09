@@ -55,12 +55,41 @@ Resolve PR number, branch, diff, touched files, and prior review status.
 Capture the current PR head SHA. All gate outcomes must be pinned to this SHA.
 Classify PR type:
 
-- `docs_only`: docs/changelog/commentary changes only
-- `code_pr`: any runtime, data, API, infra, or migration change
+- `docs_only`: documentation/changelog/commentary changes only, with no executable policy/config/workflow surface changes
+- `code_pr`: any runtime, data, API, infra, migration, CI, workflow, agent, executable plugin surface, manifest, or policy change that can affect execution, review, deployment, or trust boundaries
+
+Treat these as `code_pr` even if they are Markdown/JSON/YAML:
+
+- `.claude/**`
+- `.claude-plugin/**`
+- `plugins/**/commands/**`
+- `plugins/**/agents/**`
+- `plugins/**/.claude-plugin/**`
+- `templates/.claude/**`
+- `templates/docs/process/**`
+- `templates/docs/reviews/**`
+- workflow/CI manifests
+- scripts or automation policies
 
 Write or update review evidence file:
 
 `docs/reviews/prs/pr-<number>-review.md`
+
+Evidence migration rule:
+
+- If legacy `docs/reviews/prs/pr-<number>-triple-review.md` exists and the canonical `pr-<number>-review.md` does not, rename the legacy file to the canonical path before continuing.
+- If both files exist, treat `pr-<number>-review.md` as canonical, copy forward any still-relevant context from the legacy file, and mark the legacy file as superseded instead of continuing to update both.
+- When loading prior review context, normalize legacy reviewer IDs before computing `supporting_reviewers` or `support_count`:
+  - `codex_correctness` -> `codex:correctness`
+  - `codex_edgecase` -> `codex:edgecase`
+  - `codex` -> `legacy:codex-aggregate`
+- Preserve legacy aggregate reviewer labels as stable migrated reviewer IDs when raw identities are unavailable:
+  - `teammate` -> `legacy:teammate-aggregate`
+  - `ci` -> `legacy:ci-aggregate`
+  - `greptile` -> `legacy:greptile-aggregate`
+- Count each migrated aggregate label as at most one supporting reviewer.
+- If fresh teammate, CI, or Codex gate evidence exists for the current PR head SHA, drop the corresponding migrated aggregate label from consensus math instead of combining old aggregate support with fresh same-gate evidence.
+- `legacy:greptile-aggregate` may be retained as historical supporting evidence for same-SHA migrated findings, but it must never be treated as a required gate for PASS under the new workflow.
 
 ### 1.1 SHA authorization gate (fail-closed)
 
@@ -104,7 +133,16 @@ Fallback set:
 - `compound-engineering-core:code-simplicity-reviewer`
 
 Capture blocker/non-blocker findings in the review evidence file.
-Tag each finding with source reviewer (`teammate|codex_correctness|codex_edgecase|ci`) so consensus can be computed.
+Tag each finding with a specific source reviewer ID so consensus can be computed over unique reviewers, for example:
+
+- `teammate:kieran-python-reviewer`
+- `teammate:security-sentinel`
+- `codex:correctness`
+- `codex:edgecase`
+- `ci:unit`
+- `ci:integration`
+
+Do not collapse all teammate findings into a single `teammate` bucket.
 
 ### 3. Dual Codex xhigh gates (required, parallel)
 
@@ -164,7 +202,7 @@ Do not treat non-blockers as disposable. Consolidate non-blockers from teammate,
 Normalize duplicate findings into canonical rows with:
 
 - `support_count`
-- `supporting_reviewers`
+- `supporting_reviewers` (unique reviewer IDs, not reviewer classes)
 - `impact_tags` (correctness/security/data/performance/accuracy/maintainability/ux/operability)
 
 For each non-blocker, assign one disposition:
@@ -203,7 +241,8 @@ PR gate is **PASS** only when:
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
 - refresh-resilience test requirement satisfied when frontend/session/state surfaces changed
 - all gate results match current PR head SHA
-- `approve_sha` used for this run matches current PR head SHA
+- for `code_pr`, `approve_sha` used for this run matches current PR head SHA
+- for `docs_only`, `approve_sha` may be omitted; if supplied, it must match current PR head SHA
 - no gate is marked `conditional_pass` when `allow_conditional_pass_for_code_prs` is `false`
 - all non-blockers are triaged with explicit disposition and rationale (if required)
 - deferred high-value non-blockers have explicit PM signoff (if required)

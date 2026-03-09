@@ -8,6 +8,13 @@
 - Fixed the repo-local copied `workflows:pr-review` template so it uses the canonical review artifact/remediation path and local-agent semantics instead of stale plugin-only references.
 - Extended the canonical PR review evidence template to represent `stale` SHA state and required non-blocker triage fields.
 - Fixed Codex reviewer/gate agent MCP-outage contracts to return `status: fail` consistently with their declared output schemas.
+- Switched the repo-local `workflows:work` template to invoke canonical `workflows:pr-review` directly instead of leaning on the deprecated alias.
+- Added explicit migration rules so legacy `pr-<number>-triple-review.md` evidence is renamed or superseded cleanly by `pr-<number>-review.md`.
+- Tightened PR-type classification so workflow, agent, plugin, manifest, CI, and policy changes are always treated as guarded `code_pr` changes, not `docs_only`.
+- Restored a complete usable body for the legacy `pr-triple-gate-template.md` filename so compatibility is structural, not just a pointer note.
+- Normalized legacy Codex reviewer IDs during evidence migration so consensus counts stay stable across the underscore-to-colon reviewer ID rename.
+- Added an explicit migration policy for legacy aggregate `teammate` / `ci` reviewer labels so migrated evidence preserves historical support without double-counting once fresh same-gate evidence exists.
+- Extended legacy reviewer-ID migration coverage to old aggregate `codex` and `greptile` labels so historical PR evidence stays deterministic under the new gate contract.
 
 ## 0.4.6 - 2026-03-09
 
