@@ -15,7 +15,15 @@ max_cycle_days_per_pr: 2
 require_test_strategy_per_pr: true
 require_tests_for_code_prs: true
 require_integration_tests_for_boundary_changes: true
+require_frontend_validation_for_frontend_changes: true
 allow_conditional_pass_for_code_prs: false
+frontend_validation_mode: codex-devtools
+frontend_local_url: "http://localhost:3000"
+frontend_staging_url: ""
+frontend_validation_use_staging_fallback: false
+frontend_local_revision_check_command: ""
+frontend_staging_revision_check_command: ""
+playwright_command: ""
 require_non_blocker_triage: true
 require_pm_signoff_for_non_blocker_deferrals: true
 auto_promote_high_impact_non_blockers: true

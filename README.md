@@ -26,6 +26,7 @@ This repository now also contains a private Claude plugin marketplace so shared 
 | `templates/compound-engineering.local.example.md` | Review-agent and external-gate configuration template |
 | `templates/docs/adr/` | Architecture Decision Record template |
 | `templates/docs/runbooks/` | Operational runbook template |
+| `templates/docs/runbooks/configure-codex-browser-mcp.md` | Codex browser MCP setup for frontend validation |
 | `templates/docs/runbooks/configure-private-marketplace.md` | Shared plugin rollout/update runbook |
 | `templates/docs/solutions/` | Solution documentation structure |
 | `templates/docs/process/` | Workflow definitions and sequence diagrams |
@@ -69,71 +70,72 @@ claude plugin install compound-engineering-core@compound-engineering-marketplace
 6. Rename `CLAUDE.md.base` to `CLAUDE.md` and customize project-specific sections.
 7. Copy `compound-engineering.local.example.md` to `compound-engineering.local.md` and customize reviewers.
 8. Run `claude mcp add -s user codex-xhigh -- codex mcp-server -c 'model=\"gpt-5.3-codex\"' -c 'model_reasoning_effort=\"xhigh\"'` once per machine.
-9. Verify plugin is installed:
+9. Configure Codex browser MCP once per machine for `frontend-validate` (see `templates/docs/runbooks/configure-codex-browser-mcp.md`).
+10. Verify plugin is installed:
 
 ```bash
 claude plugin list
 # should include: compound-engineering-core@compound-engineering-marketplace
 ```
 
-10. If requirements are ambiguous, run discovery first (add freshness research controls for volatile domains):
+11. If requirements are ambiguous, run discovery first (add freshness research controls for volatile domains):
 
 ```text
 /compound-engineering-core:workflows:brainstorm "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions research=on research_depth=standard"
 ```
 
-11. When needed, run deep research before planning:
+12. When needed, run deep research before planning:
 
 ```text
 /compound-engineering-core:workflows:research "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions depth=deep scope=hybrid"
 ```
 
-12. Start planning with plugin-prefixed command:
+13. Start planning with plugin-prefixed command:
 
 ```text
 /compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
 ```
 
-13. Confirm planning artifacts were created:
+14. Confirm planning artifacts were created:
    - `docs/plans/*-plan.md`
    - `docs/reviews/plans/*-codex-extra-high.md`
-14. If a draft plan needs stronger grounding before approval:
+15. If a draft plan needs stronger grounding before approval:
 
 ```text
 /compound-engineering-core:workflows:deepen-plan "docs/plans/<your-plan>-plan.md depth=deep"
 ```
 
-15. Initialize execution tracker:
+16. Initialize execution tracker:
 
 ```bash
 scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 ```
 
-16. Execute implementation from the approved plan:
+17. Execute implementation from the approved plan:
 
 ```text
 /compound-engineering-core:workflows:work docs/plans/<your-plan>-plan.md
 ```
 
-17. If scope changes mid-epic:
+18. If scope changes mid-epic:
 
 ```text
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-18. For manual gate reruns (or ad-hoc checks) before merge:
+19. For manual gate reruns (or ad-hoc checks) before merge:
 
 ```text
 /compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
 ```
 
-19. `/compound-engineering-core:workflows:work` auto-runs PR review after each pushed SHA on the active PR using current head SHA authorization; treat stale/background runs as invalid.
-20. Merge only when PR review gate status is `PASS` for the current PR head SHA (teammate + Codex correctness + Codex edge-case + test/CI).
-21. After each merge, wait for merge-triggered CI/CD/deploy workflows on target-branch SHA to finish and pass before continuing (or record `N/A` with rationale when no merge-triggered pipeline exists).
-22. Once post-merge CI/CD is green, `/compound-engineering-core:workflows:work` auto-runs `/compound-engineering-core:workflows:compound` and records `created|updated|skipped` evidence before the next slice.
-23. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
-24. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
-25. Optional utility only (not part of the default `compound-engineering-core` loop): if upstream EveryInc `compound-engineering` plugin is installed, use `/setup` to regenerate `compound-engineering.local.md` and `/triage` for a separate todo-file system. By default, keep deferred items in PR review evidence + execution tracker.
+20. `/compound-engineering-core:workflows:work` auto-runs PR review after each pushed SHA on the active PR using current head SHA authorization; treat stale/background runs as invalid.
+21. Merge only when PR review gate status is `PASS` for the current PR head SHA (teammate + Codex correctness + Codex edge-case + test/CI + frontend/browser validation when qualifying).
+22. After each merge, wait for merge-triggered CI/CD/deploy workflows on target-branch SHA to finish and pass before continuing (or record `N/A` with rationale when no merge-triggered pipeline exists).
+23. Once post-merge CI/CD is green, `/compound-engineering-core:workflows:work` auto-runs `/compound-engineering-core:workflows:compound` and records `created|updated|skipped` evidence before the next slice.
+24. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
+25. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
+26. Optional utility only (not part of the default `compound-engineering-core` loop): if upstream EveryInc `compound-engineering` plugin is installed, use `/setup` to regenerate `compound-engineering.local.md` and `/triage` for a separate todo-file system. By default, keep deferred items in PR review evidence + execution tracker.
 
 ### Option B: Existing project bootstrap
 

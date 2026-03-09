@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.9 - 2026-03-09
+
+- Added `workflows:frontend-validate` as the phase-1 browser-validation gate using `codex exec` and Chrome DevTools MCP.
+- Added a frontend validation artifact template under `docs/reviews/frontend/`.
+- Updated `workflows:work` to auto-run frontend validation before PR review when a batch touches qualifying frontend/browser validation changes.
+- Updated `workflows:pr-review` to fail closed for qualifying PRs when frontend validation evidence is missing, stale, or failed.
+- Added policy defaults for frontend validation environment/mode/fallback and optional Playwright supplementation.
+
 ## 0.4.7 - 2026-03-09
 
 - Renamed the canonical PR review evidence artifact from `pr-<number>-triple-review.md` to `pr-<number>-review.md`.

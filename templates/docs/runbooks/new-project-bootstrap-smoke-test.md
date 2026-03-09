@@ -9,6 +9,7 @@ Bootstrap a new or existing repository with the compound engineering system and 
 - [ ] `codex` CLI installed and authenticated
 - [ ] `claude` CLI installed
 - [ ] `codex-xhigh` MCP configured (see `configure-codex-xhigh-mcp.md`)
+- [ ] Codex `chrome-devtools` MCP configured for browser validation (see `configure-codex-browser-mcp.md`)
 - [ ] private marketplace configured (see `configure-private-marketplace.md`)
 - [ ] repository cloned locally
 
@@ -97,7 +98,7 @@ Expected artifact:
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<your-plan>-plan.md | <delta request>"
 ```
 
-10. **Manual triple-gate rerun (ad-hoc)**
+10. **Manual review rerun (ad-hoc)**
 
 ```text
 /compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
@@ -106,6 +107,7 @@ Expected artifact:
 Merge policy:
 - merge only when status is `PASS`
 - gate evidence must match current PR head SHA
+- qualifying frontend/browser validation changes also require current-SHA frontend evidence
 - `workflows:work` is the primary path and should auto-run PR review after each pushed SHA
 - after merge and green post-merge CI/CD, `workflows:work` should auto-run `workflows:compound` and write created/updated/skipped evidence
 - non-blockers must be triaged (`implement_now|defer|reject`) with rationale
