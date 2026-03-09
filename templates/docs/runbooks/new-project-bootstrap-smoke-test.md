@@ -107,6 +107,7 @@ Merge policy:
 - merge only when status is `PASS`
 - gate evidence must match current PR head SHA
 - `workflows:work` is the primary path and should auto-run triple review after each pushed SHA
+- after merge and green post-merge CI/CD, `workflows:work` should auto-run `workflows:compound` and write created/updated/skipped evidence
 - non-blockers must be triaged (`implement_now|defer|reject`) with rationale
 
 11. **Verify diagnosis/explanation workflows are available**

@@ -31,6 +31,7 @@ Optional runtime flag in arguments:
 - **Execution mode:** agent teams are optional per run (`teams=on`)
 - **External reviewer:** `external_plan_review_gate` from `compound-engineering.local.md` (must resolve to `codex-extra-high`)
 - **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `compound-engineering-core:codex-gate-runner`)
+- **Flow analysis agent:** `compound-engineering-core:spec-flow-analyzer` for permutation and edge-case gap detection
 - **Codex MCP server:** `codex_mcp_server` from `compound-engineering.local.md` (default: `codex-xhigh`)
 - **Agent ID normalization:** if an agent ID from `compound-engineering.local.md` has no namespace prefix, resolve it as `compound-engineering-core:<agent-id>` before invocation.
 - **Sizing defaults (override in `compound-engineering.local.md`):**
@@ -98,24 +99,41 @@ Sizing and decomposition rules:
 4. The first PR in each epic should establish/verify test harness and CI path (if not already present).
 5. "Test later" is not allowed for code paths included in this epic.
 
+### 1.7 Flow permutations gate (required)
+
+Before any approval, ensure the plan has a **Flow Permutations & Edge Cases** section.
+
+Minimum coverage:
+
+1. initial load
+2. refresh/rehydrate
+3. partial completion + resume
+4. error + retry path
+5. session expiry/re-auth path (if auth exists)
+6. offline/timeout degradation (if networked)
+
+For stateful UX changes (frontend state, auth/session, client cache/local storage, multi-step flows), this section is mandatory and must include explicit verification strategy (integration/e2e).
+
 ### 2. Teammate review loop (required)
 
 Run iterative rounds until blockers are cleared:
 
 1. Read the current plan and list unresolved assumptions, risks, and decisions.
-2. Run teammate plan-review agents.
+2. Run `compound-engineering-core:spec-flow-analyzer` on the current plan to identify missing user-flow permutations and edge cases.
+3. Convert any critical flow gaps into blockers and patch the plan before teammate review.
+4. Run teammate plan-review agents.
    - If `teams=on`, run in parallel via agent teams.
    - If `teams=off`, run sequentially.
-3. If reviewers request more evidence, run research agents in parallel:
+5. If reviewers request more evidence, run research agents in parallel:
    - `compound-engineering-core:repo-research-analyst`
    - `compound-engineering-core:learnings-researcher`
    - Optional: `compound-engineering-core:framework-docs-researcher`
-4. Consolidate findings into:
+6. Consolidate findings into:
    - blockers
    - non-blocking improvements
    - decision questions for PM
-5. Ask PM only decision-critical questions.
-6. Update plan in place.
+7. Ask PM only decision-critical questions.
+8. Update plan in place.
 
 ### 2.5 Non-blocker value triage (required by default)
 
@@ -187,7 +205,9 @@ Do not approve the plan until all are true:
 - Acceptance criteria are testable
 - Dependencies, rollout, and rollback are defined
 - Plan includes Epic PR Ladder that satisfies sizing budgets
+- Plan includes Flow Permutations & Edge Cases coverage for relevant user journeys
 - Every planned PR includes explicit unit/integration testing intent
+- Stateful UX paths (when present) include explicit refresh/rehydrate/resume verification strategy
 - No deferred "test-only later epic" for already-planned code PRs
 - Non-blockers are triaged (`implement_now|defer|reject`) with rationale
 - High-value deferred non-blockers have explicit PM signoff when policy requires it

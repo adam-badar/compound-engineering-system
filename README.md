@@ -128,9 +128,10 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 19. `/compound-engineering-core:workflows:work` auto-runs triple review after each pushed SHA on the active PR using current head SHA authorization; treat stale/background runs as invalid.
 20. Merge only when triple gate status is `PASS` for the current PR head SHA (including the test/CI gate for code PRs).
 21. After each merge, wait for merge-triggered CI/CD/deploy workflows on target-branch SHA to finish and pass before continuing (or record `N/A` with rationale when no merge-triggered pipeline exists).
-22. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
-23. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
-24. Optional utility only (not part of the default `compound-engineering-core` loop): if upstream EveryInc `compound-engineering` plugin is installed, use `/setup` to regenerate `compound-engineering.local.md` and `/triage` for a separate todo-file system. By default, keep deferred items in triple-review evidence + execution tracker.
+22. Once post-merge CI/CD is green, `/compound-engineering-core:workflows:work` auto-runs `/compound-engineering-core:workflows:compound` and records `created|updated|skipped` evidence before the next slice.
+23. Non-blockers must be triaged (`implement_now|defer|reject`) with rationale before merge.
+24. Optional: run `/compound-engineering-core:workflows:debug "<failing behavior>"` and `/compound-engineering-core:workflows:explain "<why/how question>"` for diagnosis and traceability.
+25. Optional utility only (not part of the default `compound-engineering-core` loop): if upstream EveryInc `compound-engineering` plugin is installed, use `/setup` to regenerate `compound-engineering.local.md` and `/triage` for a separate todo-file system. By default, keep deferred items in triple-review evidence + execution tracker.
 
 ### Option B: Existing project bootstrap
 

@@ -132,9 +132,10 @@ For `code_pr`, this gate is mandatory.
 
 1. Run configured `unit_test_command` and record command + summary in the evidence file.
 2. If boundary surfaces changed (API routes, DB schema/migrations, adapters, workers, auth, external integrations), run configured `integration_test_command`.
-3. Verify tests for changed behavior exist in the same PR.
-4. If CI exists, ensure test jobs for this PR head SHA are passing.
-5. If tests are missing, failing, skipped without policy exception, or CI is red, set gate status `FAIL` with explicit remediation.
+3. If frontend/session/state surfaces changed (client state, auth/session token lifecycle, local storage/cache rehydration, multi-step flows), require at least one integration/e2e scenario that proves refresh/rehydrate/resume behavior.
+4. Verify tests for changed behavior exist in the same PR.
+5. If CI exists, ensure test jobs for this PR head SHA are passing.
+6. If tests are missing, failing, skipped without policy exception, or CI is red, set gate status `FAIL` with explicit remediation.
 
 For `docs_only`, mark test gate `N/A` with rationale.
 
@@ -204,6 +205,7 @@ PR gate is **PASS** only when:
 - teammate gate: no open blocker
 - Codex Extra High gate: no open blocker
 - test/CI gate: pass for `code_pr`, or N/A for `docs_only`
+- refresh-resilience test requirement satisfied when frontend/session/state surfaces changed
 - Greptile gate:
   - `PASS` for current SHA, or
   - `PASS_WITH_EXCEPTION` with explicit PM signoff when policy allows, or

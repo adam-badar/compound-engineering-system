@@ -25,7 +25,7 @@
 7. Only then start implementation with `/compound-engineering-core:workflows:work <approved-plan-path>`.
 8. For each epic, keep `docs/plans/<plan-slug>-execution.md` updated in real time.
 9. If scope changes during implementation, run `/compound-engineering-core:workflows:epic-delta-loop "<parent-plan-path> | <delta request>"` and merge approved deltas back into the parent epic plan.
-10. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage.
+10. Plans must include an explicit Epic PR Ladder with per-PR size and test coverage, plus a Flow Permutations & Edge Cases section (including refresh/rehydrate/resume for stateful UX).
 11. `/compound-engineering-core:workflows:work` should auto-run triple review after each pushed SHA on an open PR using current head SHA authorization (`approve_sha=<current-head-sha>`). For manual/ad-hoc runs, use `/compound-engineering-core:workflows:pr-triple-review "<pr-number> approve_sha=<current-head-sha>"`.
 12. Treat stale/background review output as non-authoritative; if head SHA changes, rerun triple review for the new SHA.
 13. After each PR merge, wait for merge-triggered CI/CD/deploy workflows on the target branch SHA; continue only when they are green (or explicitly `N/A` with rationale when no merge-triggered pipeline exists).
@@ -38,6 +38,8 @@
 20. Use `/compound-engineering-core:workflows:debug` for root-cause loops and `/compound-engineering-core:workflows:explain` for decision/behavior traceability.
 21. Every change should be as simple as possible. One concern per PR.
 22. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.
+23. After each merge, once merge-triggered CI/CD is green, `/compound-engineering-core:workflows:work` must auto-run `/compound-engineering-core:workflows:compound` and record created/updated/skipped output before continuing.
+24. Use manual `/compound-engineering-core:workflows:compound "<short context>"` only for backfills/ad-hoc captures; skip trivial fixes and avoid low-signal docs.
 
 ### Epic Definition
 
