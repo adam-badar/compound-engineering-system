@@ -31,10 +31,10 @@
 13. After each PR merge, wait for merge-triggered CI/CD/deploy workflows on the target branch SHA; continue only when they are green (or explicitly `N/A` with rationale when no merge-triggered pipeline exists).
 14. Non-blockers from reviews must be triaged (`implement_now|defer|reject`) with rationale; findings repeated by multiple reviewers should be treated as escalation-candidates and require counterevidence + explicit PM signoff to defer/reject.
 15. Default triage artifact is existing review evidence + execution tracker; do not create a separate todo-file system unless explicitly opted in.
-16. Code PR review is fail-closed unless teammate review, Codex correctness review, and Codex edge-case review all pass on the current SHA.
+16. Code PR review is fail-closed unless teammate review plus both direct Codex PR passes (correctness and edge-case) all pass on the current SHA.
 17. Conditional pass does not qualify as merge-ready for code PRs.
 18. Never defer tests to a later "test-only" PR for code already merged.
-19. Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:research`, `/compound-engineering-core:workflows:deepen-plan`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-review`; add `teams=on` when you want fan-out.
+19. Agent teams are optional for `/compound-engineering-core:workflows:brainstorm`, `/compound-engineering-core:workflows:research`, `/compound-engineering-core:workflows:deepen-plan`, `/compound-engineering-core:workflows:plan-loop`, `/compound-engineering-core:workflows:debug`, `/compound-engineering-core:workflows:explain`, and `/compound-engineering-core:workflows:pr-review`; use them only when you explicitly want teammate fan-out. Codex plan/PR passes should run directly from the current Claude agent by default.
 20. Use `/compound-engineering-core:workflows:debug` for root-cause loops and `/compound-engineering-core:workflows:explain` for decision/behavior traceability.
 21. Every change should be as simple as possible. One concern per PR.
 22. Adhere to SOLID principles. Keep code DRY. Minimize technical debt and dead code.

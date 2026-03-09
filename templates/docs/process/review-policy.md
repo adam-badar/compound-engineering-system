@@ -36,9 +36,9 @@ Authorization rules:
 
 External reviewer rules:
 
-- For `code_pr`, both Codex PR reviewers are required and fail-closed for the current SHA.
-- Codex correctness and edge-case reviewers must run in parallel against the same head SHA.
-- If either reviewer is missing, stale, or unavailable, the PR is not merge-ready.
+- For `code_pr`, both Codex PR passes are required and fail-closed for the current SHA.
+- Codex correctness and edge-case passes must both run against the same head SHA; default execution is direct from the current Claude agent rather than through dedicated Codex-only sub-agents.
+- If either pass is missing, stale, or unavailable, the PR is not merge-ready.
 - The shared `codex-xhigh` MCP server is required unless project policy explicitly defines an alternate Codex MCP endpoint.
 
 ## Post-Merge CI/CD and Compound Gate
@@ -77,7 +77,7 @@ Non-blocker value rules:
 
 To prevent review overload:
 
-- Run both Codex PR reviewers once per stable revision.
+- Run both Codex PR passes once per stable revision.
 - Re-run only after material change.
 - Prefer focused re-review on changed areas, not full re-review of unchanged sections.
 - Keep evidence docs concise and link to artifacts instead of copying full transcripts.

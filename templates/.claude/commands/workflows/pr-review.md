@@ -56,7 +56,7 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `consensus_threshold_for_promotion` (default: `2`)
 - `require_counterevidence_for_non_blocker_reject` (default: `true`)
 - `require_pm_signoff_for_consensus_non_blocker_deferrals` (default: `true`)
-- `codex_pr_review_agents` (default: `[codex-pr-correctness-reviewer, codex-pr-edgecase-reviewer]`)
+- legacy `codex_pr_review_agents` config may still exist in older repos; ignore it because direct Codex invocation from the current Claude agent is canonical
 
 ## Workflow
 
@@ -133,11 +133,8 @@ Before running gates:
 2. If `teams=on`, validate agent teams are enabled (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) and teammate fan-out is available for `review_agents`.
 3. If `teams=on` and either team check fails, stop with `status: FAIL` and reason `agent_teams_unavailable`.
 4. Validate configured `codex_mcp_server` (`codex-xhigh` default) is connected.
-5. Resolve `codex_pr_review_agents` from `compound-engineering.local.md`; if missing, use both fallback agents:
-   - `codex-pr-correctness-reviewer`
-   - `codex-pr-edgecase-reviewer`
-6. Validate both Codex PR reviewer agents are available.
-7. If MCP or either reviewer agent is unavailable, stop with `status: FAIL` and reason `external_gate_unavailable`.
+5. Direct invocation rule: the current Claude agent must run both Codex review passes directly through `codex_mcp_server`; do not spawn dedicated Codex-only sub-agents unless the user explicitly requests that override.
+6. If MCP is unavailable, stop with `status: FAIL` and reason `external_gate_unavailable`.
 
 ### 2. Teammate review gate
 
@@ -163,13 +160,15 @@ Tag each finding with a specific source reviewer ID so consensus can be computed
 
 Do not collapse all teammate findings into a single `teammate` bucket.
 
-### 3. Dual Codex xhigh gates (required, parallel)
+### 3. Dual Codex xhigh passes (required, direct)
 
-Run both Codex PR reviewer agents in parallel on the same PR head SHA.
+Run two independent Codex PR review passes on the same PR head SHA from the current Claude agent.
+Default execution is sequential direct invocation to avoid extra sub-agent/agent-team token overhead while preserving reviewer separation by rubric.
 
 #### 3a. Codex correctness reviewer
 
-Route this through the configured correctness reviewer agent and pin findings to current PR head SHA.
+Run a direct Codex xhigh correctness pass through `codex_mcp_server` from the current Claude agent and pin findings to current PR head SHA.
+Use a focused prompt that covers only the correctness/security/state-transition rubric for this pass.
 
 Primary focus:
 
@@ -184,7 +183,8 @@ Capture output in:
 
 #### 3b. Codex edge-case reviewer
 
-Route this through the configured edge-case reviewer agent and pin findings to current PR head SHA.
+Run a direct Codex xhigh edge-case pass through `codex_mcp_server` from the current Claude agent and pin findings to current PR head SHA.
+Use a focused prompt that covers only the edge-case/frontend/CI/operability rubric for this pass.
 
 Primary focus:
 

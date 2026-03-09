@@ -40,7 +40,7 @@ claude plugin marketplace list
 Use explicit plugin prefix so execution always comes from the shared plugin (not stale repo-local command copies):
 
 ```text
-/compound-engineering-core:workflows:plan-loop "problem statement teams=on"
+/compound-engineering-core:workflows:plan-loop "problem statement"
 /compound-engineering-core:workflows:brainstorm "problem framing prompt research=on research_depth=standard"
 /compound-engineering-core:workflows:research "problem framing prompt depth=deep scope=hybrid"
 /compound-engineering-core:workflows:deepen-plan "docs/plans/<plan>-plan.md depth=deep"
@@ -48,7 +48,7 @@ Use explicit plugin prefix so execution always comes from the shared plugin (not
 /compound-engineering-core:workflows:explain "why is this behaving this way?"
 /compound-engineering-core:workflows:work docs/plans/<plan>-plan.md
 /compound-engineering-core:workflows:epic-delta-loop "docs/plans/<plan>-plan.md | <delta>"
-/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
+/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha>"
 ```
 
 `/compound-engineering-core:workflows:work` auto-invokes PR review after each pushed SHA and auto-runs post-merge compound capture after CI/CD is green.

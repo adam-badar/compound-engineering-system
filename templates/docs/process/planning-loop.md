@@ -20,8 +20,7 @@ If a plan already exists but needs stronger grounding, run:
 - PM/architect: defines the problem, approves priorities, accepts tradeoffs
 - Planning workflow: drafts the plan and keeps it internally consistent
 - Plan-review agents: critique architecture, security, performance, and simplicity
-- External Codex reviewer: independent review at Extra High reasoning depth
-- Codex gate runner: dedicated teammate agent that executes Codex MCP gate and normalizes findings
+- External Codex reviewer: the current Claude agent runs the Codex MCP gate directly and normalizes findings into durable evidence
 - Research agents: gather evidence when reviewers identify uncertainty
 
 ## Required Loop
@@ -32,7 +31,7 @@ If a plan already exists but needs stronger grounding, run:
 4. Spec-flow analysis runs on each material revision to detect permutation/edge-case gaps (including refresh/rehydrate/resume for stateful UX).
 5. Planning workflow asks PM/architect only the unresolved decision questions.
 6. Plan updates are applied.
-7. Run external Codex review in Extra High mode through codex gate runner and record evidence pinned to revision.
+7. Run external Codex review in Extra High mode directly from the current Claude agent and record evidence pinned to revision.
 8. Steps 3-7 repeat until PM/architect, plan-review agents, and Codex all approve.
 
 No implementation begins until this loop exits.
@@ -82,8 +81,8 @@ Each approved plan must also include a **Flow Permutations & Edge Cases** sectio
 Every code PR must pass all three review sources plus test gate before merge:
 
 1. Teammate review agents
-2. Codex correctness review
-3. Codex edge-case review
+2. Codex correctness pass
+3. Codex edge-case pass
 4. Test/CI gate for code PRs
 5. Non-blocker triage and disposition (`implement_now|defer|reject`)
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.10 - 2026-03-09
+
+- Switched plan, delta, and PR Codex gates to direct invocation by the current Claude agent instead of defaulting to dedicated Codex-only Claude sub-agents.
+- Removed default reliance on `codex_gate_agent` and `codex_pr_review_agents` in the canonical workflow/config surface; legacy configs remain ignored for compatibility.
+- Updated docs/examples so `teams=on` is no longer the default example path for planning and PR review.
+
 ## 0.4.9 - 2026-03-09
 
 - Added `workflows:frontend-validate` as the phase-1 browser-validation gate using `codex exec` and Chrome DevTools MCP.

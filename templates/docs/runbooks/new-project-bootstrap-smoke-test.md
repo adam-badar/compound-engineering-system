@@ -62,7 +62,7 @@ Optional deep research step before planning:
 Then run planning loop:
 
 ```text
-/compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
+/compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
 ```
 
 Optional plan-hardening step:
@@ -101,7 +101,7 @@ Expected artifact:
 10. **Manual review rerun (ad-hoc)**
 
 ```text
-/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
+/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha>"
 ```
 
 Merge policy:
