@@ -4,7 +4,7 @@
 
 - Date: `{YYYY-MM-DD}`
 - Gate Source: `codex-xhigh`
-- Gate Agent: `codex-gate-runner`
+- Gate Executor: `current Claude agent via codex-xhigh`
 - Branch: `{BRANCH}`
 - Commit SHA: `{COMMIT_SHA}`
 - Plan Hash: `{PLAN_HASH}`

@@ -11,9 +11,9 @@ This repository now also contains a private Claude plugin marketplace so shared 
 | `templates/CLAUDE.md.base` | Base Claude Code instructions (branch workflow, planning, memory, circuit breakers) |
 | `templates/.claude/settings.json` | Default Claude Code permissions and deny rules |
 | `templates/.claude/settings.marketplace.example.json` | Example project settings for marketplace/plugin enforcement |
-| `templates/.claude/agents/codex-gate-runner.md` | Dedicated agent for Codex xhigh plan and delta review gates |
-| `templates/.claude/agents/codex-pr-correctness-reviewer.md` | Dedicated Codex xhigh reviewer for correctness/security/state-transition PR risks |
-| `templates/.claude/agents/codex-pr-edgecase-reviewer.md` | Dedicated Codex xhigh reviewer for edge-case/frontend/CI/operability PR risks |
+| `templates/.claude/agents/codex-gate-runner.md` | Legacy compatibility shim for older repos; direct Codex invocation is now canonical |
+| `templates/.claude/agents/codex-pr-correctness-reviewer.md` | Legacy compatibility shim for older repos; direct Codex invocation is now canonical |
+| `templates/.claude/agents/codex-pr-edgecase-reviewer.md` | Legacy compatibility shim for older repos; direct Codex invocation is now canonical |
 | `templates/.claude/commands/workflows/brainstorm.md` | Discovery command to clarify WHAT/why before planning |
 | `templates/.claude/commands/workflows/research.md` | Deep research workflow with iterative PM feedback loops |
 | `templates/.claude/commands/workflows/deepen-plan.md` | Plan hardening workflow with targeted research passes |
@@ -93,7 +93,7 @@ claude plugin list
 13. Start planning with plugin-prefixed command:
 
 ```text
-/compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions teams=on"
+/compound-engineering-core:workflows:plan-loop "Build an app that unifies Fathom/Aircall/HubSpot/Gmail timeline + suggestions"
 ```
 
 14. Confirm planning artifacts were created:
@@ -126,7 +126,7 @@ scripts/init-plan-tracker.sh docs/plans/<your-plan>-plan.md
 19. For manual gate reruns (or ad-hoc checks) before merge:
 
 ```text
-/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha> teams=on"
+/compound-engineering-core:workflows:pr-review "<pr-number> approve_sha=<current-head-sha>"
 ```
 
 20. `/compound-engineering-core:workflows:work` auto-runs PR review after each pushed SHA on the active PR using current head SHA authorization; treat stale/background runs as invalid.

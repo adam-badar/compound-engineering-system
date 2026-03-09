@@ -30,7 +30,7 @@ Optional runtime flag in arguments:
   - Fallback: `architecture-strategist`, `security-sentinel`, `performance-oracle`, `code-simplicity-reviewer`
 - **Execution mode:** agent teams are optional per run (`teams=on`)
 - **External reviewer:** `external_plan_review_gate` from `compound-engineering.local.md` (must resolve to `codex-extra-high`)
-- **External gate runner agent:** `codex_gate_agent` from `compound-engineering.local.md` (default: `codex-gate-runner`)
+- **Direct invocation rule:** the current Claude agent runs the Codex Extra High pass directly through `codex_mcp_server`; legacy `codex_gate_agent` config in older repos should be ignored
 - **Flow analysis agent:** `spec-flow-analyzer` for permutation and edge-case gap detection
 - **Codex MCP server:** `codex_mcp_server` from `compound-engineering.local.md` (default: `codex-xhigh`)
 - **Sizing defaults (override in `compound-engineering.local.md`):**
@@ -161,9 +161,9 @@ Normalize duplicate findings into canonical rows with:
 
 ### 3. Codex Extra High gate (required)
 
-When the plan reaches a candidate state (no obvious internal blockers), run external Codex review in **Extra High** mode via the dedicated gate runner agent.
+When the plan reaches a candidate state (no obvious internal blockers), the current Claude agent must run external Codex review in **Extra High** mode directly via the configured Codex MCP server.
 
-Invoke `codex_gate_agent` with:
+Pass enough context for an independent gate:
 
 - gate type: `plan`
 - plan path

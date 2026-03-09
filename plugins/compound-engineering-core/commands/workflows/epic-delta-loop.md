@@ -48,9 +48,10 @@ Material deltas must run full nested loop below.
 1. Create delta plan file:
    - `docs/plans/deltas/YYYY-MM-DD-<epic-slug>-delta-<topic>.md`
 2. Run teammate plan-review agents on the delta.
-3. Validate `codex_mcp_server` and `codex_gate_agent` availability.
-4. Run Codex Extra High external review on the delta through `codex_gate_agent`.
+3. Validate `codex_mcp_server` availability. Ignore legacy `codex_gate_agent` config if present; direct invocation from the current Claude agent is canonical.
+4. Run Codex Extra High external review on the delta directly from the current Claude agent through `codex_mcp_server`.
    - pin to delta revision (commit SHA + delta hash)
+   - do not spawn a separate Codex-only Claude sub-agent unless the user explicitly requests that override
 5. Ask PM only unresolved decision questions.
 6. Update delta plan and repeat until all blockers are cleared.
 

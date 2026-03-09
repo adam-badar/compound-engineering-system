@@ -2,9 +2,7 @@
 review_agents: [compound-engineering-core:kieran-python-reviewer, compound-engineering-core:code-simplicity-reviewer, compound-engineering-core:security-sentinel, compound-engineering-core:performance-oracle]
 plan_review_agents: [compound-engineering-core:kieran-python-reviewer, compound-engineering-core:code-simplicity-reviewer]
 external_plan_review_gate: codex-extra-high
-codex_pr_review_agents: [compound-engineering-core:codex-pr-correctness-reviewer, compound-engineering-core:codex-pr-edgecase-reviewer]
 codex_mcp_server: codex-xhigh
-codex_gate_agent: compound-engineering-core:codex-gate-runner
 research_agents: [compound-engineering-core:repo-research-analyst, compound-engineering-core:learnings-researcher, compound-engineering-core:framework-docs-researcher, compound-engineering-core:external-frontier-researcher, compound-engineering-core:best-practices-researcher]
 research_max_rounds: 3
 deepen_plan_max_rounds: 2
