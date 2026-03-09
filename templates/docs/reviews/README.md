@@ -6,11 +6,13 @@ Store durable review evidence here so gates remain auditable even as chat contex
 
 - `plans/`: plan and delta review evidence
 - `prs/`: PR review evidence
+- `frontend/`: browser-validation evidence for qualifying frontend/session/state PRs
 
 ## Required Files
 
 - Plan gate: `plans/<plan-slug>-codex-extra-high.md`
 - PR gate: `prs/pr-<number>-review.md`
+- Frontend validation gate: `frontend/pr-<number>-frontend-validate.md`
 - Optional detailed Codex PR dumps:
   - `prs/pr-<number>-codex-correctness.md`
   - `prs/pr-<number>-codex-edgecase.md`

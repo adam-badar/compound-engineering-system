@@ -19,6 +19,7 @@ If empty, ask: "Which approved plan should I execute?"
 Optional runtime flag in arguments:
 
 - `teams=on|off` (default `off`) to forward teammate fan-out requirement into `/workflows:pr-review`
+- `frontend_env=auto|local|staging` (default `auto`) to forward browser-validation environment choice into `/workflows:frontend-validate`
 
 ## Workflow
 
@@ -44,6 +45,7 @@ For each implementation batch:
 4. Run local validation before opening/updating PR:
    - Always run unit tests (`unit_test_command` from `compound-engineering.local.md`, default `pytest -q tests/unit`).
    - If boundary surfaces changed (API routes/endpoints, DB schema/migrations, adapters/integrations, workers, auth), run integration tests (`integration_test_command`, default `pytest -q tests/integration`).
+   - If frontend/session/state surfaces changed, ensure the configured frontend validation target is reachable (`frontend_local_url` or `frontend_staging_url`).
    - Run project-required lint/type/static checks.
    - If required integration tests are missing, skipped, or failing without an approved exception, stop and remediate before proceeding.
 5. Update execution tracker in real time:
@@ -71,26 +73,33 @@ Before any merge:
 
 1. Open/update PR for current work batch.
 2. Capture current PR head SHA.
-3. Run `/workflows:pr-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
+3. If frontend/session/state surfaces changed, run `/workflows:frontend-validate "<pr-number-or-url> sha=<head-sha> env=<frontend_env|auto> playwright=auto"` automatically from this workflow using the current head SHA.
+   - If `workflows:frontend-validate` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not skip or silently downgrade the browser-validation gate.
+   - Record the frontend artifact path in the execution tracker.
+   - If frontend validation returns `FAIL` or `STALE`, do not proceed to PR review or merge until rerun passes on the current SHA.
+4. Run `/workflows:pr-review "<pr-number-or-url> approve_sha=<head-sha> [teams=on|teams=off]"` automatically from this workflow using the current head SHA.
    - If `workflows:pr-review` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge. Do not fall back to a deprecated review gate automatically.
-4. If PR review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
-5. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun PR review with the new head SHA before making merge decisions.
-6. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
-7. Triage non-blockers from PR review output:
+5. If PR review fails, do not proceed to merge. Fix blockers or rerun on the same SHA only when the failure was environmental and the SHA has not changed.
+6. If PR head SHA changes at any time (new push/force-push), invalidate prior gate result and rerun required gates on the new head SHA before making merge decisions.
+   - For frontend/session/state changes, rerun `/workflows:frontend-validate "<pr-number-or-url> sha=<new-head-sha> env=<frontend_env|auto> playwright=auto"` first.
+   - If `workflows:frontend-validate` is unavailable in a partially upgraded repo-local install, stop and require the repo to upgrade its CE workflow copy before merge.
+   - Then rerun `/workflows:pr-review "<pr-number-or-url> approve_sha=<new-head-sha> [teams=on|teams=off]"`.
+7. Treat any late/stale background-agent review output as non-authoritative when SHA does not match current head.
+8. Triage non-blockers from PR review output:
    - implement_now
    - defer (owner + follow-up PR/task + rationale)
    - reject (rationale)
-8. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
-9. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
-10. Merge only when gate status is `PASS` for current PR head SHA, both Codex reviewer gates are green, test/CI gate is green, and non-blocker triage is complete (including consensus rules).
-11. After merge, run a post-merge CI/CD confirmation gate before proceeding:
+9. For consensus non-blockers (`support_count >= consensus_threshold_for_promotion`), require counterevidence and PM signoff for `defer`/`reject`.
+10. If policy requires PM signoff for deferred high-value non-blockers, capture signoff before merge.
+11. Merge only when gate status is `PASS` for current PR head SHA, both Codex reviewer gates are green, test/CI gate is green, frontend/browser validation gate is green or `N/A`, and non-blocker triage is complete (including consensus rules).
+12. After merge, run a post-merge CI/CD confirmation gate before proceeding:
    - Identify target branch and merged SHA.
    - Wait for merge-triggered CI/CD workflows on that branch/SHA to finish (tests + deployment where configured).
    - If no merge-triggered CI/CD workflow exists, record `N/A` with rationale and continue.
    - Do not start the next implementation batch or close the epic while these runs are pending.
    - If any merge-triggered CI/CD workflow fails, stop and treat as an open blocker until remediated.
    - Continue only when required post-merge workflows are green.
-12. After post-merge CI/CD is green, auto-run `/workflows:compound "<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"` before starting the next slice:
+13. After post-merge CI/CD is green, auto-run `/workflows:compound "<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"` before starting the next slice:
    - For `status: created|updated`, record artifact path(s) in the execution tracker.
    - For `status: skipped`, record the returned rationale in the execution tracker.
    - If compound capture errors (workflow/tool failure), default to stop + remediate + rerun before continuing execution.
@@ -115,5 +124,6 @@ Return:
 - updated tracker path
 - open blockers or risks
 - PR/gate status
+- frontend validation status/evidence
 - post-merge compound status/evidence
 - next step

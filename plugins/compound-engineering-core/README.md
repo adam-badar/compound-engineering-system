@@ -12,6 +12,7 @@ Private plugin for shared compound engineering workflows.
   - `compound-engineering-core:workflows:plan-loop`
   - `compound-engineering-core:workflows:debug`
   - `compound-engineering-core:workflows:explain`
+  - `compound-engineering-core:workflows:frontend-validate`
   - `compound-engineering-core:workflows:work`
   - `compound-engineering-core:workflows:compound`
   - `compound-engineering-core:workflows:epic-delta-loop`
@@ -30,6 +31,9 @@ Private plugin for shared compound engineering workflows.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR review enforces teammate + Codex correctness + Codex edge-case + test/CI gates for code PRs.
+- `frontend-validate` provides the phase-1 browser-validation gate using `codex exec` + Chrome DevTools MCP.
+- `workflows:work` auto-runs `frontend-validate` when frontend/session/state surfaces changed.
+- `workflows:pr-review` fails closed for qualifying PRs when current-SHA frontend validation evidence is missing, stale, or failed.
 - The two Codex PR reviewers run in parallel and are both required on the current SHA.
 - PR review requires SHA authorization via `approve_sha=<current-head-sha>` (auto-supplied when invoked from `workflows:work`).
 - `workflows:work` auto-runs/re-runs PR review after each pushed SHA on the active PR.

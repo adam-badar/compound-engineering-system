@@ -22,6 +22,7 @@ This legacy filename remains usable so older repos and human processes still get
 | Codex correctness | PASS|FAIL|PENDING|STALE | `{CODEX_CORRECTNESS_REVIEWED_SHA}` | `docs/reviews/prs/pr-{PR_NUMBER}-codex-correctness.md` |
 | Codex edge-case | PASS|FAIL|PENDING|STALE | `{CODEX_EDGECASE_REVIEWED_SHA}` | `docs/reviews/prs/pr-{PR_NUMBER}-codex-edgecase.md` |
 | Test/CI | PASS|FAIL|PENDING|STALE|N/A | `{TEST_CI_REVIEWED_SHA_OR_N_A}` | `{path}` |
+| Frontend/browser validation | PASS|FAIL|PENDING|STALE|N/A | `{FRONTEND_VALIDATION_REVIEWED_SHA_OR_N_A}` | `docs/reviews/frontend/pr-{PR_NUMBER}-frontend-validate.md` |
 
 ## Blockers
 

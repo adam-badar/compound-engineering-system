@@ -21,12 +21,15 @@ A code PR can be merged only when all pass:
 6. SHA authorization exists for this revision before PR review is invoked (`approve_sha=<head-sha>` or auto-supplied by `/workflows:work`)
 7. Non-blockers are triaged with explicit disposition and rationale
 8. For frontend/session/state changes, refresh/rehydrate/resume behavior is covered by integration/e2e validation
+9. For frontend/session/state changes, current-SHA browser validation evidence exists and passes (or is explicitly `N/A`)
 
 Authorization rules:
 
 - PR review is fail-closed without SHA authorization.
 - Authorization must be SHA-specific; if head SHA changes, prior authorization is invalid.
 - `/workflows:work` should auto-run PR review with current head SHA authorization after each pushed SHA and rerun on SHA change.
+- `/workflows:work` should auto-run `/workflows:frontend-validate` before PR review when frontend/session/state surfaces changed.
+- On any later SHA change for qualifying frontend PRs, `/workflows:work` should rerun frontend validation on the new SHA before rerunning PR review.
 - Background/sub-agent output with stale SHA is invalid and must not produce `PASS`.
 
 External reviewer rules:
