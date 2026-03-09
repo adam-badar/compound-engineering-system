@@ -31,7 +31,9 @@ Optional runtime flags in arguments:
 - `frontend_validation_mode` (default: `codex-devtools`)
 - `frontend_local_url` (default: `http://localhost:3000`)
 - `frontend_staging_url` (default: `""`)
-- `frontend_validation_use_staging_fallback` (default: `true`)
+- `frontend_validation_use_staging_fallback` (default: `false`)
+- `frontend_local_revision_check_command` (default: `""`)
+- `frontend_staging_revision_check_command` (default: `""`)
 - `playwright_command` (default: `""`)
 
 ## Workflow
@@ -67,7 +69,10 @@ If the change does not qualify:
    - `env=local`: require `frontend_local_url`
    - `env=staging`: require `frontend_staging_url`
    - `env=auto`: prefer reachable `frontend_local_url`; if unreachable and fallback is enabled, use `frontend_staging_url`
-5. Fail closed if no reachable browser target exists.
+5. Establish target revision proof before browser validation:
+   - for `env=local`, prove the reachable target is serving code from the current worktree/reviewed SHA. Use `frontend_local_revision_check_command` when configured; otherwise inspect launch provenance/process context. If proof cannot be established, fail closed.
+   - for `env=staging`, require `frontend_staging_revision_check_command` that proves the target URL is serving the reviewed SHA. If no such proof mechanism exists, fail closed instead of accepting staging as a current-SHA substitute.
+6. Fail closed if no reachable browser target exists.
 
 ### 3. Select target flows
 
@@ -108,6 +113,7 @@ Write a temporary JSON schema and require structured output with at least:
 - `reviewed_sha`
 - `environment`
 - `base_url`
+- `target_revision_proof`
 - `target_urls`
 - `screenshots`
 - `console_findings`
@@ -120,12 +126,13 @@ Write a temporary JSON schema and require structured output with at least:
 
 Run:
 
-`codex exec --skip-git-repo-check --cd <repo-root> --output-schema <schema-path> -o <json-output-path> "<generated prompt>"`
+`codex exec --skip-git-repo-check --cd <repo-root> --model gpt-5.3-codex -c 'model_reasoning_effort="xhigh"' --output-schema <schema-path> -o <json-output-path> "<generated prompt>"`
 
 If `playwright=on`, or `playwright=auto` and `playwright_command` is configured and appropriate for this repo, run the Playwright command as supplemental evidence only.
 Playwright is not required for phase 1 pass/fail unless project policy explicitly says so.
 
 Before returning `PASS`, re-resolve the current PR/branch head SHA. If it no longer matches the requested/current validation SHA, write a `STALE` artifact instead of `PASS` and instruct the caller to rerun on the new SHA.
+If target revision proof is missing, mismatched, or cannot establish that the tested target is serving the reviewed SHA/current worktree, write `FAIL` instead of `PASS`.
 
 ### 5. Write validation artifact
 
@@ -134,11 +141,14 @@ Write to:
 - `docs/reviews/frontend/pr-<number>-frontend-validate.md` for PR-based runs
 - `docs/reviews/frontend/YYYY-MM-DD-<branch>-<short-sha>-frontend-validate.md` otherwise
 
+If a project overrides `frontend_validation_command`, the custom validator must still write the canonical PR artifact path above for PR-based runs so `pr-review` can consume the result.
+
 Minimum sections:
 
 - Metadata
 - Reviewed SHA
 - Environment and base URL
+- Target revision proof
 - Touched files summary
 - Target URLs/flows
 - Screenshots
@@ -160,7 +170,9 @@ Frontend validation is `PASS` only when:
 - Codex browser run completed successfully
 - no open browser-validation blockers remain
 - refresh/rehydrate/resume behavior is validated for qualifying stateful UX
+- for auth/session/token changes, session/auth continuity is validated and passes
 - console/network findings do not reveal open correctness-breaking issues
+- target revision proof matches the reviewed SHA or otherwise proves the local target came from the current worktree/reviewed revision
 
 Otherwise:
 

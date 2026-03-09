@@ -40,11 +40,13 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `allow_conditional_pass_for_code_prs` (default: `false`)
 - `unit_test_command` (default: `pytest -q tests/unit`)
 - `integration_test_command` (default: `pytest -q tests/integration`)
-- `frontend_validation_command` (default: `/compound-engineering-core:workflows:frontend-validate`)
+- `frontend_validation_command` (default: `/compound-engineering-core:workflows:frontend-validate`) -- custom validators must still write `docs/reviews/frontend/pr-<number>-frontend-validate.md` for PR-based runs
 - `frontend_validation_mode` (default: `codex-devtools`)
 - `frontend_local_url` (default: `http://localhost:3000`)
 - `frontend_staging_url` (default: `""`)
-- `frontend_validation_use_staging_fallback` (default: `true`)
+- `frontend_validation_use_staging_fallback` (default: `false`)
+- `frontend_local_revision_check_command` (default: `""`)
+- `frontend_staging_revision_check_command` (default: `""`)
 - `playwright_command` (default: `""`)
 - `require_non_blocker_triage` (default: `true`)
 - `require_pm_signoff_for_non_blocker_deferrals` (default: `true`)
@@ -226,6 +228,7 @@ If `require_frontend_validation_for_frontend_changes: true` and the PR touches q
    - reviewed SHA matching current PR head SHA
    - base URL/environment used
    - target URLs/flows tested
+   - target revision proof that establishes the tested target matched the reviewed SHA/current worktree
    - screenshot evidence
    - console/network findings
    - refresh/rehydrate/resume result

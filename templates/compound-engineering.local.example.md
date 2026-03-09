@@ -20,7 +20,9 @@ allow_conditional_pass_for_code_prs: false
 frontend_validation_mode: codex-devtools
 frontend_local_url: "http://localhost:3000"
 frontend_staging_url: ""
-frontend_validation_use_staging_fallback: true
+frontend_validation_use_staging_fallback: false
+frontend_local_revision_check_command: ""
+frontend_staging_revision_check_command: ""
 playwright_command: ""
 require_non_blocker_triage: true
 require_pm_signoff_for_non_blocker_deferrals: true
