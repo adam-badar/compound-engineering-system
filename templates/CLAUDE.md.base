@@ -71,6 +71,7 @@ Default PR size budgets (override in `compound-engineering.local.md`):
 - Never deploy to production without explicit user confirmation.
 - Never merge to main/master without explicit user confirmation.
 - Never force-push, `rm -rf`, `reset --hard`, or drop tables without explicit confirmation.
+- Never auto-merge PRs -- always wait for explicit human review and approval.
 
 ## Autonomy Levels
 

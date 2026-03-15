@@ -1,6 +1,6 @@
 ---
 name: workflows:frontend-validate
-description: Validate frontend/browser behavior for qualifying PRs using Codex xhigh with Chrome DevTools MCP
+description: Validate frontend/browser behavior for qualifying PRs using GStack browse CLI or Codex with Chrome DevTools MCP
 argument-hint: "[PR number, PR url, branch name, or current]"
 ---
 
@@ -9,7 +9,9 @@ argument-hint: "[PR number, PR url, branch name, or current]"
 Use this command when a PR touches frontend, session, auth, routing, or client-state behavior.
 
 This command is the browser-validation gate for Compound Engineering phase 1.
-It uses `codex exec` with the configured `chrome-devtools` MCP server and writes auditable evidence.
+It supports two validation modes:
+- `gstack-browse` (default): Uses GStack browse CLI (Playwright-based, ~100ms/cmd, zero token overhead)
+- `codex-devtools` (legacy): Uses `codex exec` with Chrome DevTools MCP
 
 ## Inputs
 
@@ -28,13 +30,15 @@ Optional runtime flags in arguments:
 ## Policy defaults (override in `compound-engineering.local.md`)
 
 - `require_frontend_validation_for_frontend_changes` (default: `true`)
-- `frontend_validation_mode` (default: `codex-devtools`)
+- `frontend_validation_mode` (default: `gstack-browse`)
 - `frontend_local_url` (default: `http://localhost:3000`)
 - `frontend_staging_url` (default: `""`)
 - `frontend_validation_use_staging_fallback` (default: `false`)
 - `frontend_local_revision_check_command` (default: `""`)
 - `frontend_staging_revision_check_command` (default: `""`)
 - `playwright_command` (default: `""`)
+- `gstack_binary_path` (default: `""` — auto-resolves to `~/.claude/skills/gstack/browse/dist/browse`)
+- `default_subagent_model` (default: `null` — use per-agent frontmatter defaults)
 
 ## Workflow
 
@@ -62,9 +66,23 @@ If the change does not qualify:
 
 ### 2. Preflight environment checks
 
+#### Mode: `gstack-browse` (default)
+
+1. Resolve GStack binary path:
+   - use `gstack_binary_path` from `compound-engineering.local.md` if set
+   - else check `~/.claude/skills/gstack/browse/dist/browse`
+   - else check `<repo-root>/.claude/skills/gstack/browse/dist/browse`
+   - if not found, fail closed: `FAIL — GStack browse binary not found. See docs/runbooks/configure-gstack-browse.md`
+2. Verify Bun is in PATH (`which bun`). If missing, fail closed with install instructions.
+3. Test basic connectivity: `$B goto <target_url>`. If non-200, fail closed.
+
+#### Mode: `codex-devtools` (legacy)
+
 1. Validate `codex` CLI is installed and reachable.
-2. Validate the configured frontend validation mode is `codex-devtools` or compatible with it.
-3. Validate the local Codex config exposes `chrome-devtools` MCP.
+2. Validate the local Codex config exposes `chrome-devtools` MCP.
+
+#### Both modes
+
 4. Resolve target environment:
    - `env=local`: require `frontend_local_url`
    - `env=staging`: require `frontend_staging_url`
@@ -91,7 +109,45 @@ Selection rules:
 4. If route inference is weak and `target_url=<url>` was supplied, use it.
 5. Ask a focused question only if no meaningful target URL can be inferred from repo/PR context.
 
-### 4. Run Codex browser validation
+### 4. Run browser validation
+
+#### Mode: `gstack-browse`
+
+Set `$B` to the resolved GStack binary path. For each selected target flow:
+
+**Navigation and inspection:**
+```bash
+$B goto <url>                    # navigate to target
+$B console                       # check for JS errors
+$B network                       # check for failed requests
+$B snapshot -i                   # accessibility tree (interactive elements)
+$B text                          # page content verification
+$B screenshot <artifact-path>    # visual evidence
+```
+
+**Interactive flows (login, forms, multi-step):**
+```bash
+$B snapshot -i                   # identify form elements (@e1, @e2, ...)
+$B fill @eN "<value>"            # fill input fields
+$B click @eN                     # submit/interact
+$B snapshot -D                   # diff: what changed after action
+$B console                       # post-action errors
+$B screenshot <artifact-path>    # post-action evidence
+```
+
+**Refresh/rehydrate/resume verification:**
+```bash
+$B goto <same-url>               # reload the page
+$B snapshot -i                   # verify state persisted
+$B text                          # verify content still present
+$B console                       # check for hydration errors
+```
+
+The main Claude agent (not GStack) analyzes the command outputs, determines PASS/FAIL, and writes the artifact. GStack provides raw browser data; the agent provides the judgment.
+
+**Partial completion:** If GStack crashes mid-run or a command fails, set `status: FAIL` with a note listing which flows completed and which did not. Partial output is always treated as FAIL.
+
+#### Mode: `codex-devtools` (legacy)
 
 Create a temporary prompt for `codex exec` that instructs Codex to:
 
@@ -128,8 +184,9 @@ Run:
 
 `codex exec --skip-git-repo-check --cd <repo-root> --model gpt-5.3-codex -c 'model_reasoning_effort="xhigh"' --output-schema <schema-path> -o <json-output-path> "<generated prompt>"`
 
-If `playwright=on`, or `playwright=auto` and `playwright_command` is configured and appropriate for this repo, run the Playwright command as supplemental evidence only.
-Playwright is not required for phase 1 pass/fail unless project policy explicitly says so.
+#### Both modes
+
+If `playwright=on`, or `playwright=auto` and `playwright_command` is configured, run the Playwright command as supplemental evidence only.
 
 Before returning `PASS`, re-resolve the current PR/branch head SHA. If it no longer matches the requested/current validation SHA, write a `STALE` artifact instead of `PASS` and instruct the caller to rerun on the new SHA.
 If target revision proof is missing, mismatched, or cannot establish that the tested target is serving the reviewed SHA/current worktree, write `FAIL` instead of `PASS`.
