@@ -1,5 +1,6 @@
 ---
 description: Runs Codex xhigh PR review focused on edge cases, fallback paths, frontend state, CI semantics, and operational resilience.
+model: sonnet
 ---
 
 # Codex PR Edge-Case Reviewer

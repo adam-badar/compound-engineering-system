@@ -23,6 +23,7 @@
 | Codex Extra High plan review | passed | `docs/reviews/plans/{PLAN_SLUG}-codex-extra-high.md` |
 | PR review (latest) | pending | `docs/reviews/prs/pr-{NUMBER}-review.md` |
 | Latest PR reviewed SHA | pending | `{PR_REVIEWED_SHA}` |
+| Compound capture | pending | `docs/solutions/{SOLUTION_FILE}` or `skipped: {rationale}` |
 
 ## Progress
 

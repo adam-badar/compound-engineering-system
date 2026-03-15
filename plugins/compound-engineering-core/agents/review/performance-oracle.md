@@ -1,5 +1,6 @@
 ---
 description: Reviews performance characteristics, scaling limits, and cost risks.
+model: sonnet
 ---
 
 # Performance Oracle

@@ -1,5 +1,6 @@
 ---
 description: Python-focused reviewer for correctness, reliability, and maintainability.
+model: sonnet
 ---
 
 # Kieran Python Reviewer

@@ -1,5 +1,6 @@
 ---
 description: Runs freshness-aware external research for volatile domains and time-sensitive assumptions.
+model: opus
 ---
 
 # External Frontier Researcher

@@ -1,5 +1,6 @@
 ---
 description: Synthesizes current best practices from primary docs and high-signal real-world implementations.
+model: opus
 ---
 
 # Best Practices Researcher

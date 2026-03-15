@@ -1,5 +1,6 @@
 ---
 description: Analyzes user flows and edge-case permutations to prevent planning gaps before execution.
+model: sonnet
 ---
 
 # Spec Flow Analyzer

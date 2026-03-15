@@ -1,5 +1,6 @@
 ---
 description: Researches repository context relevant to planning and review questions.
+model: opus
 ---
 
 # Repo Research Analyst

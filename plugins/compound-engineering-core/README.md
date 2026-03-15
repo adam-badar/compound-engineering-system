@@ -30,10 +30,11 @@ Private plugin for shared compound engineering workflows.
 - `deepen-plan` upgrades an existing plan through targeted research passes and confidence-tracked PM feedback loops.
 - External Codex gate expects a configured `codex-xhigh` MCP server.
 - Codex plan and PR passes are invoked directly by the current Claude agent; dedicated Codex-only Claude sub-agents are no longer the default path.
-- Frontend browser validation also expects Codex to have a `chrome-devtools` MCP server configured in `~/.codex/config.toml` or via `codex mcp add`.
+- Frontend browser validation supports two modes: `gstack-browse` (default, recommended) and `codex-devtools` (legacy). Set `frontend_validation_mode` in `compound-engineering.local.md`.
+- GStack browse provides ~100ms per-command headless Chromium via Playwright CLI. See `docs/runbooks/configure-gstack-browse.md`.
 - Planning enforces an Epic PR Ladder with per-PR size/test expectations.
 - PR review enforces teammate + Codex correctness + Codex edge-case + test/CI gates for code PRs.
-- `frontend-validate` provides the phase-1 browser-validation gate using `codex exec` + Chrome DevTools MCP.
+- `frontend-validate` provides the browser-validation gate using GStack browse CLI (default) or Codex + Chrome DevTools MCP (legacy).
 - `workflows:work` auto-runs `frontend-validate` when a batch touches qualifying frontend/browser validation changes.
 - `workflows:pr-review` fails closed for qualifying PRs when current-SHA frontend validation evidence is missing, stale, or failed.
 - The two Codex PR passes are both required on the current SHA and are run directly by the current Claude agent by default.

@@ -1,5 +1,6 @@
 ---
 description: Executes external Codex xhigh review gates through MCP and returns normalized findings with pass/fail status.
+model: sonnet
 ---
 
 # Codex Gate Runner

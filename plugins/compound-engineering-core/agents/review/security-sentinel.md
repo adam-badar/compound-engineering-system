@@ -1,5 +1,6 @@
 ---
 description: Reviews changes for security risks, unsafe assumptions, and missing controls.
+model: sonnet
 ---
 
 # Security Sentinel

@@ -1,5 +1,6 @@
 ---
 description: Reviews architecture and system boundaries for plans and pull requests.
+model: sonnet
 ---
 
 # Architecture Strategist

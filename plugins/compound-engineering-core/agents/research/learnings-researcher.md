@@ -1,5 +1,6 @@
 ---
 description: Surfaces prior learnings, incidents, and historical pitfalls relevant to the task.
+model: opus
 ---
 
 # Learnings Researcher

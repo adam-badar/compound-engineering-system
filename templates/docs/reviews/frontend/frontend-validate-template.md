@@ -12,7 +12,7 @@
 
 - Mode: `{ENV_MODE}`
 - Base URL: `{BASE_URL}`
-- Validator: `codex exec + chrome-devtools`
+- Validator: `{gstack-browse|codex-devtools}`
 - Playwright: `{PLAYWRIGHT_STATUS|not_run}`
 
 ## Touched Files Summary
