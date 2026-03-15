@@ -1,5 +1,6 @@
 ---
 description: Runs Codex xhigh PR review focused on correctness, security, data integrity, and state transitions.
+model: sonnet
 ---
 
 # Codex PR Correctness Reviewer

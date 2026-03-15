@@ -1,5 +1,6 @@
 ---
 description: Reviews plans and code changes for simplicity, clarity, and unnecessary complexity.
+model: sonnet
 ---
 
 # Code Simplicity Reviewer

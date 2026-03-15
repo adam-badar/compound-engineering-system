@@ -9,7 +9,7 @@ Bootstrap a new or existing repository with the compound engineering system and 
 - [ ] `codex` CLI installed and authenticated
 - [ ] `claude` CLI installed
 - [ ] `codex-xhigh` MCP configured (see `configure-codex-xhigh-mcp.md`)
-- [ ] Codex `chrome-devtools` MCP configured for browser validation (see `configure-codex-browser-mcp.md`)
+- [ ] GStack browse configured for frontend validation (see `configure-gstack-browse.md`)
 - [ ] private marketplace configured (see `configure-private-marketplace.md`)
 - [ ] repository cloned locally
 

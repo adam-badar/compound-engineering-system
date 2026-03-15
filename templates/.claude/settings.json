@@ -42,6 +42,11 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Blow.aiff"
+          },
+          {
+            "type": "command",
+            "command": "branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); if [ -n \"$branch\" ] && [ \"$branch\" != \"main\" ] && [ \"$branch\" != \"master\" ] && [ \"$branch\" != \"develop\" ]; then echo '\\n--- After merge: run /workflows:compound to capture learnings. For new initiatives: /workflows:plan-loop ---'; fi",
+            "timeout": 5
           }
         ]
       }

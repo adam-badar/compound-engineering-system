@@ -1,5 +1,6 @@
 ---
 description: Checks framework and library docs to validate implementation assumptions.
+model: opus
 ---
 
 # Framework Docs Researcher
