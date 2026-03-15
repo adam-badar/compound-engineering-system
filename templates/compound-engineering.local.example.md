@@ -15,7 +15,7 @@ require_tests_for_code_prs: true
 require_integration_tests_for_boundary_changes: true
 require_frontend_validation_for_frontend_changes: true
 allow_conditional_pass_for_code_prs: false
-frontend_validation_mode: gstack-browse
+frontend_validation_mode: gstack
 frontend_local_url: "http://localhost:3000"
 frontend_staging_url: ""
 frontend_validation_use_staging_fallback: false

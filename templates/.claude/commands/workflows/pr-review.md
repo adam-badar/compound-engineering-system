@@ -42,7 +42,7 @@ Policy defaults (override in `compound-engineering.local.md`):
 - `unit_test_command` (default: `pytest -q tests/unit`)
 - `integration_test_command` (default: `pytest -q tests/integration`)
 - `frontend_validation_command` (default: `/workflows:frontend-validate`) -- custom validators must still write `docs/reviews/frontend/pr-<number>-frontend-validate.md` for PR-based runs
-- `frontend_validation_mode` (default: `codex-devtools`)
+- `frontend_validation_mode` (default: `gstack`)
 - `frontend_local_url` (default: `http://localhost:3000`)
 - `frontend_staging_url` (default: `""`)
 - `frontend_validation_use_staging_fallback` (default: `false`)
