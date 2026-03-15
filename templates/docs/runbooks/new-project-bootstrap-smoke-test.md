@@ -9,7 +9,7 @@ Bootstrap a new or existing repository with the compound engineering system and 
 - [ ] `codex` CLI installed and authenticated
 - [ ] `claude` CLI installed
 - [ ] `codex-xhigh` MCP configured (see `configure-codex-xhigh-mcp.md`)
-- [ ] GStack browse configured for frontend validation (see `configure-gstack-browse.md`)
+- [ ] gstack headless browser installed at `~/.claude/skills/gstack/` (run `./setup`)
 - [ ] private marketplace configured (see `configure-private-marketplace.md`)
 - [ ] repository cloned locally
 
