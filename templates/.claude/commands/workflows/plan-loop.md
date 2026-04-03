@@ -131,12 +131,12 @@ Run iterative rounds until blockers are cleared:
    - `repo-research-analyst`
    - `learnings-researcher` (re-run with narrowed scope if needed)
    - Optional: `framework-docs-researcher`
-8. Consolidate findings into:
+9. Consolidate findings into:
    - blockers
    - non-blocking improvements
    - decision questions for PM
-9. Ask PM only decision-critical questions.
-10. Update plan in place.
+10. Ask PM only decision-critical questions.
+11. Update plan in place.
 
 ### 2.5 Non-blocker value triage (required by default)
 
