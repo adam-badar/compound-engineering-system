@@ -120,23 +120,24 @@ Any `required_tests` emitted by `spec-flow-analyzer` must be copied into either 
 Run iterative rounds until blockers are cleared:
 
 1. Read the current plan and list unresolved assumptions, risks, and decisions.
-2. Run `compound-engineering-core:spec-flow-analyzer` on the current plan to identify missing user-flow permutations and edge cases.
-3. If analyzer returns `status: not_applicable`, record the rationale and continue without flow blockers.
-4. If analyzer returns `status: applicable`, convert any critical flow gaps into blockers and patch the plan before teammate review.
-5. Copy analyzer `required_tests` into the plan's verification strategy. Missing mapping from analyzer output to plan content is a blocker.
-6. Run teammate plan-review agents.
+2. **Required**: Run `compound-engineering-core:learnings-researcher` on the first iteration (and re-run after material plan revisions) to surface prior solutions, critical patterns, and historical pitfalls. Any `must-apply` findings that are not addressed in the plan are blockers. If no `docs/solutions/` exists or the researcher returns `no institutional matches`, the check is satisfied — this is not a blocker for greenfield repos.
+3. Run `compound-engineering-core:spec-flow-analyzer` on the current plan to identify missing user-flow permutations and edge cases.
+4. If analyzer returns `status: not_applicable`, record the rationale and continue without flow blockers.
+5. If analyzer returns `status: applicable`, convert any critical flow gaps into blockers and patch the plan before teammate review.
+6. Copy analyzer `required_tests` into the plan's verification strategy. Missing mapping from analyzer output to plan content is a blocker.
+7. Run teammate plan-review agents.
    - If `teams=on`, run in parallel via agent teams.
    - If `teams=off`, run sequentially.
-7. If reviewers request more evidence, run research agents in parallel:
+8. If reviewers request more evidence, run research agents in parallel:
    - `compound-engineering-core:repo-research-analyst`
-   - `compound-engineering-core:learnings-researcher`
+   - `compound-engineering-core:learnings-researcher` (re-run with narrowed scope if needed)
    - Optional: `compound-engineering-core:framework-docs-researcher`
-8. Consolidate findings into:
+9. Consolidate findings into:
    - blockers
    - non-blocking improvements
    - decision questions for PM
-9. Ask PM only decision-critical questions.
-10. Update plan in place.
+10. Ask PM only decision-critical questions.
+11. Update plan in place.
 
 ### 2.5 Non-blocker value triage (required by default)
 

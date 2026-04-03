@@ -27,12 +27,13 @@ If a plan already exists but needs stronger grounding, run:
 
 1. PM/architect provides problem statement, outcomes, constraints, success metrics, non-goals.
 2. Planning workflow creates/updates `docs/plans/*-plan.md`.
-3. Plan-review agents critique the plan.
-4. Spec-flow analysis runs on each material revision to detect permutation/edge-case gaps (including refresh/rehydrate/resume for stateful UX).
-5. Planning workflow asks PM/architect only the unresolved decision questions.
-6. Plan updates are applied.
-7. Run external Codex review in Extra High mode directly from the current Claude agent and record evidence pinned to revision.
-8. Steps 3-7 repeat until PM/architect, plan-review agents, and Codex all approve.
+3. **Learnings check (mandatory)**: `learnings-researcher` runs to surface prior solutions, critical patterns, and historical pitfalls from `docs/solutions/`. Any `must-apply` findings not addressed in the plan are blockers.
+4. Plan-review agents critique the plan.
+5. Spec-flow analysis runs on each material revision to detect permutation/edge-case gaps (including refresh/rehydrate/resume for stateful UX).
+6. Planning workflow asks PM/architect only the unresolved decision questions.
+7. Plan updates are applied.
+8. Run external Codex review in Extra High mode directly from the current Claude agent and record evidence pinned to revision.
+9. Steps 4-8 repeat until PM/architect, plan-review agents, and Codex all approve.
 
 No implementation begins until this loop exits.
 

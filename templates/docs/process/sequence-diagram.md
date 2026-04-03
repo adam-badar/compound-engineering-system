@@ -30,6 +30,8 @@ sequenceDiagram
     loop Planning approval loop (required)
         Plan->>Research: Gather evidence and constraints
         Research-->>Plan: Findings and options
+        Plan->>Research: Check prior solutions and critical patterns (mandatory)
+        Research-->>Plan: must-apply learnings + watch-outs
         Plan->>TeamPlan: Review plan draft
         TeamPlan-->>Plan: Findings and blockers
         Plan->>CodexGate: Run external plan gate
@@ -96,7 +98,8 @@ flowchart TD
     A1 -- No --> B
     B --> B1["Optional: /workflows:deepen-plan"]
     B1 --> C
-    B --> C["Run teammate plan review"]
+    B --> B2["Check prior solutions + critical patterns (mandatory)"]
+    B2 --> C["Run teammate plan review"]
     C --> D["Run Codex Extra High plan review"]
     D --> E{"Any blockers?"}
     E -- Yes --> F["Ask PM questions + update plan"]

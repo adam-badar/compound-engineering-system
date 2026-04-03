@@ -44,3 +44,13 @@ Private plugin for shared compound engineering workflows.
 - Non-blockers must be triaged (`implement_now|defer|reject`) and cannot be silently ignored.
 - Default triage artifact is existing gate evidence + execution tracker (no extra todo-file system required).
 - Multi-reviewer consensus non-blockers are escalation-candidates and default to promotion unless counterevidence + PM signoff are captured.
+
+## Meta-governance
+
+Changes to this plugin (workflow commands, agent definitions, review policies) are themselves subject to the same compound engineering workflow:
+
+1. **Branch + PR**: All changes must go through a feature branch and pull request in the plugin repository, never committed directly.
+2. **PR review**: Plugin changes are classified as `code_pr` (they affect execution, review, and trust boundaries) and must pass the same teammate + Codex review gates.
+3. **Compound capture**: Non-trivial changes should produce a `docs/solutions/` entry in the consuming repository if the change was motivated by a process failure.
+
+The methodology must enforce itself. If an agent skips these gates for "meta" changes, that is a process violation equivalent to skipping them for application code.
