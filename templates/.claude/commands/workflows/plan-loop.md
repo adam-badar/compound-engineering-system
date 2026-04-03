@@ -119,7 +119,7 @@ Any `required_tests` emitted by `spec-flow-analyzer` must be copied into either 
 Run iterative rounds until blockers are cleared:
 
 1. Read the current plan and list unresolved assumptions, risks, and decisions.
-2. **Required**: Run `learnings-researcher` on the first iteration to surface prior solutions, critical patterns, and historical pitfalls. Any `must-apply` findings that are not addressed in the plan are blockers. This step is not optional — it prevents repeating past failures.
+2. **Required**: Run `learnings-researcher` on the first iteration (and re-run after material plan revisions) to surface prior solutions, critical patterns, and historical pitfalls. Any `must-apply` findings that are not addressed in the plan are blockers. If no `docs/solutions/` exists or the researcher returns `no institutional matches`, the check is satisfied — this is not a blocker for greenfield repos.
 3. Run `spec-flow-analyzer` on the current plan to identify missing user-flow permutations and edge cases.
 4. If analyzer returns `status: not_applicable`, record the rationale and continue without flow blockers.
 5. If analyzer returns `status: applicable`, convert any critical flow gaps into blockers and patch the plan before teammate review.
