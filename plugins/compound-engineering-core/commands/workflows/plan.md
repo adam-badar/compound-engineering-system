@@ -19,9 +19,9 @@ If empty, ask: "What should this plan solve?"
 ### 1. Gather context
 
 1. Read `CLAUDE.md`, relevant ADRs, and existing docs under `docs/`.
-2. Run focused research agents when needed:
+2. **Required**: Run `compound-engineering-core:learnings-researcher` to surface prior solutions, critical patterns, and historical pitfalls for the affected components. This is not optional — solutions capture hard-won lessons from past incidents that directly prevent recurring failures.
+3. Run additional research agents as needed:
    - `compound-engineering-core:repo-research-analyst`
-   - `compound-engineering-core:learnings-researcher`
    - Optional: `compound-engineering-core:framework-docs-researcher`
 
 ### 2. Build plan draft
