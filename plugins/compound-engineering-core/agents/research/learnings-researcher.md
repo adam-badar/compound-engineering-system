@@ -46,6 +46,15 @@ Rank each candidate by:
 
 Only include items with score >=4 unless they are in `critical-patterns.md`.
 
+## Negative Claims Protocol
+
+When concluding that a learning, pattern, or prior solution does NOT exist in the knowledge base:
+
+1. List the specific file paths, glob patterns, or search queries checked.
+2. If asserting "no prior art exists" for a technique or pattern: search at least 2 different term variations — use both the concept name and common abbreviations or alternative phrasings (e.g., "retry" + "backoff", "auth" + "session" + "token").
+3. Mark unverified negatives explicitly: "No match found in [paths/queries] — may exist under different naming or in unchecked locations."
+4. Never assert a negative with high confidence unless exhaustive search was performed and documented.
+
 ## Return Contract
 
 For each item include:

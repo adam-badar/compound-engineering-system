@@ -44,7 +44,7 @@ Optional runtime flag in arguments:
 2. Parse `research=auto|on|off` (default `auto`).
 3. Parse `research_depth=quick|standard|deep` (default `standard`).
 4. Parse `as_of=YYYY-MM-DD`; if missing, set `as_of` to today's date for this run.
-5. Classify `volatility=high` when the topic includes fast-moving domains (AI models, external APIs, security/compliance rules, pricing, recently changing libraries/tools).
+5. Classify `volatility=high` when the topic includes fast-moving domains per the Domain Volatility Taxonomy defined in `external-frontier-researcher` (AI tools/models, developer tools/IDEs, SaaS platforms/APIs, crypto, compliance/regulatory).
 
 ### 3. Agent-teams preflight (optional)
 
@@ -92,7 +92,29 @@ Before generating options:
    - confidence (`high|medium|low`)
 3. Mark inference explicitly when a claim is reasoned from sources rather than directly stated.
 
-### 6. Option generation
+### 6. Adversarial verification (negative claims)
+
+After the freshness gate, scan all qualified findings for claims that conclude absence or non-existence of a capability, API, feature, pattern, or service. This includes explicit negatives ("X doesn't exist", "no API") and implicit negatives ("lacks", "is absent", "does not provide", "unavailable as of", "could not find"). The scan is semantic — do not rely on keyword matching alone.
+
+**Eligibility guards (check before running):**
+- If `research=off`: skip this step entirely. The user explicitly opted out of external research; adversarial counter-queries would violate that choice.
+
+**Origin-based guard:** Only run external counter-queries on negative claims produced by `external-frontier-researcher` or `best-practices-researcher`. Negative claims from codebase-focused agents are logged with paths checked but never trigger external counter-research.
+
+1. Extract all negative claims from the research output, tagged with their originating agent.
+2. If zero negative claims: skip this step entirely.
+3. Filter to external-agent negatives only. Log codebase-agent negatives with paths checked.
+4. For each external-agent negative claim in a `high` volatility domain (per the Domain Volatility Taxonomy defined in `external-frontier-researcher`):
+   a. Formulate a directed counter-query that assumes the claim is wrong. If the original claim is version-scoped or tier-scoped, the counter-query must match the same scope first, then broaden only if the scoped search is exhausted.
+   b. Run `external-frontier-researcher` with the counter-query. Instruct the agent to check 3-5 high-signal sources only (official docs, changelog, GitHub, one community source).
+   c. If counter-evidence is found: revise the original claim, flag the correction, and re-assign confidence based on the counter-evidence strength.
+   d. If no counter-evidence: retain the claim with sources-checked documentation from both the original and counter-query passes.
+5. For `medium` volatility domains: log the negative claim with sources checked. Counter-research is not automatic but can be triggered by PM in the decision loop if the claim is decision-critical.
+6. For `low` volatility domains: log the negative claim with sources checked. No counter-research.
+7. This step is a **single pass**. Do not recurse — if the counter-query itself produces negative claims, document them but do not run another adversarial verification round.
+8. Document all adversarial checks under "Dated evidence log" in the brainstorm artifact.
+
+### 7. Option generation
 
 Generate 2-4 concrete options with PM-level tradeoffs:
 
@@ -107,7 +129,7 @@ For each option include:
 
 Apply YAGNI by default. Prefer the simplest option that still meets the outcome.
 
-### 7. Decision loop
+### 8. Decision loop
 
 Ask the PM/architect only decision-critical questions, such as:
 
@@ -117,7 +139,7 @@ Ask the PM/architect only decision-critical questions, such as:
 
 Iterate options if needed until one primary direction is selected.
 
-### 8. Capture artifact
+### 9. Capture artifact
 
 Write brainstorm output to:
 
@@ -135,7 +157,7 @@ Minimum sections:
 - Open questions (if any)
 - Decision timestamp and owner
 
-### 9. Handoff
+### 10. Handoff
 
 If open questions remain, do not start planning.
 
