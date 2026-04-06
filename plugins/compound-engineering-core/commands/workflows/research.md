@@ -87,7 +87,31 @@ After each round, produce:
 - unknowns that block recommendation confidence
 - highest-leverage follow-up questions
 
-### 6. PM feedback loop (required)
+### 6. Adversarial verification (negative claims)
+
+After synthesis, scan all findings for claims that conclude absence or non-existence of a capability, API, feature, pattern, or service. This includes explicit negatives ("X doesn't exist", "no API") and implicit negatives ("lacks", "is absent", "does not provide", "has yet to offer", "unavailable as of", "could not find"). The scan is semantic — do not rely on keyword matching alone.
+
+**Eligibility guards (check before running):**
+- If `scope=codebase`: log negative claims with paths checked but do not run external counter-research. Skip to step 6.7.
+
+**Origin-based guard:** Only run external counter-queries on negative claims produced by `external-frontier-researcher` or `best-practices-researcher`. Negative claims from codebase-focused agents (`repo-research-analyst`, `learnings-researcher`, `framework-docs-researcher`) are logged with paths checked but never trigger external counter-research, regardless of top-level scope.
+
+1. Extract all negative claims from the research output, tagged with their originating agent.
+2. If zero negative claims: skip this step entirely.
+3. Filter to external-agent negatives only. Log codebase-agent negatives with paths checked.
+4. For each external-agent negative claim in a `high` volatility domain (per the Domain Volatility Taxonomy defined in `external-frontier-researcher`):
+   a. Formulate a directed counter-query that assumes the claim is wrong. If the original claim is version-scoped or tier-scoped, the counter-query must match the same scope first, then broaden only if the scoped search is exhausted.
+   b. Run `external-frontier-researcher` with the counter-query. Instruct the agent to check 3-5 high-signal sources only (official docs, changelog, GitHub, one community source).
+   c. If counter-evidence is found: revise the original claim, flag the correction, and re-assign confidence based on the counter-evidence strength.
+   d. If no counter-evidence: retain the claim with sources-checked documentation from both the original and counter-query passes.
+5. For `medium` volatility domains: log the negative claim with sources checked. Counter-research is not automatic but can be triggered by PM in the feedback loop if the claim is decision-critical.
+6. For `low` volatility domains: log the negative claim with sources checked. No counter-research.
+7. This step is a **single pass**. Do not recurse — if the counter-query itself produces negative claims, document them but do not run another adversarial verification round.
+8. Document all adversarial checks under "Contradictions and resolutions" in the research artifact (or "Open risks and unknowns" if unresolved).
+
+**Re-entry:** If follow-up research in the PM feedback loop (step 7.3) produces new negative claims, rerun this adversarial verification on the new claims only — do not re-verify claims already checked in prior rounds.
+
+### 7. PM feedback loop (required)
 
 Run iterative PM interaction loops until stop criteria:
 
@@ -102,7 +126,7 @@ Stop when either:
 - round cap is reached, or
 - PM asks to finalize with remaining uncertainty documented.
 
-### 7. Quality and freshness gate
+### 8. Quality and freshness gate
 
 Before final output:
 
@@ -114,7 +138,7 @@ Before final output:
    - confidence
 3. Contradictions must be resolved or explicitly documented.
 
-### 8. Capture artifact
+### 9. Capture artifact
 
 Write to:
 
@@ -132,7 +156,7 @@ Minimum sections:
 - PM Q&A log
 - Revalidation plan/date
 
-### 9. Handoff
+### 10. Handoff
 
 Recommend next command based on state:
 

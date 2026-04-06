@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 - 2026-04-05
+
+- Added Negative Claims Protocol to all 5 research agents (two variants: external-facing and codebase-focused).
+- Added adversarial verification step to `workflows:research`, `workflows:brainstorm`, and `workflows:deepen-plan` — challenges high-volatility negative claims with directed counter-queries.
+- Added Domain Volatility Taxonomy to `external-frontier-researcher` (high/medium/low classification) with freshness requirements per level.
+- Added volatility cross-reference to `best-practices-researcher`.
+- Updated `brainstorm` volatility classification to reference canonical taxonomy from `external-frontier-researcher`.
+- Adversarial verification includes: single-pass termination, origin-based guard, research=off guard, scope-preserving counter-queries, re-entry semantics for iterative workflows.
+
 ## 0.4.10 - 2026-03-09
 
 - Switched plan, delta, and PR Codex gates to direct invocation by the current Claude agent instead of defaulting to dedicated Codex-only Claude sub-agents.
