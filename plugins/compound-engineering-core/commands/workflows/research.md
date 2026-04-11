@@ -156,6 +156,27 @@ Minimum sections:
 - PM Q&A log
 - Revalidation plan/date
 
+### 9b. Export deep research prompt
+
+After writing the research artifact, generate a self-contained deep research prompt that can be given to external AI agents (ChatGPT, Gemini, Perplexity, etc.) for additional research breadth.
+
+Write to:
+
+`/tmp/deep-research-<topic-slug>.md`
+
+The prompt must include:
+
+1. **Full context**: What the user is building, why, constraints, current state.
+2. **Research objective**: The specific questions and decisions to inform.
+3. **What we already know**: Key findings from this research run (summarized, not the full artifact). Include specific numbers, benchmarks, and tool names so the external agent doesn't re-derive known information.
+4. **What we still need**: Explicit gaps, unresolved unknowns, low-confidence claims that need more sources.
+5. **Desired output format**: Ask for specific, sourced, quantified answers — not generic advice.
+6. **Anti-patterns to avoid**: Tell the external agent not to produce generic/unsourced recommendations, not to rehash what's already known, and to focus on net-new findings.
+
+The prompt should be written in second person ("You are researching...") and be immediately copy-pasteable with no edits needed. Aim for 500-1500 words of context — enough to be thorough, not so much that it overwhelms the external agent's context.
+
+Notify the user: "Deep research prompt exported to `/tmp/deep-research-<topic-slug>.md` — copy-paste to ChatGPT, Gemini, or Perplexity for additional sources."
+
 ### 10. Handoff
 
 Recommend next command based on state:
