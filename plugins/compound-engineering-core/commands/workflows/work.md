@@ -101,7 +101,13 @@ Before any merge:
    - Do not start the next implementation batch or close the epic while these runs are pending.
    - If any merge-triggered CI/CD workflow fails, stop and treat as an open blocker until remediated.
    - Continue only when required post-merge workflows are green.
-13. After post-merge CI/CD is green, auto-run `/compound-engineering-core:workflows:compound "<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"` before starting the next slice:
+13. After post-merge CI/CD is green, run the **SEO recrawl gate** before compound capture. This step closes the post-deploy contract documented in `~/.claude/skills/gsc/SKILL.md` ("Post-Deploy Contract", "Workflow integration"):
+   - Inspect the merged SHA's diff for indexable-surface changes. Indexable surface includes: new or renamed routes under `src/routes/{compare,blog,for,docs,features,guides,integrations,pricing}/`, sitemap config in `scripts/sitemap-routes.ts` (`MARKETING_ROUTES` additions), `MARKETING_LASTMOD_OVERRIDES` additions, new published `BLOG_POSTS` entries in `src/lib/blog.ts` (status: `published`), and new files under `content/blog/`.
+   - If indexable-surface changes are present, derive the new public URLs and call `python3 ${CLAUDE_SKILL_DIR_GSC}/scripts/gsc.py recrawl <urls>` against the matching `sc-domain:*` property per the repo→property mapping in the `gsc` skill.
+   - Record the recrawl response (success URLs, failure URLs, quota state) in the execution tracker under a `seo_recrawl` field. If any URL failed, surface the URLs to the operator at workflow handoff time and add a `MANUAL_RECRAWL_REQUIRED` flag to the tracker.
+   - If the diff has no indexable-surface changes, record `seo_recrawl: N/A` with rationale and continue.
+   - If the repo is not in the gsc skill's repo→property mapping, do NOT skip silently. Pause and ask the operator to add the mapping (the gsc skill's "Property mapping" section is the source of truth).
+14. After SEO recrawl gate is recorded, auto-run `/compound-engineering-core:workflows:compound "<approved-plan-path> | pr=<pr-number-or-url> | merged_sha=<merged-sha>"` before starting the next slice:
    - For `status: created|updated`, record artifact path(s) in the execution tracker.
    - For `status: skipped`, record the returned rationale in the execution tracker.
    - If compound capture errors (workflow/tool failure), default to stop + remediate + rerun before continuing execution.
@@ -109,7 +115,7 @@ Before any merge:
 
 ### 5. Closeout
 
-After PM acceptance, successful post-merge CI/CD confirmation, and post-merge compound capture:
+After PM acceptance, successful post-merge CI/CD confirmation, post-merge SEO recrawl gate, and post-merge compound capture:
 
 1. Update plan status to `implemented`.
 2. Update tracker summary/outcomes (including compound capture status and evidence path/rationale).
