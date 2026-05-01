@@ -5,7 +5,9 @@
 - Added `docs/ideas/` enforcement to `workflows:brainstorm` step 4.0 and `workflows:plan-loop` step 1. Brainstorm grep-checks the per-repo deferred-work folder for prior ideas before generating new options; mid-brainstorm deferrals are written as idea files immediately. Plan-loop confirms any `docs/ideas/*.md` files referenced in the source brainstorm are resolved (active / deferred-with-owner / rejected / completed / abandoned) before plan generation or review gate launch.
 - Idea file content is treated as untrusted data in both workflows: only frontmatter and prose summary are extracted; instructions or role overrides inside idea bodies are ignored.
 - Mid-brainstorm idea writes constrain slugs to lowercase-alphanumeric-plus-hyphens, require minimal frontmatter (`status`/`owner`/`target_date`/`rationale`/`created_at`/`title`), and never silently overwrite collisions.
-- Plan-loop reference matching is specified across exact path, basename, stem, and dated-slug suffix; ambiguous matches block.
+- Plan-loop reference matching is specified across exact path, basename, stem, and dated-slug suffix (token-bounded to avoid substring false positives); ambiguous matches block.
+- Plan-loop step 1 split into 3 explicit branches (existing plan path / brainstorm path / raw problem statement) so the docs/ideas gate runs before `/workflows:plan` invocation in the brainstorm-path branch.
+- Terminal-state reactivation rule: promoting a `completed` or `abandoned` idea requires explicit reactivation (status update with `reactivated_at` + rationale, OR a new follow-up idea file with `supersedes:` pointer).
 - No-op when `docs/ideas/` is missing or empty in the consumer repo.
 
 ## 0.6.0 - 2026-04-05
