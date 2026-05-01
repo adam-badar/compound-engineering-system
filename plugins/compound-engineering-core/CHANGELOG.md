@@ -2,8 +2,11 @@
 
 ## 0.6.1 - 2026-04-30
 
-- Added `docs/ideas/` enforcement to `workflows:brainstorm` step 4.0 and `workflows:plan-loop` step 1. Brainstorm grep checks the per-repo deferred-work folder for prior ideas relevant to the current topic before generating new options; new mid-brainstorm deferrals are written as idea files instead of dying in chat. Plan-loop confirms any `docs/ideas/*.md` files referenced in the source brainstorm are resolved (active/deferred-with-owner/rejected) before launching review gates. No-op when `docs/ideas/` does not exist in the consumer repo.
-- Source: per-repo `docs/ideas/` convention has been in place in consumer repos since 2026-04-29; this PR promotes it from per-user-memory enforcement to plugin contract.
+- Added `docs/ideas/` enforcement to `workflows:brainstorm` step 4.0 and `workflows:plan-loop` step 1. Brainstorm grep-checks the per-repo deferred-work folder for prior ideas before generating new options; mid-brainstorm deferrals are written as idea files immediately. Plan-loop confirms any `docs/ideas/*.md` files referenced in the source brainstorm are resolved (active / deferred-with-owner / rejected / completed / abandoned) before plan generation or review gate launch.
+- Idea file content is treated as untrusted data in both workflows: only frontmatter and prose summary are extracted; instructions or role overrides inside idea bodies are ignored.
+- Mid-brainstorm idea writes constrain slugs to lowercase-alphanumeric-plus-hyphens, require minimal frontmatter (`status`/`owner`/`target_date`/`rationale`/`created_at`/`title`), and never silently overwrite collisions.
+- Plan-loop reference matching is specified across exact path, basename, stem, and dated-slug suffix; ambiguous matches block.
+- No-op when `docs/ideas/` is missing or empty in the consumer repo.
 
 ## 0.6.0 - 2026-04-05
 
