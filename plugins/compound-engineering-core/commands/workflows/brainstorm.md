@@ -54,7 +54,11 @@ Optional runtime flag in arguments:
 
 ### 4. Evidence gathering
 
-Run lightweight context checks first:
+**4.0 Check `docs/ideas/` for prior deferred work** (required if folder exists in current repo):
+
+Before generating new options, grep `docs/ideas/*.md` in the current repo for prior deferred work that may be relevant to this brainstorm topic. If matches found, surface them as candidate options to consider promoting (rather than generating new options that duplicate them). If a new option is being deferred mid-brainstorm (e.g., PM says "yes, but not now"), write it as `docs/ideas/YYYY-MM-DD-<slug>.md` immediately rather than letting it die in chat. If `docs/ideas/` does not exist in the current repo, skip this sub-step.
+
+Then run lightweight context checks:
 
 - `compound-engineering-core:repo-research-analyst`
 - `compound-engineering-core:learnings-researcher`

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 - 2026-04-30
+
+- Added `docs/ideas/` enforcement to `workflows:brainstorm` step 4.0 and `workflows:plan-loop` step 1. Brainstorm grep checks the per-repo deferred-work folder for prior ideas relevant to the current topic before generating new options; new mid-brainstorm deferrals are written as idea files instead of dying in chat. Plan-loop confirms any `docs/ideas/*.md` files referenced in the source brainstorm are resolved (active/deferred-with-owner/rejected) before launching review gates. No-op when `docs/ideas/` does not exist in the consumer repo.
+- Source: per-repo `docs/ideas/` convention has been in place in consumer repos since 2026-04-29; this PR promotes it from per-user-memory enforcement to plugin contract.
+
 ## 0.6.0 - 2026-04-05
 
 - Added Negative Claims Protocol to all 5 research agents (two variants: external-facing and codebase-focused).

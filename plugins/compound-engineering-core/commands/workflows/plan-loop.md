@@ -56,6 +56,8 @@ Otherwise run `/compound-engineering-core:workflows:plan <planning_input>` and u
 
 Ensure the plan file exists before continuing.
 
+**Check `docs/ideas/` resolution** (if folder exists in current repo): if the source brainstorm references any `docs/ideas/*.md` files (via path or slug), confirm each referenced idea has been resolved before plan-loop proceeds. Resolution = one of: (a) `status: active` and being promoted by this plan, (b) `status: deferred` with explicit owner + target_date + rationale, (c) `status: rejected` with rationale. Unresolved ideas in the source brainstorm are blockers — patch the brainstorm or update the idea file before continuing. If `docs/ideas/` does not exist or no idea files are referenced, skip this check.
+
 Do not launch research agents or teammate reviewers until steps 1.4, 1.5, and 1.6 are satisfied.
 
 ### 1.4 Agent teams mode (optional)
